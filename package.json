@@ -1,6 +1,6 @@
 {
   "name": "hmpl-js",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "Server-oriented customizable templating for JavaScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,6 +9,7 @@
     "lint": "npx eslint src/**/* --fix",
     "lint:test": "npx eslint test/**/* --fix",
     "prebuild": "npm run lint",
+    "build": "tsc",
     "build:package": "tsup",
     "test": "mocha --require ts-node/esm --experimental-specifier-resolution=node",
     "test:watch": "mocha --watch --require ts-node/esm --experimental-specifier-resolution=node",

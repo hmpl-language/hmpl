@@ -974,7 +974,7 @@
             case FORM_DATA:
               if (typeof autoBody[FORM_DATA] !== "boolean")
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: The "formData" property should be a boolean`
+                  `${REQUEST_OBJECT_ERROR}: The "${FORM_DATA}" property should be a boolean`
                 );
               break;
             default:
