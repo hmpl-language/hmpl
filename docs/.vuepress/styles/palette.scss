@@ -1,0 +1,58 @@
+a::after,
+a::before {
+  display: none !important;
+}
+
+* {
+  scrollbar-color: var(--vp-c-text-mute) !important;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--vp-c-text-mute) !important;
+}
+
+#navbar a:hover {
+  transition: 0.1s all ease-in-out;
+  -webkit-transition: 0.1s all ease-in-out;
+  -moz-transition: 0.1s all ease-in-out;
+  -ms-transition: 0.1s all ease-in-out;
+  -o-transition: 0.1s all ease-in-out;
+}
+
+#navbar a:hover {
+  color: var(--vp-c-accent) !important;
+}
+
+.vp-site-name {
+  display: none;
+}
+
+.vp-project-home div,
+.vp-project-home h1,
+.vp-project-home p,
+.vp-hero-info * {
+  opacity: 1 !important;
+  transform: unset !important;
+}
+
+.vp-project-home .vp-hero-actions a {
+  transition: 0.25s all ease-in-out !important;
+  -webkit-transition: 0.25s all ease-in-out !important;
+  -moz-transition: 0.25s all ease-in-out !important;
+  -ms-transition: 0.25s all ease-in-out !important;
+  -o-transition: 0.25s all ease-in-out !important;
+}
+
+.vp-project-home .vp-hero-title {
+  margin-top: 1em !important;
+}
+
+.vp-back-to-top-button .back-to-top-icon {
+  width: 25px;
+  height: 14.67px;
+  margin-top: -2px;
+}
+
+.edit-link svg {
+  display: none !important;
+}
