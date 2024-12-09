@@ -1,0 +1,39 @@
+.footer-wrapper {
+  text-align: center !important;
+}
+
+.social-media-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.footer-col-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-col {
+  margin-bottom: 0;
+}
+
+.social-media-list li + li {
+  padding-top: 0;
+}
+
+.social-media-list li:hover svg {
+  fill: #1f2328;
+}
+
+@media screen and (max-width: 600px) {
+  .site-nav .page-link {
+    margin-left: 0;
+  }
+}
+
+#breadcrumbs {
+  margin-bottom: 1.5rem;
+}
