@@ -1,0 +1,15 @@
+title: HMPL Blog
+author:
+  name: ""
+  email: ""
+description: >
+  HMPL - 🐜 Server-oriented customizable 
+  templating for JavaScript
+theme: minima
+plugins:
+  - jekyll-feed
+minima:
+  social_links:
+    - { platform: github, user_url: "https://github.com/hmpl-language/hmpl" }
+    - { platform: x, user_url: "https://x.com/hmpljs" }
+    - { platform: rss, user_url: "/feed.xml" }
