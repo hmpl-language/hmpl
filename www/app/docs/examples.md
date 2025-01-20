@@ -147,7 +147,7 @@ wrapper.appendChild(obj.response);
   </form>
 </div>
 
-## Source
+### Source
 
 ```javascript
 import { compile } from "hmpl-js";
@@ -207,6 +207,39 @@ const wrapper = document.getElementById("wrapper");
 wrapper.appendChild(obj.response);
 ```
 
+## Form with fields that were fetched from the server
+
+<input placeholder="Enter text" />
+<button type="submit">Submit</button>
+
+### Source
+
+```javascript
+import { compile } from "hmpl-js";
+
+const templateFn = compile(
+  `<div>
+    {
+      {
+        "src":"/api/form",
+        "indicators": [
+           {
+             "trigger": "pending",
+             "content": "<div>Loading...</div>"
+           }
+        ]
+      }
+    }
+  </div>`
+);
+
+const wrapper = document.getElementById("wrapper");
+
+const elementObj = templateFn();
+
+wrapper.appendChild(elementObj.response);
+```
+
 <script setup>
   import { createCommentVNode, h, ref } from 'vue'
 
@@ -225,6 +258,7 @@ wrapper.appendChild(obj.response);
         }, 300);
       }
     }
+
   // Registration form
   const login = ref("");
   const password = ref("");
