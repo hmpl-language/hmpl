@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: " en" }}">
+
+{%- include head.html -%}
+<script src="https://unpkg.com/clipboard.js"></script>
+<link rel="stylesheet" href="/css/style.css" />
+
+<body>
+
+  {%- include header.html -%}
+
+  <main class="page-content" aria-label="Content">
+    <div class="wrapper">
+      {% include breadcrumbs.html %}
+      {{ content }}
+    </div>
+  </main>
+
+  {%- include footer.html -%}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const codeBlocks = document.querySelectorAll('pre code');
+
+      codeBlocks.forEach((codeBlock) => {
+        const container = codeBlock.parentNode;
+
+        const button = document.createElement('button');
+        button.classList.add('copy-btn');
+
+        // const lang = container.closest('[class^="language-"]').classList[0].split('-')[1];
+        // button.textContent = lang;
+
+        container.style.position = 'relative';
+        container.appendChild(button);
+
+        new ClipboardJS(button, {
+          target: function () {
+            return codeBlock;
+          }
+        });
+
+        button.addEventListener('click', function () {
+          button.classList.add('copied');
+          setTimeout(() => {
+            button.classList.remove('copied')
+          }, 1500);
+          window.getSelection().removeAllRanges();
+        });
+      });
+    });
+  </script>
+
+  <script src="https://unpkg.com/lunr.js"></script>
+  <script src="/assets/search.js"></script>
+
+</body>
+
+</html>
