@@ -411,48 +411,50 @@
                 <span class="metric-subtitle">smaller than Alpine</span>
               </div>
             </div>
-            <div class="labels-column">
-              <div class="progress-label">HMPL</div>
-              <div class="progress-label">Alpine</div>
-              <div class="progress-label">Vue</div>
-              <div class="progress-label">Angular</div>
-              <div class="progress-label">Vanilla</div>
-            </div>
-            <div class="progress-column">
-              <div class="progress-bar-wrapper">
-                <div
-                  class="progress-bar"
-                  data-width="39.15"
-                  data-value="194"
-                ></div>
+            <div class="metrics-progress-container">
+              <div class="labels-column">
+                <div class="progress-label">HMPL</div>
+                <div class="progress-label">Alpine</div>
+                <div class="progress-label">Vue</div>
+                <div class="progress-label">Angular</div>
+                <div class="progress-label">Vanilla</div>
               </div>
-              <div class="progress-bar-wrapper">
-                <div
-                  class="progress-bar"
-                  data-width="48.29"
-                  data-value="224"
-                ></div>
-              </div>
-              <div class="progress-bar-wrapper">
-                <div
-                  class="progress-bar"
-                  data-width="51.59"
-                  data-value="235"
-                ></div>
-              </div>
-              <div class="progress-bar-wrapper">
-                <div
-                  class="progress-bar"
-                  data-width="75.73"
-                  data-value="314"
-                ></div>
-              </div>
-              <div class="progress-bar-wrapper">
-                <div
-                  class="progress-bar"
-                  data-width="80"
-                  data-value="328"
-                ></div>
+              <div class="progress-column">
+                <div class="progress-bar-wrapper">
+                  <div
+                    class="progress-bar"
+                    data-width="39.15"
+                    data-value="194"
+                  ></div>
+                </div>
+                <div class="progress-bar-wrapper">
+                  <div
+                    class="progress-bar"
+                    data-width="48.29"
+                    data-value="224"
+                  ></div>
+                </div>
+                <div class="progress-bar-wrapper">
+                  <div
+                    class="progress-bar"
+                    data-width="51.59"
+                    data-value="235"
+                  ></div>
+                </div>
+                <div class="progress-bar-wrapper">
+                  <div
+                    class="progress-bar"
+                    data-width="75.73"
+                    data-value="314"
+                  ></div>
+                </div>
+                <div class="progress-bar-wrapper">
+                  <div
+                    class="progress-bar"
+                    data-width="80"
+                    data-value="328"
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
@@ -699,7 +701,7 @@
             </ul>
           </div>
           <div class="footer_section">
-            <h3>Documents</h3>
+            <h3 class="footer_section_title">Documents</h3>
             <ul class="footer_list">
               <li class="footer_item">
                 <a
@@ -1556,6 +1558,14 @@ section {
   flex: 0 0 auto;
 }
 
+.metrics-progress-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  justify-content: start;
+  gap: 2rem;
+  width: 100%;
+}
+
 @media (max-width: 600px) {
   .metrics-column {
     display: flex;
@@ -1651,7 +1661,7 @@ section {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   gap: 32px;
 }
 @media (max-width: 600px) {
@@ -1835,6 +1845,7 @@ section {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
 }
 
 @media (max-width: 600px) {
@@ -1989,6 +2000,7 @@ footer {
   justify-content: space-between;
   max-width: 1920px;
   margin: 0 auto;
+  row-gap: 30px;
 }
 
 .footer_logo_header {
@@ -2166,11 +2178,27 @@ footer {
     flex-direction: column;
     gap: 18px;
   }
+  .metrics-column{
+    display: flex;
+    flex: auto;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+  }
+  .metric-medium{
+    margin-top: 0px;
+  }
+  .metrics-content{
+    padding-left: 20px;
+    padding-right: 20px;
+    margin: 0px;
+    width: 100%;
+  }
   .labels-column {
-    gap: 18px;
+    /* gap: 18px; */
   }
   .progress-column {
-    gap: 18px;
+    /* gap: 18px; */
   }
 }
 
@@ -2335,5 +2363,51 @@ footer {
   .contributors-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+
+/* Tablet/iPad */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .banner_image_logo {
+    width: 100px !important;
+  }
+  .banner_info_h1{
+    font-size: 80px !important;
+  }
+  .banner_info{
+    padding-top: 0px !important;
+  }
+  .cards{
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .text_block_1 {
+    flex-direction: column-reverse;
+  }
+  .container {
+    width: 90vw !important;
+    margin: auto;
+  }
+  .text-content, .code-wrapper {
+    width: 100% !important;
+  }
+  .text_block_1_items-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    /* gap: 2rem;
+    margin-top: 1rem; */
+  }
+  .sample_text {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 120px 0px;
+  }
+  .sample_buttons{
+    width: 100%;
+  }
+  .footer_sections{
+    justify-content: space-between !important;
+  }
+  /* .wave_info{
+    overflow-x: hidden;
+  } */
 }
 </style>
