@@ -247,6 +247,12 @@
             >Demo Sandbox</a
           >
         </div>
+        <div class="badge fade-in-effect">
+          <img
+            class="badge-img"
+            src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhunt.svg"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -792,19 +798,8 @@
         </div>
       </div>
     </a>
-    <div class="note">
-      HMPL on DevHunt!
-      <a
-        target="_blank"
-        rel="nooferer noopener"
-        href="https://devhunt.org/tool/hmpljs"
-        class="note_link"
-        >You can upvote us here!</a
-      >💎
-    </div>
   </footer>
 </template>
-
 <script>
 import axios from "axios";
 import toastr from "toastr";
@@ -1030,6 +1025,10 @@ a {
   .star_us {
     bottom: 2rem;
   }
+}
+
+.badge {
+  margin-top: 45px;
 }
 
 .star_us:hover {
@@ -2178,17 +2177,17 @@ footer {
     flex-direction: column;
     gap: 18px;
   }
-  .metrics-column{
+  .metrics-column {
     display: flex;
     flex: auto;
     justify-content: space-between;
     width: 100%;
     align-items: center;
   }
-  .metric-medium{
+  .metric-medium {
     margin-top: 0px;
   }
-  .metrics-content{
+  .metrics-content {
     padding-left: 20px;
     padding-right: 20px;
     margin: 0px;
@@ -2370,13 +2369,13 @@ footer {
   .banner_image_logo {
     width: 100px !important;
   }
-  .banner_info_h1{
+  .banner_info_h1 {
     font-size: 80px !important;
   }
-  .banner_info{
+  .banner_info {
     padding-top: 0px !important;
   }
-  .cards{
+  .cards {
     flex-wrap: wrap;
     width: 100%;
   }
@@ -2387,7 +2386,8 @@ footer {
     width: 90vw !important;
     margin: auto;
   }
-  .text-content, .code-wrapper {
+  .text-content,
+  .code-wrapper {
     width: 100% !important;
   }
   .text_block_1_items-grid {
@@ -2400,10 +2400,10 @@ footer {
     flex-direction: column !important;
     padding: 120px 0px;
   }
-  .sample_buttons{
+  .sample_buttons {
     width: 100%;
   }
-  .footer_sections{
+  .footer_sections {
     justify-content: space-between !important;
   }
   /* .wave_info{
