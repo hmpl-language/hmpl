@@ -23,6 +23,12 @@ hmpl is a small template language for displaying UI from server to client. It is
 
 ☆ If you find HMPL useful, please consider giving us a star on GitHub! Your support helps us continue to innovate and deliver exciting features.
 
+<div align="center">
+  <a href="https://devhunt.org/tool/hmpljs">
+    <img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhunt.svg" />
+  </a>
+</div>
+
 ## Usage
 
 ```javascript
