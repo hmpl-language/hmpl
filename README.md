@@ -48,6 +48,36 @@ const clicker = templateFn(({ request: { event } }) => ({
 document.querySelector("#app").append(clicker);
 ```
 
+<details>
+<summary>Clarify this!</summary>
+
+```js
+import hmpl from "hmpl-js"; // Import the HMPL library
+
+// Compile an HMPL template with dynamic behavior
+const templateFn = hmpl.compile(
+  `<div>
+      <button data-action="increment" id="btn">Click!</button>
+      <!-- This div will update with the click count from /api/clicks -->
+      <div>Clicks: {{ src: "/api/clicks", after: "click:#btn" }}</div>
+  </div>`
+);
+
+// Generate a response handler for the template
+// In the original object, we will have the following: { response: div, status: 200 }
+const clicker = templateFn(({ request: { event } }) => ({
+  // Send a JSON payload with the action from the button's data attribute
+  body: JSON.stringify({ action: event.target.getAttribute("data-action") })
+})).response;
+
+// Append the dynamically generated element to the #app container
+document.querySelector("#app").append(clicker);
+```
+
+In this example, we create a dynamic clicker component in which, when a `button` is pressed, we will receive the value of the current clicks that will come from the server. The advantage of this approach is that we can take out not only data in the form of `Text`, but also entire components and even pages!
+
+</details>
+
 ## Why HMPL?
 
 Using template language capabilities, you can multiply reduce the size of the application bundle. Full customization of the request based on the modern `fetch` standard, as well as support for all the functionality necessary for modern work in applications (request indicator, sending by event, automatic generation of `body` for the `form`, caching) and the syntax of the object in the markup, which requires a minimum number of characters, will help to build interaction with the server and client as efficiently as possible.
