@@ -82,7 +82,11 @@ In this example, we create a dynamic clicker component in which, when a `button`
 
 Using template language capabilities, you can multiply reduce the size of the application bundle. Full customization of the request based on the modern `fetch` standard, as well as support for all the functionality necessary for modern work in applications (request indicator, sending by event, automatic generation of `body` for the `form`, caching) and the syntax of the object in the markup, which requires a minimum number of characters, will help to build interaction with the server and client as efficiently as possible. App size [comparison](https://github.com/hmpl-language/app-size-comparison) (bytes):
 
-![App size compariosn](https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/comparison.png)
+<div>
+    <a href="https://github.com/hmpl-language/app-size-comparison">
+        <img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/comparison.png" alt="App size comparison">
+    </a>
+</div>
 
 Also, HMPL can be a great alternative to popular tools such as HTMX and Alpine.js.
 
