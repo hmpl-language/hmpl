@@ -23,6 +23,8 @@ hmpl is a small template language for displaying UI from server to client. It is
 </div>
 
 <br/>
+<br/>
+<br/>
 
 <a href="https://hmpl-lang.dev">Website</a> • <a href="https://hmpl-lang.dev/introduction.html">Documentation</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples.html">Examples</a>
 
