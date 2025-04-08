@@ -1,7 +1,7 @@
 {
-  "name": "hmpl-docs",
+  "name": "hmpl-specs",
   "version": "0.0.1",
-  "description": "hmpl documentation",
+  "description": "hmpl specs",
   "license": "MIT",
   "type": "module",
   "scripts": {
