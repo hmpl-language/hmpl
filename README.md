@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://www.npmjs.com/package/hmpl-js">
-        <img width="100" src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/logo.png" alt="hmpl">
+        <img width="100" src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/logo_readme.png" alt="hmpl">
     </a>
 </div>
 
