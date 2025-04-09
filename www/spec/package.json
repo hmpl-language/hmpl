@@ -1,0 +1,26 @@
+{
+  "name": "hmpl-spec",
+  "version": "0.0.1",
+  "description": "hmpl spec",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmpl-language/spec.git"
+  },
+  "keywords": [
+    "hmpl",
+    "spec"
+  ],
+  "scripts": {
+    "build": "ecmarkup src/index.html build/index.html",
+    "watch": "chokidar src/index.html -c \"npm run build\"",
+    "start:server": "node server/main.js",
+    "start": "npm run build && concurrently \"npm run start:server\" \"npm run watch\""
+  },
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^9.1.2",
+    "ecmarkup": "^21.2.0",
+    "express": "^5.1.0"
+  }
+}
