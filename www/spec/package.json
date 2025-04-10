@@ -13,14 +13,14 @@
   ],
   "scripts": {
     "build": "ecmarkup src/index.html build/index.html",
-    "watch": "chokidar src/index.html -c \"npm run build\"",
-    "start:server": "node server/main.js",
-    "start": "npm run build && concurrently \"npm run start:server\" \"npm run watch\""
+    "start": "npm run build && node server/main.js",
+    "dev": "npm start"
   },
   "devDependencies": {
     "chokidar-cli": "^3.0.0",
     "concurrently": "^9.1.2",
     "ecmarkup": "^21.2.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "ws": "^8.18.1"
   }
 }

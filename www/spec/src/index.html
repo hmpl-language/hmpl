@@ -1,13 +1,272 @@
 <!doctype html>
+
+<pre class="metadata">
+  title: HMPL Template Language Specification
+  status: proposal
+  version: 1.0.0
+  shortname: hmpl
+  location: https://spec.hmpl-lang.dev
+  copyright: false
+  contributors: Anthony Max
+  date: 2025-03-09
+</pre>
+
 <emu-spec>
   <emu-intro id="introduction">
-    <h1>My Spec</h1>
-    <p>This is a sample specification using ecmarkup.</p>
+    <h1>Introduction</h1>
+    <p>
+      <dfn>hmpl</dfn> is a small template language for displaying UI from server to client. It is based on customizable requests sent to the server via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> and processed into ready-made HTML. The language is syntactically object-based and integrated with <a href="https://www.npmjs.com/package/json5">JSON5</a> and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>. 
+    </p>
+    <p>
+      Reduce the size of your javascript files and display the same UI as if it was written in a modern framework and apply Server-Side Rendering, Static Site Generation, Incremental Static Generation (SSR, SSG, ISG) without robot indexing on any sites without Next.js, Remix, Nuxt.js!
+    </p>
   </emu-intro>
 
-  <emu-clause id="sec-my-feature">
-    <h1>My Feature</h1>
-    <p>This is a definition of a new feature.</p>
-    <emu-alg> 1. Let _x_ be 5. 2. Return _x_. </emu-alg>
+  <emu-clause id="sec-hmpl-object">
+    <h1>hmpl Object</h1>
+    <p>
+      The global <dfn>hmpl</dfn> object provides the primary API for defining templates and handling client-server rendering behavior.
+    </p>
+
+    <emu-clause id="sec-hmpl-compile">
+      <h1>hmpl.compile ( templateString, options )</h1>
+      <p>
+        The <dfn>compile</dfn> method creates a renderable template function from an HTML-like string containing request objects.
+        These request objects are evaluated, and the result is injected into the DOM.
+      </p>
+
+      <emu-alg>
+        1. Let _template_ be the result of parsing _templateString_ using hmpl syntax.
+        2. If _options_ is provided, apply the options to each internal request object:
+          1. If an option is overridden by the request itself, use the request’s value.
+        3. Return a function _templateFn_ which, when called, performs:
+          1. Evaluate embedded request objects.
+          2. Send each request via Fetch.
+          3. Receive and sanitize HTML if needed.
+          4. Replace request placeholders in the DOM with server responses.
+      </emu-alg>
+
+      <emu-note>
+        Options include:
+        - <var>memo</var>: Cache request results.
+        - <var>autoBody</var>: Automatically attach form data.
+        - <var>allowedContentTypes</var>: Restrict valid response MIME types.
+        - <var>disallowedTags</var>: Remove disallowed HTML tags.
+        - <var>sanitize</var>: Use DOMPurify to sanitize responses.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-hmpl-template-function">
+      <h1>Template Function</h1>
+      <p>
+        The result of calling <code>hmpl.compile</code> is a function that takes request initialization configuration.
+        It supports:
+        <ul>
+          <li>A single <a href="#sec-request-init">RequestInit</a> object</li>
+          <li>An array of <a href="#sec-identification-request-init">IdentificationRequestInit</a> objects</li>
+          <li>A function to generate options from context</li>
+        </ul>
+      </p>
+
+      <emu-example>
+        <pre><code class="javascript">
+const templateFn = hmpl.compile({{ "src": "/api/test" }});
+const result = templateFn(); // => { response: HTMLElement, status: 200 }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
   </emu-clause>
+
+  <emu-clause id="sec-request-init">
+    <h1>RequestInit</h1>
+    <p>
+      Template functions accept request configuration similar to the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Request">Fetch API</a>.
+      The object may include headers, credentials, method, body, etc.
+    </p>
+  </emu-clause>
+
+  <emu-clause id="sec-identification-request-init">
+    <h1>IdentificationRequestInit</h1>
+    <p>
+      Multiple requests can be provided using an array, each with a unique <code>id</code> and associated configuration object.
+    </p>
+  </emu-clause>
+
+  <emu-clause id="sec-request-init-function">
+    <h1>RequestInit Function</h1>
+    <p>
+      If a function is passed as the argument to the template function, it will be called with the <dfn>context</dfn> of the current request.
+      This allows dynamically computing body, headers, and other properties.
+    </p>
+  </emu-clause>
+
+  <emu-clause id="sec-get-callback">
+    <h1>Property Watcher (get)</h1>
+    <p>
+      A <code>get</code> function can be provided to track property changes such as <code>response</code> or <code>status</code> for each request.
+    </p>
+  </emu-clause>
+
+  <emu-clause id="sec-stringify">
+    <h1>hmpl.stringify</h1>
+    <p>
+      This method serializes a JavaScript request object into a string that can be used inside template syntax.
+    </p>
+  </emu-clause>
+
+  <emu-clause id="sec-context-concept">
+    <h1>Context</h1>
+    <p>
+      The <dfn>HMPLInstanceContext</dfn> allows templates to access the request event, including values from <code>event.target</code>, <code>FormData</code>, etc.
+    </p>
+  </emu-clause>
+
+  <emu-clause id="sec-request-object">
+    <h1>Request Object Syntax</h1>
+    <p>
+      The main construct in HMPL syntax is string interpolation using single braces. Unlike frameworks like Cample which use double braces, HMPL uses the format <code>{${request}}</code> to embed request objects directly into templates.
+    </p>
+    <p>
+      Request objects are JSON5-formatted and parsed using <code>JSON5.parse</code>. You can use <code>hmpl.stringify</code> to generate valid interpolations programmatically.
+    </p>
+  
+    <emu-example>
+      <pre><code class="html">
+  {{
+    "src": "/api/test"
+  }}
+      </code></pre>
+    </emu-example>
+  
+    <p>
+      Prior to execution, the template placeholder will be rendered as an HTML comment:
+    </p>
+  
+    <emu-example>
+      <pre><code class="html">
+  <!--hmpl1-->
+      </code></pre>
+    </emu-example>
+  
+    <emu-note>
+      All <code>&lt;script&gt;</code> tags from server responses are removed by default for security.
+    </emu-note>
+  </emu-clause>
+  
+  <emu-clause id="sec-request-properties">
+    <h1>Request Object Properties</h1>
+  
+    <emu-clause id="sec-request-src">
+      <h1>src</h1>
+      <p>
+        Specifies the endpoint to which the request will be sent. This field is required.
+      </p>
+      <emu-example>
+        <pre><code class="html">
+  {{
+    "src": "/api/test"
+  }}
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+  
+    <emu-clause id="sec-request-method">
+      <h1>method</h1>
+      <p>
+        Specifies the HTTP method for the request. Default is <code>GET</code>.
+      </p>
+      <emu-example>
+        <pre><code class="html">
+  {{
+    "method": "POST"
+  }}
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+  
+    <emu-clause id="sec-request-after">
+      <h1>after</h1>
+      <p>
+        Specifies the event after which the request should be sent. Uses the format <code>${event}:${selector}</code>.
+      </p>
+      <emu-note>
+        Selectors are resolved within the template string, not globally.
+      </emu-note>
+    </emu-clause>
+  
+    <emu-clause id="sec-request-repeat">
+      <h1>repeat</h1>
+      <p>
+        Determines whether the request should be repeated each time the event fires. Default is <code>true</code>.
+      </p>
+    </emu-clause>
+  
+    <emu-clause id="sec-request-indicators">
+      <h1>indicators</h1>
+      <p>
+        Defines HTML to be shown for specific request states like <code>pending</code>, <code>rejected</code>, or specific HTTP error codes.
+      </p>
+      <emu-example>
+        <pre><code class="html">
+  {{
+    "indicators": [
+      {
+        "trigger": "pending",
+        "content": "&lt;p&gt;Loading...&lt;/p&gt;"
+      },
+      {
+        "trigger": "error",
+        "content": "&lt;p&gt;Something went wrong&lt;/p&gt;"
+      }
+    ]
+  }}
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+  
+    <emu-clause id="sec-request-autoBody">
+      <h1>autoBody</h1>
+      <p>
+        Enables automatic generation of <code>FormData</code> from <code>SubmitEvent</code> targets.
+      </p>
+      <emu-note>
+        Only works with <code>&lt;form&gt;</code> tags for now.
+      </emu-note>
+    </emu-clause>
+  
+    <emu-clause id="sec-request-memo">
+      <h1>memo</h1>
+      <p>
+        Enables memoization to cache responses and avoid re-rendering the same content. Works only when <code>repeat</code> is <code>true</code>.
+      </p>
+    </emu-clause>
+  
+    <emu-clause id="sec-request-initid">
+      <h1>initId</h1>
+      <p>
+        Refers to a named or numeric ID in a supplied <code>HMPLRequestInit</code> dictionary to use as configuration.
+      </p>
+    </emu-clause>
+  
+    <emu-clause id="sec-request-allowed-content-types">
+      <h1>allowedContentTypes</h1>
+      <p>
+        Lists MIME types allowed in the response. Default: <code>["text/html"]</code>. A wildcard <code>*</code> allows all text-based types.
+      </p>
+    </emu-clause>
+  
+    <emu-clause id="sec-request-disallowed-tags">
+      <h1>disallowedTags</h1>
+      <p>
+        Specifies an array of HTML tags to remove from the server response. Default is an empty array.
+      </p>
+    </emu-clause>
+  
+    <emu-clause id="sec-request-sanitize">
+      <h1>sanitize</h1>
+      <p>
+        When set to <code>true</code>, the server's HTML response will be sanitized using <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>.
+      </p>
+    </emu-clause>
+  </emu-clause>  
 </emu-spec>
