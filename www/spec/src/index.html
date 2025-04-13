@@ -1,0 +1,1879 @@
+<!doctype html>
+<style>
+  *:target {
+    background-color: lightgray !important; /* Красный цвет */
+    transition: background-color 0.3s ease; /* Плавное изменение */
+  }
+  .title {
+    color: #9747ff !important;
+  }
+  .version {
+    color: #9747ff !important;
+  }
+  .hljs {
+    background: #ffffff !important;
+    color: #24292e !important;
+    line-height: 1.5 !important;
+    padding: 1em !important;
+    border-radius: 8px !important;
+    overflow-x: auto !important;
+  }
+
+  .hljs-keyword,
+  .hljs-selector-tag,
+  .hljs-literal,
+  .hljs-section,
+  .hljs-link {
+    color: #d73a49 !important;
+  }
+
+  .hljs-function .hljs-title,
+  .hljs-title {
+    color: #6f42c1 !important;
+  }
+
+  .hljs-attr,
+  .hljs-name,
+  .hljs-variable {
+    color: #005cc5 !important;
+  }
+
+  .hljs-string,
+  .hljs-meta .hljs-string {
+    color: #032f62 !important;
+  }
+
+  .hljs-number,
+  .hljs-built_in,
+  .hljs-bullet {
+    color: #005cc5 !important;
+  }
+
+  .hljs-comment {
+    color: #6a737d !important;
+    font-style: italic !important;
+  }
+
+  .hljs-doctag {
+    color: #d73a49 !important;
+  }
+
+  .hljs-meta,
+  .hljs-meta .hljs-keyword {
+    color: #6a737d !important;
+  }
+
+  .hljs-addition {
+    color: #22863a !important;
+    background-color: #f0fff4 !important;
+  }
+
+  .hljs-deletion {
+    color: #b31d28 !important;
+    background-color: #ffeef0 !important;
+  }
+</style>
+<pre class="metadata">
+  title: HMPL Template Language Specification
+  status: proposal
+  version: 1.0.0
+  shortname: hmpl
+  location: https://spec.hmpl-lang.dev
+  copyright: false
+  contributors: Anthony Max
+  date: 2025-03-09
+</pre>
+<link
+  rel="icon"
+  href="https://hmpl-lang.dev/images/favicon.ico"
+  type="image/x-icon"
+/>
+<emu-spec>
+  <emu-intro id="description">
+    <h1>Overview</h1>
+    <p>
+      The <a href="https://github.com/hmpl-language/hmpl"><dfn>HMPL</dfn></a> is
+      a declarative template language designed for server-side UI rendering with
+      client-side interactivity. The language combines:
+    </p>
+    <ul>
+      <li>
+        <a href="https://www.npmjs.com/package/json5">JSON5</a>-based syntax for
+        request configuration
+      </li>
+      <li>HTML templating capabilities</li>
+      <li>
+        Integrated security via
+        <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>
+      </li>
+      <li>Event-driven updates</li>
+    </ul>
+  </emu-intro>
+
+  <emu-clause id="sec-features">
+    <h1>Introduction</h1>
+    <p>
+      HMPL enables efficient UI rendering through customizable server requests
+      initiated via the
+      <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"
+        >Fetch API</a
+      >, with responses processed into ready-made HTML. Reduce the size of your
+      javascript files and display the same UI as if it was written in a modern
+      framework and apply Server-Side Rendering, Static Site Generation,
+      Incremental Static Generation (SSR, SSG, ISG) without robot indexing on
+      any sites without Next.js, Remix, Nuxt.js.
+    </p>
+    <emu-clause id="sec-features">
+      <h1>Features</h1>
+
+      <ul>
+        <li>
+          <strong>Customizable</strong>: Provides the ability to initiate custom
+          server requests for dynamically receiving user interface content,
+          enabling fine-grained control over request structure and behavior.
+        </li>
+        <li>
+          <strong>Memory Preserving</strong>: Significantly reduces client-side
+          file sizes by offloading rendering logic to the server, minimizing
+          front-end resource requirements.
+        </li>
+        <li>
+          <strong>Standards-Based (Fetch API)</strong>: Utilizes the modern
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"
+            >Fetch API</a
+          >
+          for performing network requests, offering a standardized,
+          promise-based alternative to legacy <code>XMLHttpRequest</code>.
+        </li>
+        <li>
+          <strong>Server-Oriented</strong>: Designed to prioritize server-driven
+          rendering workflows, enabling UI generation through declarative markup
+          with minimal JavaScript involvement.
+        </li>
+        <li>
+          <strong>High-Volume DOM Generation</strong>: Supports the efficient
+          creation of large quantities of DOM nodes from a single template,
+          enabling scalable component rendering both on the server and the
+          client.
+        </li>
+        <li>
+          <strong>Simplicity</strong>: Allows ready-to-render UI content to be
+          retrieved from the server using concise, familiar object notation
+          requiring minimal code.
+        </li>
+        <li>
+          <strong>XSS Protection</strong>: Integrates HTML sanitization using
+          <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>,
+          ensuring the safe handling of incoming server-generated markup to
+          mitigate cross-site scripting (XSS) vulnerabilities.
+        </li>
+        <li>
+          <strong>Flexible Integration</strong>: Capable of operating within a
+          wide range of project types, supporting both script-based usage and
+          dedicated markup files with the <code>.hmpl</code> file extension.
+        </li>
+        <li>
+          <strong>JSON5 Compatibility</strong>: Provides flexible and expressive
+          object syntax via <a href="https://spec.json5.org">JSON5</a>, ensuring
+          developer-friendly notation and leveraging a widely adopted, reliable
+          parser.
+        </li>
+        <li>
+          <strong>Compact Bundle Size</strong>: Delivers substantial
+          functionality in a minimal bundle footprint, typically limited to a
+          few kilobytes.
+        </li>
+      </ul>
+    </emu-clause>
+
+    <emu-clause id="sec-features">
+      <h1>Example</h1>
+      <pre><code class="javascript">
+        import hmpl from "hmpl-js";
+  
+        const templateFn = hmpl.compile(
+          `&lt;div&gt;
+              &lt;button data-action="increment" id="btn"&gt;Click!&lt;/button&gt;
+              &lt;div&gt;Clicks: {{
+                "src": "/api/clicks",
+                "after": "click:#btn"
+              }}&lt;/div&gt;
+          &lt;/div&gt;`
+        );
+        
+        const clicker = templateFn(({ request: { event } }) => ({
+          body: JSON.stringify({ action: event.target.getAttribute("data-action") })
+        })).response;
+        
+        document.querySelector("#app").append(clicker);
+      </code></pre>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="hmpl">
+    <h1>hmpl</h1>
+    <p>
+      The global <code>hmpl</code> object serves as the primary interface for
+      template compilation and request serialization. This object is
+      automatically available in the global scope without requiring explicit
+      import.
+    </p>
+
+    <emu-table id="hmpl-methods-table" caption="Methods">
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Type Signature</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>compile</code></td>
+            <td><dfn>HMPLCompile</dfn></td>
+            <td>
+              Transforms template strings into executable template functions
+            </td>
+          </tr>
+          <tr>
+            <td><code>stringify</code></td>
+            <td><code>(info: HMPLRequestInfo) => string</code></td>
+            <td>Serializes request configuration objects to JSON5 strings</td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+
+    <emu-clause id="compile">
+      <h1>compile</h1>
+      <p>
+        The <code>compile</code> method processes HMPL template strings into
+        executable template functions (<dfn>HMPLTemplateFunction</dfn>).
+      </p>
+      <emu-table id="compile-arguments-table" caption="Parameters">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Required</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>template</td>
+              <td>string</td>
+              <td>
+                HMPL template string containing HTML markup and request
+                configurations
+              </td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>options</td>
+              <td><dfn>HMPLCompileOptions</dfn></td>
+              <td>Compilation configuration parameters</td>
+              <td>No</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+      <emu-example>
+        <pre><code class="javascript">
+          const templateFn = hmpl.compile(
+            `{ 
+               {
+                 "src":"/api/test" 
+               } 
+             }`,
+            {
+              memo: true,
+              autoBody: {
+                formData: true
+              },
+              allowedContentTypes: ["text/html"],
+              disallowedTags: ["script"],
+              sanitize: false
+            }
+          );
+        </code></pre>
+      </emu-example>
+      <emu-clause id="template">
+        <h1>Template Syntax</h1>
+        <p>
+          HMPL templates consist of standard HTML markup interspersed with
+          request configuration objects delimited by single curly braces
+          (<code>{$config}</code>).
+        </p>
+        <emu-example>
+          <pre><code class="html">
+            &lt;div&gt;
+              &lt;button data-action="increment" id="btn"&gt;Click!&lt;/button&gt;
+              &lt;div&gt;Clicks: {{ "src": "/api/clicks", "after": "click:#btn" }}&lt;/div&gt;
+            &lt;/div&gt;
+          </code></pre>
+        </emu-example>
+        <p>Key characteristics:</p>
+        <ul>
+          <li>Request configurations must be valid JSON5</li>
+          <li>Nested within <code>{}</code> delimiters</li>
+          <li>May appear anywhere within HTML markup</li>
+        </ul>
+      </emu-clause>
+      <emu-clause id="options">
+        <h1>Compilation Options</h1>
+        <p>
+          The <code>options</code> parameter establishes default behaviors for
+          all requests generated by the compiled template function.
+        </p>
+        <emu-table id="compile-options-table" caption="Option Properties">
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>memo</td>
+                <td>boolean</td>
+                <td>false</td>
+                <td>Enables response caching for identical requests</td>
+              </tr>
+              <tr>
+                <td>autoBody</td>
+                <td>boolean | <dfn>HMPLAutoBodyOptions</dfn></td>
+                <td>false</td>
+                <td>Configures automatic request body generation</td>
+              </tr>
+              <tr>
+                <td>allowedContentTypes</td>
+                <td>HMPLContentTypes</td>
+                <td>["text/html"]</td>
+                <td>Permitted response Content-Type headers</td>
+              </tr>
+              <tr>
+                <td>sanitize</td>
+                <td>HMPLSanitize</td>
+                <td>false</td>
+                <td>Enables HTML sanitization of server responses</td>
+              </tr>
+              <tr>
+                <td>disallowedTags</td>
+                <td>HMPLDisallowedTags</td>
+                <td>[]</td>
+                <td>HTML elements to remove from responses</td>
+              </tr>
+            </tbody>
+          </table>
+        </emu-table>
+        <p>
+          Note: Request-specific configurations override these defaults when
+          provided.
+        </p>
+      </emu-clause>
+    </emu-clause>
+    <emu-clause id="stringify">
+      <h1>stringify</h1>
+      <p>
+        Serializes <dfn>HMPLRequestInfo</dfn> objects into JSON5 strings
+        suitable for template embedding.
+      </p>
+      <emu-example>
+        <pre><code class="javascript">
+          const request = hmpl.stringify({
+            src: "/api/test"
+          });
+          const templateFn = hmpl.compile(`{${request}}`);
+        </code></pre>
+      </emu-example>
+      <p>Implementation notes:</p>
+      <ul>
+        <li>Uses JSON5 serialization for improved readability</li>
+        <li>Maintains all original object properties</li>
+        <li>Produces valid template syntax</li>
+      </ul>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="template-function">
+    <h1>Template Function</h1>
+    <p>
+      The <dfn>HMPLTemplateFunction</dfn> instantiates template executions,
+      managing server requests and DOM updates. Each invocation creates an
+      independent <dfn>HMPLInstance</dfn>.
+    </p>
+    <emu-table id="template-function-arguments-table" caption="Parameters">
+      <table>
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>options</code></td>
+            <td>
+              HMPLIdentificationRequestInit[] | HMPLRequestInit |
+              HMPLRequestInitFunction
+            </td>
+            <td>Configuration for request initialization and execution</td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+    <emu-example>
+      <pre><code class="javascript">
+        const elementObj = templateFn();
+        // Returns: { response: div, status: 200 }
+      </code></pre>
+    </emu-example>
+
+    <emu-clause id="request-init">
+      <h1>RequestInit</h1>
+      <p>
+        The <dfn>HMPLRequestInit</dfn> interface extends the standard
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/RequestInit"
+          >RequestInit</a
+        >
+        with HMPL-specific properties.
+      </p>
+      <emu-table id="request-init-table" caption="Properties">
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>mode</code></td>
+              <td><dfn>RequestMode</dfn></td>
+              <td>The mode of the request (cors, no-cors, same-origin)</td>
+            </tr>
+            <tr>
+              <td><code>cache</code></td>
+              <td><dfn>RequestCache</dfn></td>
+              <td>
+                The cache mode for the request (default, no-store, reload, etc.)
+              </td>
+            </tr>
+            <tr>
+              <td><code>redirect</code></td>
+              <td><dfn>RequestRedirect</dfn></td>
+              <td>How to handle redirects (follow, error, manual)</td>
+            </tr>
+            <tr>
+              <td><code>referrerPolicy</code></td>
+              <td><dfn>ReferrerPolicy</dfn></td>
+              <td>
+                Policy for the referrer header (no-referrer, same-origin, etc.)
+              </td>
+            </tr>
+            <tr>
+              <td><code>integrity</code></td>
+              <td><code>string</code></td>
+              <td>Subresource integrity value for the request</td>
+            </tr>
+            <tr>
+              <td><code>referrer</code></td>
+              <td><code>string</code></td>
+              <td>The referrer URL for the request</td>
+            </tr>
+            <tr>
+              <td><code>get</code></td>
+              <td><dfn>HMPLRequestGet</dfn></td>
+              <td>Optional function to retrieve properties from the request</td>
+            </tr>
+            <tr>
+              <td><code>body</code></td>
+              <td><dfn>BodyInit</dfn> | <code>null</code></td>
+              <td>The body of the request (can be a string, FormData, etc.)</td>
+            </tr>
+            <tr>
+              <td><code>signal</code></td>
+              <td><dfn>AbortSignal</dfn> | <code>null</code></td>
+              <td>An AbortSignal to abort the request if needed</td>
+            </tr>
+            <tr>
+              <td><code>window</code></td>
+              <td><code>any</code></td>
+              <td>Reference to the window object (if applicable)</td>
+            </tr>
+            <tr>
+              <td><code>credentials</code></td>
+              <td><dfn>RequestCredentials</dfn></td>
+              <td>
+                Credentials mode for the request (omit, same-origin, include)
+              </td>
+            </tr>
+            <tr>
+              <td><code>headers</code></td>
+              <td><dfn>HMPLHeadersInit</dfn></td>
+              <td>Custom headers for the request</td>
+            </tr>
+            <tr>
+              <td><code>timeout</code></td>
+              <td><code>number</code></td>
+              <td>Optional timeout duration for the request in milliseconds</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+      <emu-example>
+        <pre><code class="javascript">
+          const elementObj = templateFn({
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+              "Content-Type": "text/html"
+            },
+            redirect: "follow",
+            get: (prop, value) => {},
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify(data),
+            signal: new AbortController().signal,
+            integrity: "...",
+            window: null,
+            refferer: "about:client"
+          });
+        </code></pre>
+      </emu-example>
+
+      <emu-clause id="get-property">
+        <h1>get</h1>
+        <p>
+          The <code>get</code> property specifies a callback function that
+          executes on property updates within the HMPLInstance.
+        </p>
+        <emu-table id="get-callback-table" caption="Callback Parameters">
+          <table>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>prop</td>
+                <td>string</td>
+                <td>The name of the updated property</td>
+              </tr>
+              <tr>
+                <td>value</td>
+                <td>any</td>
+                <td>The new property value</td>
+              </tr>
+              <tr>
+                <td>requestObject</td>
+                <td>HMPLRequest</td>
+                <td>
+                  The associated request object (for multi-request templates)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </emu-table>
+
+        <emu-example>
+          <pre><code class="javascript">
+    const elementObj = templateFn({
+      get: (prop, value, requestObject) => {
+        switch (prop) {
+          case "response":
+            if (!requestObject) console.log(requestObject);
+            console.log("Response:");
+            console.log(value);
+            break;
+          case "status":
+            console.log("Status:");
+            console.log(value);
+            break;
+        }
+      }
+    });
+          </code></pre>
+        </emu-example>
+
+        <emu-note>
+          The <code>get</code> callback does not trigger for changes to
+          individual array elements within the <code>requests</code> property.
+          This design prevents excessive callbacks during batch updates.
+        </emu-note>
+
+        <p>
+          For asynchronous operations, wrap the template function in a Promise:
+        </p>
+
+        <emu-example>
+          <pre><code class="javascript">
+    const val = await new Promise((res, rej) => {
+      templateFn({
+        get: (prop, value, requestObject) => {
+          switch (prop) {
+            case "response":
+              if (!value) return;
+              res(value);
+              break;
+          }
+        }
+      });
+    });
+          </code></pre>
+        </emu-example>
+      </emu-clause>
+    </emu-clause>
+
+    <emu-clause id="identification-request-init">
+      <h1>Identification RequestInit</h1>
+      <p>
+        The <dfn>HMPLIdentificationRequestInit</dfn> interface associates
+        request configurations with specific template requests via unique
+        identifiers.
+      </p>
+      <emu-table id="identification-request-init-table" caption="Properties">
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>id</code></td>
+              <td><code>string | number</code></td>
+              <td>
+                Unique identifier matching template request's
+                <code>initId</code>
+              </td>
+            </tr>
+            <tr>
+              <td><code>value</code></td>
+              <td>
+                <dfn>HMPLRequestInit</dfn> |
+                <dfn>HMPLRequestInitFunction</dfn>
+              </td>
+              <td>The initialization parameters for the referenced request</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+      <emu-example>
+        <pre><code class="javascript">
+const elementObj = templateFn([
+{
+  id: "1",
+  value: {
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "text/html"
+    },
+    redirect: "follow",
+    get: (prop, value) => {},
+    referrerPolicy: "no-referrer",
+    body: JSON.stringify(data)
+  }
+}]);
+        </code></pre>
+      </emu-example>
+      <emu-note>
+        <p>
+          When passing an array of initialization objects, requests without
+          matching <code>initId</code> values execute with default
+          configurations. Each template request must explicitly declare its
+          <code>initId</code> to receive custom initialization.
+        </p>
+      </emu-note>
+
+      <emu-clause id="instance-structure">
+        <h1>Instance Structure</h1>
+        <p>
+          The structure of the returned <dfn>HMPLInstance</dfn> depends on the
+          template's request configuration:
+        </p>
+
+        <emu-clause id="single-request-example">
+          <h1>Single Request Template</h1>
+          <emu-example>
+            <pre><code class="javascript">
+      const templateFn = hmpl.compile(
+        `{ 
+           {
+             "src":"/api/test" 
+           } 
+         }`
+      );
+      const elementObj = templateFn();
+            </code></pre>
+          </emu-example>
+          <emu-table id="single-request-structure-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>status</td>
+                  <td>number</td>
+                  <td>HTTP status code of the response</td>
+                </tr>
+                <tr>
+                  <td>response</td>
+                  <td>Element</td>
+                  <td>Rendered DOM element</td>
+                </tr>
+              </tbody>
+            </table>
+          </emu-table>
+        </emu-clause>
+
+        <emu-clause id="multi-request-example">
+          <h1>Multi-Request Template</h1>
+          <emu-example>
+            <pre><code class="javascript">
+      const templateFn = hmpl.compile(
+        `&lt;div&gt;
+         {
+           {
+             "src":"/api/test"
+           }
+         }
+         {
+           {
+             "src":"/api/test"
+           }
+         }
+      &lt;/div&gt;`
+      );
+      const elementObj = templateFn();
+            </code></pre>
+          </emu-example>
+          <emu-table id="multi-request-structure-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>response</td>
+                  <td>Element</td>
+                  <td>Container DOM element</td>
+                </tr>
+                <tr>
+                  <td>requests</td>
+                  <td>HMPLRequest[]</td>
+                  <td>Array of individual request results</td>
+                </tr>
+              </tbody>
+            </table>
+          </emu-table>
+          <p>
+            Each item in the <code>requests</code> array contains
+            <code>status</code> and <code>response</code> properties for its
+            respective request.
+          </p>
+        </emu-clause>
+      </emu-clause>
+    </emu-clause>
+
+    <emu-clause id="sec-request-init-function">
+      <h1>RequestInit Function</h1>
+      <p>
+        The <dfn>HMPLRequestInitFunction</dfn> enables dynamic request
+        configuration based on execution context.
+      </p>
+      <emu-table id="request-init-function-table" caption="Parameters">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>context</td>
+              <td><dfn>HMPLInstanceContext</dfn></td>
+              <td>Execution context containing request information</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+
+      <emu-example>
+        <pre><code class="javascript">
+    const elementObj = templateFn(({
+      request: { event }
+    })=>{
+      return {
+          mode: "cors",
+          cache: "no-cache",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "text/html",
+          },
+          redirect: "follow",
+          get: (prop, value) => {},
+          referrerPolicy: "no-referrer",
+          body: new FormatData(event.target, event.submitter),
+        }
+    });
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="concept-of-context">
+    <h1>Execution Context</h1>
+    <p>
+      HMPL provides an execution context that exposes request-specific
+      information during template instantiation.
+    </p>
+
+    <emu-table id="context-structure-table" caption="Context Structure">
+      <table>
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>request</td>
+            <td>HMPLRequestContext</td>
+            <td>Contains information about the triggering request</td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+
+    <emu-example>
+      <pre><code class="html">
+  &lt;div&gt;
+    &lt;button id="getHTML"&gt;Get HTML!&lt;/button&gt;
+    {{ "src":"/api/getHTML", method:"POST", after:"click:#getHTML" }}
+  &lt;/div&gt;
+      </code></pre>
+    </emu-example>
+
+    <emu-example>
+      <pre><code class="javascript">
+  const initFn = (ctx) => {
+    const event = ctx.request.event;
+    const text = event.target.textContent;
+    return {
+      body: text
+    };
+  };
+  const elementObj = templateFn(initFn);
+      </code></pre>
+    </emu-example>
+  </emu-clause>
+
+  <emu-clause id="request-configuration">
+    <h1>Request Configuration</h1>
+    <p>
+      Request objects define how and when the template makes server requests.
+      These JSON5 objects appear within template markup and support the
+      following properties:
+    </p>
+
+    <emu-table id="request-info-table" caption="Properties">
+      <table>
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>src</code></td>
+            <td><code>string</code></td>
+            <td><em>Required</em></td>
+            <td>The source URL of the request</td>
+          </tr>
+          <tr>
+            <td><code>method</code></td>
+            <td><code>string</code></td>
+            <td>"GET"</td>
+            <td>The HTTP method used for the request</td>
+          </tr>
+          <tr>
+            <td><code>initId</code></td>
+            <td><code>string | number</code></td>
+            <td>undefined</td>
+            <td>Identifier for request initialization</td>
+          </tr>
+          <tr>
+            <td><code>after</code></td>
+            <td><code>string</code></td>
+            <td>undefined</td>
+            <td>Event trigger specification</td>
+          </tr>
+          <tr>
+            <td><code>repeat</code></td>
+            <td><code>boolean</code></td>
+            <td>true</td>
+            <td>Whether the request repeats on subsequent triggers</td>
+          </tr>
+          <tr>
+            <td><code>memo</code></td>
+            <td><code>boolean</code></td>
+            <td>false</td>
+            <td>Enables response caching</td>
+          </tr>
+          <tr>
+            <td><code>allowedContentTypes</code></td>
+            <td><dfn>HMPLContentTypes</dfn></td>
+            <td>["text/html"]</td>
+            <td>Permitted response Content-Types</td>
+          </tr>
+          <tr>
+            <td><code>indicators</code></td>
+            <td><dfn>HMPLIndicator</dfn>[]</td>
+            <td>[]</td>
+            <td>Status-specific UI indicators</td>
+          </tr>
+          <tr>
+            <td><code>sanitize</code></td>
+            <td><dfn>HMPLSanitize</dfn></td>
+            <td>false</td>
+            <td>Enables HTML sanitization</td>
+          </tr>
+          <tr>
+            <td><code>disallowedTags</code></td>
+            <td><dfn>HMPLDisallowedTags</dfn></td>
+            <td>[]</td>
+            <td>HTML elements to remove from responses</td>
+          </tr>
+          <tr>
+            <td><code>autoBody</code></td>
+            <td>
+              <code>boolean | <dfn>HMPLAutoBodyOptions</dfn></code>
+            </td>
+            <td>false</td>
+            <td>Configures automatic body generation</td>
+          </tr>
+        </tbody>
+      </table>
+    </emu-table>
+
+    <emu-example>
+      <pre><code class="html">
+    {
+      {
+        src: "/api/test",
+        method: "get",
+        after: "click:.target",
+        repeat: true,
+        indicators: [
+          {
+            trigger: "pending",
+            content: "&lt;p&gt;Loading...&lt;/p&gt;"
+          },
+          {
+            trigger: "rejected",
+            content: "&lt;p&gt;Error&lt;/p&gt;&lt;button&gt;reload&lt;/button&gt;"
+          }
+        ],
+        autoBody: {
+          formData: true
+        },
+        sanitize: false,
+        disallowedTags: ["script", "style", "iframe"],
+        memo: true,
+        initId: "id1"
+      }
+    }
+          </code></pre>
+    </emu-example>
+
+    <emu-clause id="sec-src-property">
+      <h1>src</h1>
+      <p>
+        The <code>src</code> property specifies the target URL for the request.
+        This property is required for all request configurations.
+      </p>
+      <emu-table id="src-examples-table" caption="URL Resolution">
+        <table>
+          <thead>
+            <tr>
+              <th>Example</th>
+              <th>Resolution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>"src":"http://github.com/api"</code></td>
+              <td>Absolute URL used as-is</td>
+            </tr>
+            <tr>
+              <td><code>"src":"/api/test"</code></td>
+              <td>Resolved relative to current origin</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+    </emu-clause>
+
+    <emu-clause id="sec-method-property">
+      <h1>method</h1>
+      <p>
+        The <code>method</code> property defines the HTTP verb for the request.
+        Supported methods include:
+      </p>
+      <ul>
+        <li><code>GET</code></li>
+        <li><code>POST</code></li>
+        <li><code>PUT</code></li>
+        <li><code>PATCH</code></li>
+        <li><code>DELETE</code></li>
+      </ul>
+    </emu-clause>
+
+    <emu-clause id="sec-after-property">
+      <h1>after</h1>
+      <p>
+        The <code>after</code> property specifies event-based request triggering
+        using the format:
+      </p>
+      <pre><code>${eventType}:${selector}</code></pre>
+
+      <emu-table id="event-types-table" caption="Supported Events">
+        <table>
+          <thead>
+            <tr>
+              <th>Event Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>click</code></td>
+              <td>Mouse click events</td>
+            </tr>
+            <tr>
+              <td><code>submit</code></td>
+              <td>Form submission events</td>
+            </tr>
+            <tr>
+              <td><code>change</code></td>
+              <td>Input change events</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+
+      <emu-note>
+        Selectors are scoped to the template's DOM fragment or elements, not the
+        global document.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-repeat-property">
+      <h1>repeat</h1>
+      <p>
+        The <code>repeat</code> property controls whether a request re-executes
+        on subsequent trigger events:
+      </p>
+      <ul>
+        <li><code>true</code>: Request executes on every trigger (default)</li>
+        <li>
+          <code>false</code>: Request executes once, then removes listeners
+        </li>
+      </ul>
+    </emu-clause>
+
+    <emu-clause id="sec-indicators-property">
+      <h1>indicators</h1>
+
+      <p>
+        The <code>indicators</code> property is intended to define the HTML
+        content that should be rendered in response to a particular request
+        status. This property enables authors to provide user interface feedback
+        corresponding to specific states of a request initiated by the HMPL
+        module.
+      </p>
+
+      <p>
+        The value of the <code>indicators</code> property is either a single
+        <a href="#hmplindicator-type">HMPLIndicator</a> object or an array of
+        such objects. Each object specifies a <code>trigger</code> condition and
+        associated <code>content</code>, representing the HTML markup to be
+        displayed when the corresponding status is active.
+      </p>
+
+      <p>
+        The value of the <code>content</code> property is a string containing
+        static HTML markup. This markup is not interpreted or extended by the
+        HMPL module, and therefore does not support HMPL-specific syntax or
+        dynamic bindings.
+      </p>
+
+      <p>
+        The <code>trigger</code> property specifies the status condition under
+        which the associated <code>content</code> should be displayed. Its value
+        may be one of the following:
+      </p>
+
+      <emu-table id="indicator-properties-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>trigger</code></td>
+              <td>
+                <dfn>HMPLIndicatorTrigger</dfn>
+              </td>
+              <td>
+                Condition under which the corresponding content is displayed.
+              </td>
+            </tr>
+            <tr>
+              <td><code>content</code></td>
+              <td><code>string</code></td>
+              <td>HTML markup to be rendered in response to the trigger.</td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+
+      <p>The permissible values for <code>trigger</code> are:</p>
+
+      <ul>
+        <li>
+          HTTP status codes within the range <code>400</code> to
+          <code>599</code>, indicating client and server errors as defined by
+          the
+          <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status"
+            >HTTP specification</a
+          >.
+        </li>
+        <li>
+          The string literal <code>"pending"</code>, representing the
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+            >Promise</a
+          >
+          state where a request is in progress and awaiting resolution.
+        </li>
+        <li>
+          The string literal <code>"rejected"</code>, representing a Promise
+          rejection or a failed fetch operation.
+        </li>
+        <li>
+          The string literal <code>"error"</code>, a generic value that serves
+          as a catch-all trigger, activated under either of the following
+          circumstances:
+          <ul>
+            <li>
+              A HTTP response with a status code between <code>400</code> and
+              <code>599</code>.
+            </li>
+            <li>A <code>"rejected"</code> Promise state.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <emu-note>
+        The <code>"error"</code> trigger value overlaps with
+        <code>"rejected"</code> and any HTTP status codes in the range
+        <code>400</code> to <code>599</code>. This allows authors to define a
+        default fallback indicator without the need to enumerate all possible
+        error conditions individually.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-autobody-property">
+      <h1>autoBody</h1>
+
+      <p>
+        The <code>autoBody</code> property specifies automatic generation of the
+        <code>body</code> property within a <dfn>HMPLRequestInit</dfn> object.
+        Its purpose is to facilitate the automatic population of request bodies
+        from form-related user input when a request is initiated via HMPL.
+      </p>
+
+      <p>
+        The property accepts either a Boolean value or an
+        <dfn>HMPLAutoBodyOptions</dfn> object, determining how the request body
+        should be constructed.
+      </p>
+
+      <emu-example>
+        <pre><code class="html">
+    &lt;div&gt;
+      &lt;form onsubmit=&quot;function prevent(e){e.preventDefault();};return prevent(event);&quot; id=&quot;form&quot;&gt;
+        &lt;div class=&quot;form-example&quot;&gt;
+          &lt;label for=&quot;name&quot;&gt;Enter your email:&lt;/label&gt;
+          &lt;input type=&quot;text&quot; name=&quot;email&quot; id=&quot;email&quot; required /&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;form-example&quot;&gt;
+          &lt;input type=&quot;submit&quot; value=&quot;Subscribe!&quot; /&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+      {
+        {
+          &quot;src&quot;:&quot;/api/subscribe&quot;,
+          &quot;after&quot;:&quot;submit:#form&quot;,
+          &quot;autoBody&quot;:true
+        }
+      }
+    &lt;/div&gt;
+        </code></pre>
+      </emu-example>
+
+      <p>
+        If the value of <code>autoBody</code> is <code>true</code>, the module
+        automatically generates a <code>FormData</code> instance using the
+        associated
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent"
+          >SubmitEvent</a
+        >
+        target element and its submitter.
+      </p>
+
+      <emu-table id="autobody-values-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Value</th>
+              <th>Behavior</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>true</code></td>
+              <td>
+                Enables automatic <code>FormData</code> generation using default
+                behavior.
+              </td>
+            </tr>
+            <tr>
+              <td><code>false</code></td>
+              <td>
+                Disables automatic body generation. This is the default
+                behavior.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <dfn>HMPLAutoBodyOptions</dfn>
+              </td>
+              <td>
+                Enables configuration of specific generation parameters and
+                behaviors.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </emu-table>
+
+      <p>
+        When automatic generation is active, the <code>body</code> property in
+        the resulting <dfn>HMPLRequestInit</dfn> will be assigned a
+        <code>FormData</code> instance constructed as follows:
+      </p>
+
+      <emu-example>
+        <pre><code class="language-javascript">
+    const body = new FormData(event.target, event.submitter);
+        </code></pre>
+      </emu-example>
+
+      <p>
+        It is important to note that automatic generation will only overwrite
+        the existing <code>body</code> property if the
+        <dfn>HMPLRequestInit</dfn> object is not derived from a RequestInit
+        function. In such cases, the manually specified body value takes
+        precedence.
+      </p>
+
+      <emu-note>
+        As of the current specification, automatic body generation exclusively
+        supports targets of type <code>SubmitEvent</code> originating from
+        <code>&lt;form&gt;</code> elements. Future revisions of the HMPL module
+        may extend this functionality to additional HTML element types, such as
+        <code>input</code>, <code>progress</code>, and other interactive
+        components where automatic body construction is applicable.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-memo-property">
+      <h1>memo</h1>
+      <p>
+        The <code>memo</code> property enables response caching for identical
+        requests. When enabled:
+      </p>
+      <ul>
+        <li>Identical requests return cached responses</li>
+        <li>Only active when <code>repeat</code> is true</li>
+        <li>Improves performance for repeated requests</li>
+      </ul>
+
+      <p>
+        The memoization process can be conceptually compared to disabling the
+        <code>no-cache</code> directive in the
+        <a
+          href="https://developer.mozilla.org/en-US/docs/Web/API/Request/cache#value"
+          >RequestCache</a
+        >
+        API, as it prevents repeated fetching of the same resource within the
+        same runtime environment.
+      </p>
+
+      <emu-figure id="fig-memoization" caption="Memoization Process">
+        <img src="https://hmpl-lang.dev/images/memo.png" alt="memoization" />
+      </emu-figure>
+
+      <emu-note>
+        For additional details regarding the behavior and implementation of
+        memoization in HMPL, refer to the article
+        <a href="https://blog.hmpl-lang.dev/2024/10/03/memoization-in-hmpl.html"
+          >Memoization in HMPL</a
+        >.
+      </emu-note>
+    </emu-clause>
+
+    <emu-clause id="sec-initid-property">
+      <h1>initId</h1>
+
+      <p>
+        The <code>initId</code> property establishes an explicit association
+        between a request and a predefined initialization object. It references
+        the <code>id</code> property of a corresponding entry in the
+        <dfn>HMPLRequestInit</dfn> dictionary collection, determining the
+        initialization parameters for the request.
+      </p>
+
+      <p>
+        The value assigned to <code>initId</code> may be either a
+        <code>string</code> or a <code>number</code>, providing flexibility in
+        identification schemes.
+      </p>
+
+      <emu-example>
+        <pre><code class="html">
+    &lt;div&gt;
+      {
+        {
+          "src": "/api/test",
+          "initId": "1"
+        }
+      }
+      {
+        {
+          "src": "/api/test",
+          "initId": 2
+        }
+      }
+    &lt;/div&gt;
+        </code></pre>
+      </emu-example>
+
+      <emu-example>
+        <pre><code class="language-javascript">
+    const requestInits = [
+      { id: "1", value: ... },
+      { id: 2, value: ... },
+    ];
+    const instance = templateFn(requestInits);
+        </code></pre>
+      </emu-example>
+
+      <p>
+        Multiple requests can reference the same <code>initId</code>, allowing
+        them to share a common set of initialization options. This behavior is
+        conceptually analogous to the use of foreign keys in relational
+        databases, enabling reuse and normalization of request configurations.
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-allowedcontenttypes-property">
+      <h1>allowedContentTypes</h1>
+
+      <p>
+        The <code>allowedContentTypes</code> property defines the list of
+        permissible <code>Content-Type</code> values within the
+        <code>headers</code> of HTTP responses returned from server requests.
+        This property enables content validation and type safety when processing
+        server responses.
+      </p>
+
+      <p>The property value may be either:</p>
+
+      <ul>
+        <li>
+          The string literal <code>"*"</code>, indicating that all content types
+          compatible with the <code>text</code> method are allowed.
+        </li>
+        <li>
+          An array of <code>string</code> values, each representing an
+          explicitly permitted <code>Content-Type</code>.
+        </li>
+      </ul>
+
+      <p>
+        If the array is empty, behavior is equivalent to using
+        <code>"*"</code> — all types supporting the <code>text</code> method are
+        permitted.
+      </p>
+
+      <emu-example>
+        <pre><code class="html">
+    {
+      {
+        "allowedContentTypes": [
+          "application/json; charset=utf-8",
+          "text/plain"
+        ]
+      }
+    }
+        </code></pre>
+      </emu-example>
+
+      <p>The default value of this property is <code>["text/html"]</code>.</p>
+
+      <emu-note>
+        For security considerations, it is strongly recommended not to modify
+        this property unless necessary. Accepting unknown or untrusted
+        <code>Content-Type</code> values may lead to uncontrolled application
+        behavior or vulnerabilities. For instance, receiving a response with
+        <code>Content-Type: application/octet-stream</code> could result in the
+        response body being delivered as raw binary data. In such a case, a
+        simple message such as <code>Hello, World!</code> may arrive encoded as:
+      </emu-note>
+
+      <emu-example>
+        <pre><code>
+    48 65 6C 6C 6F 2C 20 77 6F 72 6C 64 21
+        </code></pre>
+      </emu-example>
+
+      <p>
+        For additional guidance on server-side configuration and content type
+        handling, refer to the
+        <a href="https://hmpl-lang.dev/server-configuration.html"
+          >Server Configuration</a
+        >
+        documentation.
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-disallowedtags-property">
+      <h1>disallowedTags</h1>
+      <p>
+        The <code>disallowedTags</code> property specifies HTML elements to
+        remove from responses. Supported tags include:
+      </p>
+      <ul>
+        <li><code>"script"</code></li>
+        <li><code>"style"</code></li>
+        <li><code>"iframe"</code></li>
+      </ul>
+    </emu-clause>
+
+    <emu-clause id="sec-sanitize-property">
+      <h1>sanitize</h1>
+      <p>
+        The <code>sanitize</code> property enables DOMPurify-based HTML
+        sanitization. When enabled:
+      </p>
+      <ul>
+        <li>Removes potentially malicious content</li>
+        <li>Preserves safe HTML markup</li>
+        <li>Executes before disallowed tag removal</li>
+      </ul>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-types">
+    <h1>Type Definitions</h1>
+
+    <emu-clause id="sec-hmplrequestinit">
+      <h1>HMPLRequestInit</h1>
+      <p>Extends standard RequestInit with HMPL-specific properties.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  interface HMPLRequestOptions {
+    mode?: RequestMode;
+    cache?: RequestCache;
+    redirect?: RequestRedirect;
+    referrerPolicy?: ReferrerPolicy;
+    integrity?: string;
+    referrer?: string;
+    get?: HMPLRequestGet;
+    body?: BodyInit | null;
+    signal?: AbortSignal | null;
+    window?: any;
+    credentials?: RequestCredentials;
+    headers?: HMPLHeadersInit;
+    timeout?: number;
+  }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplinstance">
+      <h1>HMPLInstance</h1>
+      <p>Template execution result container.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  interface HMPLInstance {
+    response: undefined | Element | null;
+    status?: HMPLRequestStatus;
+    requests?: HMPLRequest[];
+  }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplinstancecontext">
+      <h1>HMPLInstanceContext</h1>
+      <p>Provides execution context to request initialization functions.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  interface HMPLInstanceContext {
+    request: HMPLRequestContext;
+  }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplrequest">
+      <h1>HMPLRequest</h1>
+      <p>Individual request result container.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  interface HMPLRequest {
+    response: undefined | Element | null | ChildNode[];
+    status: number;
+    id?: string;
+  }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplrequestcontext">
+      <h1>HMPLRequestContext</h1>
+      <p>Contains request-specific execution details.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  interface HMPLRequestContext {
+    event?: Event;
+  }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplrequestget">
+      <h1>HMPLRequestGet</h1>
+      <p>Property change callback signature.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  type HMPLRequestGet = (prop: string, value: any, request?: HMPLRequest) => void;
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplrequestinfo">
+      <h1>HMPLRequestInfo</h1>
+      <p>Template request configuration interface.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  interface HMPLRequestInfo {
+    src: string;
+    method?: string;
+    initId?: string | number;
+    after?: string;
+    repeat?: boolean;
+    memo?: boolean;
+    allowedContentTypes?: HMPLContentTypes;
+    indicators?: HMPLIndicator[];
+    sanitize?: HMPLSanitize;
+    disallowedTags?: HMPLDisallowedTags;
+    autoBody?: boolean | HMPLAutoBodyOptions;
+  }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplcompile">
+      <h1>HMPLCompile</h1>
+      <p>Template compilation function signature.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  type HMPLCompile = (
+    template: string,
+    options?: HMPLCompileOptions
+  ) => HMPLTemplateFunction;
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplcompileoptions">
+      <h1>HMPLCompileOptions</h1>
+      <p>Template compilation configuration.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  interface HMPLCompileOptions {
+    memo?: boolean;
+    autoBody?: boolean | HMPLAutoBodyOptions;
+    allowedContentTypes?: HMPLContentTypes;
+    sanitize?: HMPLSanitize;
+    disallowedTags?: HMPLDisallowedTags;
+  }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmpltemplatefunction">
+      <h1>HMPLTemplateFunction</h1>
+      <p>Executable template function interface.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  type HMPLTemplateFunction = (
+    options?:
+      | HMPLIdentificationRequestInit[]
+      | HMPLRequestInit
+      | HMPLRequestInitFunction
+  ) => HMPLInstance;
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplautobodyoptions">
+      <h1>HMPLAutoBodyOptions</h1>
+      <p>Automatic body generation configuration.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  interface HMPLAutoBodyOptions {
+    formData?: boolean;
+  }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplinitalstatus">
+      <h1>HMPLInitalStatus</h1>
+      <p>Union of Promise states and non-success HTTP status codes.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  type HMPLInitalStatus =
+    | "pending"
+    | "rejected"
+    | 100
+    | 101
+    | 102
+    | 103
+    | 300
+    | 301
+    | 302
+    | 303
+    | 304
+    | 305
+    | 306
+    | 307
+    | 308
+    | 400
+    | 401
+    | 402
+    | 403
+    | 404
+    | 405
+    | 406
+    | 407
+    | 408
+    | 409
+    | 410
+    | 411
+    | 412
+    | 413
+    | 414
+    | 415
+    | 416
+    | 417
+    | 418
+    | 421
+    | 422
+    | 423
+    | 424
+    | 425
+    | 426
+    | 428
+    | 429
+    | 431
+    | 451
+    | 500
+    | 501
+    | 502
+    | 503
+    | 504
+    | 505
+    | 506
+    | 507
+    | 508
+    | 510
+    | 511;
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplindicatortrigger">
+      <h1>HMPLIndicatorTrigger</h1>
+      <p>Valid indicator display conditions.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  type HMPLIndicatorTrigger = HMPLInitalStatus | "error";
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplrequeststatus">
+      <h1>HMPLRequestStatus</h1>
+      <p>Union of all possible HTTP status codes and Promise states.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  type HMPLRequestStatus =
+    | HMPLInitalStatus
+    | 200
+    | 201
+    | 202
+    | 203
+    | 204
+    | 205
+    | 206
+    | 207
+    | 208
+    | 226;
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplcontenttypes">
+      <h1>HMPLContentTypes</h1>
+      <p>Content-Type restriction specification.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  type HMPLContentTypes = string[] | "*";
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmpldisallowedtag">
+      <h1>HMPLDisallowedTag</h1>
+      <p>HTML elements eligible for removal.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  type HMPLDisallowedTag = "script" | "style" | "iframe";
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmpldisallowedtags">
+      <h1>HMPLDisallowedTags</h1>
+      <p>Array of disallowed elements.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  type HMPLDisallowedTags = HMPLDisallowedTag[];
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplsanitize">
+      <h1>HMPLSanitize</h1>
+      <p>HTML sanitization toggle.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  type HMPLSanitize = boolean;
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplindicator">
+      <h1>HMPLIndicator</h1>
+      <p>Status-specific UI definition.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  interface HMPLIndicator {
+    trigger: HMPLIndicatorTrigger;
+    content: string;
+  }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplheadersinit">
+      <h1>HMPLHeadersInit</h1>
+      <p>Header dictionary interface.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  interface HMPLHeadersInit {
+    [key: string]: string;
+  }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplidentificationrequestinit">
+      <h1>HMPLIdentificationRequestInit</h1>
+      <p>Request initialization reference container.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  interface HMPLIdentificationRequestInit {
+    value: HMPLRequestInit | HMPLRequestInitFunction;
+    id: string | number;
+  }
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplrequestinitfunction">
+      <h1>HMPLRequestInitFunction</h1>
+      <p>Dynamic request initialization signature.</p>
+      <emu-example>
+        <pre><code class="typescript">
+  type HMPLRequestInitFunction = (
+    context: HMPLInstanceContext
+  ) => HMPLRequestInit;
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+  </emu-clause>
+</emu-spec>
