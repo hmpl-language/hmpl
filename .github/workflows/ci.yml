@@ -48,3 +48,16 @@ jobs:
           git subtree split --branch app --prefix www/app/
           git checkout app
           git push origin --force app
+  spec:
+    name: Deploy spec from subdirectory
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: git
+        run: |
+          git subtree split --branch spec --prefix www/spec/
+          git checkout spec
+          git push origin --force spec
