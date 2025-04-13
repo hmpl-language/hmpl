@@ -12,7 +12,7 @@
     "spec"
   ],
   "scripts": {
-    "build": "ecmarkup src/index.html build/index.html --gh-pages",
+    "build": "ecmarkup src/index.html build/index.html",
     "start": "npm run build && node server/main.js",
     "dev": "npm start"
   },
