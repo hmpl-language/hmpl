@@ -30,6 +30,7 @@ jobs:
           git config --global user.email "anthonymaxgit@gmail.com"
           git clone https://${{ env.ORG_NAME }}:${{ secrets.SECRET_TOKEN }}@github.com/${{ env.ORG_NAME }}/spec.git
           cd spec
+          git checkout -B spec
           git remote add ${{ env.ORIGINAL_REPO_NAME }} https://${{ env.ORG_NAME }}:${{ secrets.SECRET_TOKEN }}@github.com/${{ env.ORG_NAME }}/${{ env.ORIGINAL_REPO_NAME }}.git
           git fetch ${{ env.ORIGINAL_REPO_NAME }}
           git checkout ${{ env.ORIGINAL_REPO_NAME }}/spec -- . || true
