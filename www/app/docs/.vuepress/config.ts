@@ -41,7 +41,11 @@ export default defineUserConfig({
           link: "/"
         },
         {
-          text: "Docs",
+          text: "Spec",
+          link: "https://spec.hmpl-lang.dev/"
+        },
+        {
+          text: "Overview",
           link: "introduction.md"
         },
         {
@@ -74,88 +78,8 @@ export default defineUserConfig({
           link: "server-configuration.md"
         },
         {
-          text: "hmpl",
-          link: "hmpl.md",
-          children: [
-            {
-              text: "compile",
-              link: "hmpl.md#compile",
-              children: [
-                {
-                  text: "RequestInit",
-                  link: "hmpl.md#requestinit",
-                  children: [
-                    {
-                      text: "get",
-                      link: "hmpl.md#get"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              text: "stringify",
-              link: "hmpl.md#stringify"
-            },
-            {
-              text: "Concept of context",
-              link: "hmpl.md#concept-of-context"
-            }
-          ]
-        },
-        {
-          text: "Request",
-          link: "request.md",
-          children: [
-            {
-              text: "src",
-              link: "request.md#src"
-            },
-            {
-              text: "method",
-              link: "request.md#method"
-            },
-            {
-              text: "after",
-              link: "request.md#after"
-            },
-            {
-              text: "repeat",
-              link: "request.md#repeat"
-            },
-            {
-              text: "indicators",
-              link: "request.md#indicators"
-            },
-            {
-              text: "autoBody",
-              link: "request.md#autobody"
-            },
-            {
-              text: "memo",
-              link: "request.md#memo"
-            },
-            {
-              text: "initId",
-              link: "request.md#initid"
-            },
-            {
-              text: "allowedContentTypes",
-              link: "request.md#allowedcontenttypes"
-            },
-            {
-              text: "disallowedTags",
-              link: "request.md#disallowedtags"
-            },
-            {
-              text: "sanitize",
-              link: "request.md#sanitize"
-            }
-          ]
-        },
-        {
-          text: "Types",
-          link: "types.md"
+          text: "Specification",
+          link: "https://spec.hmpl-lang.dev/"
         },
         {
           text: "Webpack Loader",

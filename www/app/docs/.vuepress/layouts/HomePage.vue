@@ -771,7 +771,7 @@
         </div>
       </div>
     </div>
-    <a
+    <!-- <a
       href="https://github.com/hmpl-language/hmpl"
       target="_blank"
       class="star_us"
@@ -797,7 +797,7 @@
           </svg>
         </div>
       </div>
-    </a>
+    </a> -->
   </footer>
 </template>
 <script>
@@ -862,22 +862,22 @@ export default {
     link.crossOrigin = "anonymous";
     document.head.appendChild(link);
 
-    let isBlock1Visible = true;
+    // let isBlock1Visible = true;
 
-    setInterval(() => {
-      const block1 = document.querySelector(".star_us_block_1");
-      const block2 = document.querySelector(".star_us_block_2");
+    // setInterval(() => {
+    //   const block1 = document.querySelector(".star_us_block_1");
+    //   const block2 = document.querySelector(".star_us_block_2");
 
-      if (isBlock1Visible) {
-        block1.classList.add("hidden");
-        block2.classList.remove("hidden");
-      } else {
-        block1.classList.remove("hidden");
-        block2.classList.add("hidden");
-      }
+    //   if (isBlock1Visible) {
+    //     block1.classList.add("hidden");
+    //     block2.classList.remove("hidden");
+    //   } else {
+    //     block1.classList.remove("hidden");
+    //     block2.classList.add("hidden");
+    //   }
 
-      isBlock1Visible = !isBlock1Visible;
-    }, 10000);
+    //   isBlock1Visible = !isBlock1Visible;
+    // }, 10000);
 
     const chart = document.getElementById("comparisonChart");
     const progressBars = chart.querySelectorAll(".progress-bar");
