@@ -52,4 +52,4 @@ If you try to send a file of a different format via the API, say, an image or a 
 BadResponseError: Expected "text/html" but received "application/json"
 ```
 
-However, if there is a need to use all types that support the `text` method as before, then you can specify [allowedContentTypes](/request.md#allowedcontenttypes).
+However, if there is a need to use all types that support the `text` method as before, then you can specify [allowedContentTypes](https://spec.hmpl-lang.dev/#sec-allowedcontenttypes-property).

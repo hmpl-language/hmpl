@@ -742,7 +742,18 @@
             <h3 class="footer_section_title">Resources</h3>
             <ul class="footer_list">
               <li class="footer_item">
-                <a class="footer_item_link" href="/introduction.html">Docs</a>
+                <a
+                  target="_blank"
+                  rel="nooferer noopener"
+                  class="footer_item_link"
+                  href="https://spec.hmpl-lang.dev"
+                  >Spec</a
+                >
+              </li>
+              <li class="footer_item">
+                <a class="footer_item_link" href="/introduction.html"
+                  >Overview</a
+                >
               </li>
               <li class="footer_item">
                 <a

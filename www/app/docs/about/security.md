@@ -4,7 +4,7 @@ When loading HTML from untrusted sources, you may encounter the problem of XSS a
 
 ## Removing potentially dangerous tags from server response
 
-Thanks to the [disallowedTags](/request.md#disallowedtags) property, you can do this by passing the appropriate array:
+Thanks to the [disallowedTags](https://spec.hmpl-lang.dev/#sec-disallowedtags-property) property, you can do this by passing the appropriate array:
 
 ```javascript
 const templateFn = hmpl.compile(
@@ -44,7 +44,7 @@ Under the hood, it uses the `DOMPurify.sanitize` method.
 
 ## Specifying the correct `Content-Types`
 
-By default, the module only processes responses with the `text/html` type, which makes the module more secure and minimizes risks, but if you use a non-default [allowedContentTypes](/request.md#disallowedtags) property, it is better to avoid this.
+By default, the module only processes responses with the `text/html` type, which makes the module more secure and minimizes risks, but if you use a non-default [allowedContentTypes](https://spec.hmpl-lang.dev/#sec-disallowedtags-property) property, it is better to avoid this.
 
 ## Other tips not related to the module
 

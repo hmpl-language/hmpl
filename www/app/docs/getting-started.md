@@ -71,7 +71,7 @@ const { response } = helloWorld();
 document.body.appendChild(response);
 ```
 
-We import `HelloWorld` as a [HMPL template function](/types.md#hmpltemplatefunction). To make the request to server we invoke this template function. It returns a [HMPL instance object](/types.md#hmplinstance) and the `response` property holds the components received from server and the request state indicator components.
+We import `HelloWorld` as a [HMPL template function](https://spec.hmpl-lang.dev/#template-function). To make the request to server we invoke this template function. It returns a [HMPL instance object](https://spec.hmpl-lang.dev/#sec-hmplinstance) and the `response` property holds the components received from server and the request state indicator components.
 
 Saving the files will render the component received from the server.
 
@@ -155,7 +155,7 @@ const templateFn = hmpl.compile(
 
 Now that you’ve set up your first components, here’s what you can explore next:
 
-- 📖 [Learn more about HMPL](/hmpl.md) – Understand how HMPL works under the hood.
+- 📖 [Learn more about HMPL](https://spec.hmpl-lang.dev/#hmpl) – Understand how HMPL works under the hood.
 - 🛠️ [Explore other examples](/examples.md) – See other use cases and patterns.
 - 📰 [Read our blog](https://blog.hmpl-lang.dev) – Stay updated with the latest HMPL features and best practices.
 - 🌱 [Contribute to HMPL](https://github.com/hmpl-language/hmpl) – Help improve HMPL by reporting issues, suggesting features, or contributing code!
