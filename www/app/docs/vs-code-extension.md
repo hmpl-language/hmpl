@@ -20,10 +20,8 @@ In your project, create a new file named `template.hmpl` and add the following c
 ```hmpl
 <template>
   <div>
-    { 
-      { 
-        "data": "Hello, World!" 
-      } 
+    #request{
+      "data": "Hello, World!"
     }
   </div>
 </template>

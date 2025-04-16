@@ -202,10 +202,10 @@
         const templateFn = hmpl.compile(
           `&lt;div&gt;
               &lt;button data-action="increment" id="btn"&gt;Click!&lt;/button&gt;
-              &lt;div&gt;Clicks: {{
+              &lt;div&gt;Clicks: #request{
                 "src": "/api/clicks",
                 "after": "click:#btn"
-              }}&lt;/div&gt;
+              }&lt;/div&gt;
           &lt;/div&gt;`
         );
         
@@ -291,11 +291,9 @@
       <emu-example>
         <pre><code class="javascript">
           const templateFn = hmpl.compile(
-            `{ 
-               {
-                 "src":"/api/test" 
-               } 
-             }`,
+            `#request{
+              "src":"/api/test" 
+            }`,
             {
               memo: true,
               autoBody: {
@@ -319,7 +317,7 @@
           <pre><code class="html">
             &lt;div&gt;
               &lt;button data-action="increment" id="btn"&gt;Click!&lt;/button&gt;
-              &lt;div&gt;Clicks: {{ "src": "/api/clicks", "after": "click:#btn" }}&lt;/div&gt;
+              &lt;div&gt;Clicks: #request{ "src": "/api/clicks", "after": "click:#btn" }&lt;/div&gt;
             &lt;/div&gt;
           </code></pre>
         </emu-example>
@@ -397,7 +395,7 @@
           const request = hmpl.stringify({
             src: "/api/test"
           });
-          const templateFn = hmpl.compile(`{${request}}`);
+          const templateFn = hmpl.compile(`#request{${request}}`);
         </code></pre>
       </emu-example>
       <p>Implementation notes:</p>
@@ -721,11 +719,9 @@ const elementObj = templateFn([
           <emu-example>
             <pre><code class="javascript">
       const templateFn = hmpl.compile(
-        `{ 
-           {
-             "src":"/api/test" 
-           } 
-         }`
+        `#request{
+          "src":"/api/test" 
+        }`
       );
       const elementObj = templateFn();
             </code></pre>
@@ -761,15 +757,11 @@ const elementObj = templateFn([
             <pre><code class="javascript">
       const templateFn = hmpl.compile(
         `&lt;div&gt;
-         {
-           {
-             "src":"/api/test"
-           }
+         #request{
+          "src":"/api/test"
          }
-         {
-           {
-             "src":"/api/test"
-           }
+         #request{
+          "src":"/api/test"
          }
       &lt;/div&gt;`
       );
@@ -886,7 +878,7 @@ const elementObj = templateFn([
       <pre><code class="html">
   &lt;div&gt;
     &lt;button id="getHTML"&gt;Get HTML!&lt;/button&gt;
-    {{ "src":"/api/getHTML", method:"POST", after:"click:#getHTML" }}
+    #request{ "src":"/api/getHTML", method:"POST", after:"click:#getHTML" }
   &lt;/div&gt;
       </code></pre>
     </emu-example>
@@ -998,8 +990,7 @@ const elementObj = templateFn([
 
     <emu-example>
       <pre><code class="html">
-    {
-      {
+      #request{
         src: "/api/test",
         method: "get",
         after: "click:.target",
@@ -1022,7 +1013,6 @@ const elementObj = templateFn([
         memo: true,
         initId: "id1"
       }
-    }
           </code></pre>
     </emu-example>
 
@@ -1256,12 +1246,10 @@ const elementObj = templateFn([
           &lt;input type=&quot;submit&quot; value=&quot;Subscribe!&quot; /&gt;
         &lt;/div&gt;
       &lt;/form&gt;
-      {
-        {
-          &quot;src&quot;:&quot;/api/subscribe&quot;,
-          &quot;after&quot;:&quot;submit:#form&quot;,
-          &quot;autoBody&quot;:true
-        }
+      #request{
+        &quot;src&quot;:&quot;/api/subscribe&quot;,
+        &quot;after&quot;:&quot;submit:#form&quot;,
+        &quot;autoBody&quot;:true
       }
     &lt;/div&gt;
         </code></pre>
@@ -1399,17 +1387,13 @@ const elementObj = templateFn([
       <emu-example>
         <pre><code class="html">
     &lt;div&gt;
-      {
-        {
-          "src": "/api/test",
-          "initId": "1"
-        }
+      #request{
+        "src": "/api/test",
+        "initId": "1"
       }
-      {
-        {
-          "src": "/api/test",
-          "initId": 2
-        }
+      #request{
+        "src": "/api/test",
+        "initId": 2
       }
     &lt;/div&gt;
         </code></pre>

@@ -9,11 +9,9 @@ Thanks to the [disallowedTags](https://spec.hmpl-lang.dev/#sec-disallowedtags-pr
 ```javascript
 const templateFn = hmpl.compile(
   `<div>
-    {
-      {
-        src: "https://some-extermal-api.example/getHTML",
-        disallowedTags: ["script", "iframe"]
-      }
+    #request{
+      src: "https://some-extermal-api.example/getHTML",
+      disallowedTags: ["script", "iframe"]
     }
   </div>`
 );
@@ -30,11 +28,9 @@ To enable this functionality, you can set the `sanitize` property to `true`.
 ```javascript
 const templateFn = hmpl.compile(
   `<div>
-    {
-      {
-        src: "https://some-extermal-api.example/getHTML",
-        sanitize: true
-      }
+    #request{
+      src: "https://some-extermal-api.example/getHTML",
+      sanitize: true
     }
   </div>`
 );

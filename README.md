@@ -37,7 +37,7 @@ import hmpl from "hmpl-js";
 const templateFn = hmpl.compile(
   `<div>
       <button data-action="increment" id="btn">Click!</button>
-      <div>Clicks: #fetch{ src: "/api/clicks", after: "click:#btn" }</div>
+      <div>Clicks: #request{ src: "/api/clicks", after: "click:#btn" }</div>
   </div>`
 );
 
@@ -59,7 +59,7 @@ const templateFn = hmpl.compile(
   `<div>
       <button data-action="increment" id="btn">Click!</button>
       <!-- This div will update with the click count from /api/clicks -->
-      <div>Clicks: #fetch{ src: "/api/clicks", after: "click:#btn" }</div>
+      <div>Clicks: #request{ src: "/api/clicks", after: "click:#btn" }</div>
   </div>`
 );
 

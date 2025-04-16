@@ -1549,7 +1549,7 @@ export const compile: HMPLCompile = (
     let pos = 0;
 
     while (pos < str.length) {
-      const start = str.indexOf("#fetch{", pos);
+      const start = str.indexOf("#request{", pos);
       if (start === -1) {
         parts.push(str.slice(pos));
         break;
@@ -1558,7 +1558,7 @@ export const compile: HMPLCompile = (
       parts.push(str.slice(pos, start));
 
       let braceCount = 1;
-      let i = start + "#fetch{".length;
+      let i = start + "#request{".length;
 
       while (i < str.length && braceCount > 0) {
         if (str[i] === "{") braceCount++;

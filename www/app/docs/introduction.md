@@ -14,11 +14,9 @@
 <script>
   const templateFn = hmpl.compile(
     `<div>
-       { 
-         {
-           "src":"http://localhost:8000/api/test" 
-         } 
-       }
+      #request{
+        "src":"http://localhost:8000/api/test" 
+      } 
     </div>`
   );
 
