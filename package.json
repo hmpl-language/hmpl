@@ -1,6 +1,6 @@
 {
   "name": "hmpl-js",
-  "version": "2.2.6",
+  "version": "3.0.0",
   "description": "🐜 Server-oriented customizable templating for JavaScript. Apply SSR, SSG, ISG without robot indexing on any sites without Next.js, Remix, Nuxt.js!",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

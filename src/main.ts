@@ -27,7 +27,8 @@ import {
   HMPLAutoBodyOptions,
   HMPLContentTypes,
   HMPLDisallowedTags,
-  HMPLSanitize
+  HMPLSanitize,
+  HMPLClearInterval
 } from "./types";
 
 /**
@@ -119,6 +120,7 @@ const DISALLOWED_TAGS = `disallowedTags`;
 const SANITIZE = `sanitize`;
 const ALLOWED_CONTENT_TYPES = "allowedContentTypes";
 const REQUEST_INIT_GET = `get`;
+const INTERVAL = `interval`;
 const RESPONSE_ERROR = `BadResponseError`;
 const REQUEST_INIT_ERROR = `RequestInitError`;
 const RENDER_ERROR = `RenderError`;
@@ -132,8 +134,6 @@ const DEFAULT_AUTO_BODY = {
 const DEFAULT_FALSE_AUTO_BODY = {
   formData: false
 };
-const MAIN_REGEX = /(\{\{(?:.|\n|\r)*?\}\}|\{\s*\{(?:.|\n|\r)*?\}\s*\})/g;
-const BRACKET_REGEX = /([{}])|([^{}]+)/g;
 
 /**
  * List of request options that are allowed.
@@ -149,7 +149,8 @@ const REQUEST_OPTIONS = [
   AUTO_BODY,
   ALLOWED_CONTENT_TYPES,
   DISALLOWED_TAGS,
-  SANITIZE
+  SANITIZE,
+  INTERVAL
 ];
 
 /**
@@ -191,7 +192,7 @@ const DEFAULT_DISALLOWED_TAGS: HMPLDisallowedTags = [];
 const getTemplateWrapper = (str: string, sanitize: boolean = false) => {
   let sanitizedStr = str;
   if (sanitize) {
-    sanitizedStr = (window as any).DOMPurify.sanitize(str);
+    sanitizedStr = DOMPurify.sanitize(str);
   }
   const elementDocument = new DOMParser().parseFromString(
     `<template>${sanitizedStr}</template>`,
@@ -282,7 +283,8 @@ const makeRequest = (
   disallowedTags: HMPLDisallowedTags,
   sanitize: HMPLSanitize,
   reqObject?: HMPLRequest,
-  indicators?: HMPLParsedIndicators
+  indicators?: HMPLParsedIndicators,
+  currentClearInterval?: HMPLClearInterval
 ) => {
   const {
     mode,
@@ -382,6 +384,10 @@ const makeRequest = (
     status === "rejected" ||
     (typeof status === "number" && (status < 200 || status > 299));
 
+  const requestContext: HMPLInstanceContext = getInstanceContext(
+    undefined,
+    currentClearInterval
+  );
   /**
    * Calls the 'get' function with the response if provided.
    * @param reqResponse - The response to pass to the 'get' function.
@@ -391,9 +397,9 @@ const makeRequest = (
   ) => {
     if (isRequests) {
       reqObject!.response = reqResponse;
-      get?.("response", reqResponse, reqObject);
+      get?.("response", reqResponse, requestContext, reqObject);
     }
-    get?.("response", mainEl);
+    get?.("response", mainEl, requestContext);
   };
 
   /**
@@ -409,7 +415,7 @@ const makeRequest = (
   ) => {
     if (isRequest) {
       (templateObject.response as any) = content!.cloneNode(true);
-      get?.("response", content);
+      get?.("response", content, requestContext);
     } else {
       let reqResponse: ChildNode[] = [];
       const newContent = isClone ? content!.cloneNode(true) : content;
@@ -461,7 +467,7 @@ const makeRequest = (
   const setComment = () => {
     if (isRequest) {
       templateObject.response = undefined;
-      get?.("response", undefined);
+      get?.("response", undefined, requestContext);
     } else {
       if (dataObj?.nodes) {
         const parentNode = dataObj!.parentNode! as ParentNode;
@@ -477,9 +483,9 @@ const makeRequest = (
         dataObj!.parentNode = null;
         if (isRequests) {
           reqObject!.response = undefined;
-          get?.("response", undefined, reqObject);
+          get?.("response", undefined, requestContext, reqObject);
         }
-        get?.("response", mainEl);
+        get?.("response", mainEl, requestContext);
       }
     }
     if (isRequestMemo) {
@@ -559,12 +565,12 @@ const makeRequest = (
     if (isRequests) {
       if (reqObject!.status !== status) {
         reqObject!.status = status;
-        get?.("status", status, reqObject);
+        get?.("status", status, requestContext, reqObject);
       }
     } else {
       if (templateObject.status !== status) {
         templateObject.status = status;
-        get?.("status", status);
+        get?.("status", status, requestContext);
       }
     }
     if (isRequestMemo && getIsNotFullfilledStatus(status)) {
@@ -658,7 +664,7 @@ const makeRequest = (
         );
         if (isRequest) {
           (templateObject.response as any) = templateWrapper;
-          get?.("response", templateWrapper);
+          get?.("response", templateWrapper, requestContext);
         } else {
           const reqResponse: ChildNode[] = [];
           const nodes = [
@@ -678,9 +684,9 @@ const makeRequest = (
             parentNode.removeChild(el!);
             if (isRequests) {
               reqObject!.response = reqResponse;
-              get?.("response", reqResponse, reqObject);
+              get?.("response", reqResponse, requestContext, reqObject);
             }
-            get?.("response", mainEl);
+            get?.("response", mainEl, requestContext);
           }
         }
       }
@@ -702,6 +708,28 @@ const makeRequest = (
 };
 
 /**
+ * Creates a context object for HMPL instance with optional event and clearInterval function.
+ * @param event - Optional event object.
+ * @param currentClearInterval - Optional function to clear interval.
+ * @returns HMPLInstanceContext object with request context.
+ */
+const getInstanceContext = (
+  event?: Event,
+  currentClearInterval?: HMPLClearInterval
+): HMPLInstanceContext => {
+  const request: HMPLRequestContext = {};
+  if (event !== undefined) {
+    request.event = event;
+  }
+  if (currentClearInterval) {
+    request.clearInterval = currentClearInterval;
+  }
+  return {
+    request
+  };
+};
+
+/**
  * Executes a HMPLRequestInitFunction to obtain request initialization options.
  * @param fn - The function to execute.
  * @param event - The event object (if any).
@@ -709,15 +737,13 @@ const makeRequest = (
  */
 const getRequestInitFromFn = (
   fn: HMPLRequestInitFunction,
-  event?: Event
+  event?: Event,
+  currentClearInterval?: HMPLClearInterval
 ): HMPLRequestInit | undefined => {
-  const request: HMPLRequestContext = {};
-  if (event !== undefined) {
-    request.event = event;
-  }
-  const context: HMPLInstanceContext = {
-    request
-  };
+  const context: HMPLInstanceContext = getInstanceContext(
+    event,
+    currentClearInterval
+  );
 
   const result = fn(context);
   return result;
@@ -765,7 +791,9 @@ const renderTemplate = (
         const oldMode = isModeUndefined ? true : req[REPEAT];
         const modeAttr = oldMode ? "all" : "one";
         const isAll = modeAttr === "all";
+        const interval = req[INTERVAL];
         const isReqMemoUndefined = !req.hasOwnProperty(MEMO);
+        const isReqIntervalUndefined = !req.hasOwnProperty(INTERVAL);
         let isMemo = isMemoUndefined ? false : compileOptions[MEMO];
         if (!isReqMemoUndefined) {
           if (after) {
@@ -794,6 +822,13 @@ const renderTemplate = (
             } else {
               isMemo = false;
             }
+          }
+        }
+        if (!isReqIntervalUndefined) {
+          if (isAll && after) {
+            createError(
+              `${REQUEST_OBJECT_ERROR}: The "${INTERVAL}" property does not work with repetiton mode yet`
+            );
           }
         }
         const isReqAutoBodyUndefined = !req.hasOwnProperty(AUTO_BODY);
@@ -861,7 +896,7 @@ const renderTemplate = (
           validateSanitize(currentSanitize);
           sanitize = currentSanitize;
         }
-        const initId = req.initId;
+        const initId = req[ID];
         const nodeId = req.nodeId;
         let indicators: any = req.indicators;
         if (indicators) {
@@ -949,7 +984,8 @@ const renderTemplate = (
             return options as HMPLRequestInit;
           }
         };
-        const isDataObj = isAll && after;
+        const isInterval = interval !== undefined;
+        const isDataObj = (isAll && after) || isInterval;
         const reqFunction: HMPLRequestFunction = (
           reqEl,
           options,
@@ -960,7 +996,8 @@ const renderTemplate = (
           reqObject,
           isRequests = false,
           currentHMPLElement,
-          event
+          event,
+          currentInterval
         ) => {
           const id = data.currentId;
           if (isRequest) {
@@ -980,7 +1017,7 @@ const renderTemplate = (
               reqEl = currentEl!;
             }
           }
-          let dataObj: HMPLNodeObj;
+          let dataObj: HMPLNodeObj | undefined = undefined;
           if (!isRequest) {
             if (isDataObj || indicators) {
               dataObj = currentHMPLElement!.objNode!;
@@ -997,6 +1034,14 @@ const renderTemplate = (
                   };
                   if (indicators) {
                     dataObj.memo.isPending = false;
+                  }
+                }
+                if (isInterval) {
+                  if (currentInterval) {
+                    dataObj.interval = {
+                      value: currentInterval,
+                      clearInterval: () => clearInterval(currentInterval!)
+                    };
                   }
                 }
                 currentHMPLElement!.objNode = dataObj;
@@ -1023,10 +1068,18 @@ const renderTemplate = (
               );
             }
           }
+
+          let currentClearInterval = currentInterval
+            ? () => clearInterval(currentInterval!)
+            : undefined;
+          currentClearInterval = isRequest
+            ? currentClearInterval
+            : dataObj?.interval?.clearInterval;
           const requestInit: HMPLRequestInit | undefined = isOptionsFunction
             ? getRequestInitFromFn(
                 currentOptions as HMPLRequestInitFunction,
-                event
+                event,
+                currentClearInterval
               )
             : (currentOptions as HMPLRequestInit);
           if (!checkObject(requestInit) && requestInit !== undefined)
@@ -1048,10 +1101,45 @@ const renderTemplate = (
             disallowedTags,
             sanitize,
             reqObject,
-            indicators
+            indicators,
+            currentClearInterval
           );
         };
-        let requestFunction = reqFunction;
+        let currentReqFunction = reqFunction;
+        if (interval) {
+          validateInterval(interval);
+          const time = Number(interval);
+          currentReqFunction = (
+            reqEl,
+            options,
+            templateObject,
+            data,
+            reqMainEl,
+            isArray = false,
+            reqObject,
+            isRequests = false,
+            currentHMPLElement,
+            event
+          ) => {
+            let interval: NodeJS.Timeout | null = null;
+            interval = setInterval(() => {
+              reqFunction(
+                reqEl,
+                options,
+                templateObject,
+                data,
+                reqMainEl,
+                isArray,
+                reqObject,
+                isRequests,
+                currentHMPLElement,
+                event,
+                interval
+              );
+            }, time);
+          };
+        }
+        let requestFunction = currentReqFunction;
         if (after) {
           const setEvents = (
             reqEl: Element,
@@ -1075,7 +1163,7 @@ const renderTemplate = (
             }
             const afterFn = isAll
               ? (evt: Event) => {
-                  reqFunction(
+                  currentReqFunction(
                     reqEl,
                     options,
                     templateObject,
@@ -1089,7 +1177,7 @@ const renderTemplate = (
                   );
                 }
               : (evt: Event) => {
-                  reqFunction(
+                  currentReqFunction(
                     reqEl,
                     options,
                     templateObject,
@@ -1400,6 +1488,16 @@ const validateIdentificationOptionsArray = (
 };
 
 /**
+ * Validates the interval time value against a number
+ * @param time - The HMPLRequestInfo object.
+ */
+const validateInterval = (time: any) => {
+  if (typeof time !== "number") {
+    createError(`${REQUEST_OBJECT_ERROR}: interval is not a number`);
+  }
+};
+
+/**
  * Converts a HMPLRequestInfo object to a JSON string.
  * @param info - The HMPLRequestInfo object.
  * @returns The JSON string representation.
@@ -1444,19 +1542,46 @@ export const compile: HMPLCompile = (
   const isSanitizeUndefined = !options.hasOwnProperty(SANITIZE);
   if (!isSanitizeUndefined) validateSanitize(options[SANITIZE]!, true);
   const requests: HMPLRequestsObject[] = [];
-  const templateArr = template.split(MAIN_REGEX).filter(Boolean);
   const requestsIndexes: number[] = [];
-  for (const match of template.matchAll(MAIN_REGEX)) {
-    requestsIndexes.push(match.index);
-  }
+
+  const splitFetchBlocks = (str: string) => {
+    const parts: string[] = [];
+    let pos = 0;
+
+    while (pos < str.length) {
+      const start = str.indexOf("#fetch{", pos);
+      if (start === -1) {
+        parts.push(str.slice(pos));
+        break;
+      }
+
+      parts.push(str.slice(pos, start));
+
+      let braceCount = 1;
+      let i = start + "#fetch{".length;
+
+      while (i < str.length && braceCount > 0) {
+        if (str[i] === "{") braceCount++;
+        else if (str[i] === "}") braceCount--;
+        i++;
+      }
+
+      if (braceCount !== 0)
+        createError(`${PARSE_ERROR}: Unpaired curly braces in fetch block`);
+
+      parts.push(str.slice(start, i));
+
+      requestsIndexes.push(parts.length - 1);
+
+      pos = i;
+    }
+
+    return parts;
+  };
+  const templateArr = splitFetchBlocks(template);
   if (requestsIndexes.length === 0)
     createError(`${PARSE_ERROR}: Request object not found`);
-  const prepareText = (text: string) => {
-    text = text.trim();
-    text = text.replace(/\r?\n|\r/g, "");
-    return text;
-  };
-  const setRequest = (text: string, i: number) => {
+  const setRequest = (text: string) => {
     const parsedData = JSON5.parse(text);
     for (const key in parsedData) {
       const value = parsedData[key];
@@ -1499,6 +1624,9 @@ export const compile: HMPLCompile = (
         case SANITIZE:
           validateSanitize(value);
           break;
+        case INTERVAL:
+          validateInterval(value);
+          break;
         default:
           if (typeof value !== "string") {
             createError(
@@ -1509,107 +1637,19 @@ export const compile: HMPLCompile = (
       }
     }
     const requestObject = {
-      ...parsedData,
-      arrId: i
+      ...parsedData
     };
     requests.push(requestObject as HMPLRequestsObject);
   };
-  let stringIndex = 0;
-  for (let i = 0; i < templateArr.length; i++) {
-    const text = templateArr[i];
-    if (requestsIndexes.includes(stringIndex)) {
-      const requestObjectArr = text.split(BRACKET_REGEX).filter(Boolean);
-      let currentBracketId = -1;
-      let newText = "";
-      let isFirst = true;
-      let isFinal = false;
-      for (let j = 0; j < requestObjectArr.length; j++) {
-        const requestText = requestObjectArr[j];
-        const isOpen = requestText === "{";
-        const isClose = requestText === "}";
-        if (isOpen) {
-          if (isFirst) {
-            isFirst = false;
-            if (requestObjectArr[j + 1] !== "{") j++;
-          } else {
-            newText += requestText;
-          }
-          currentBracketId++;
-        } else if (isClose) {
-          if (currentBracketId === 1) {
-            isFinal = true;
-          }
-          if (currentBracketId === 0) {
-            setRequest(newText, i);
-            currentBracketId--;
-            stringIndex += text.length;
-            break;
-          }
-          currentBracketId--;
-          newText += requestText;
-        } else {
-          if (isFinal) {
-            if (prepareText(requestText)) {
-              createError(
-                `${PARSE_ERROR}: There is no empty space between the curly brackets`
-              );
-            }
-          } else {
-            newText += requestText;
-          }
-        }
-      }
-      if (currentBracketId !== -1) {
-        const nextId = i + 1;
-        const nextText = templateArr[nextId];
-        const nextArr = nextText.split(BRACKET_REGEX).filter(Boolean);
-        let newNextText = "";
-        for (let j = 0; j < nextArr.length; j++) {
-          const currentNextText = nextArr[j];
-          const isOpen = currentNextText === "{";
-          const isClose = currentNextText === "}";
-          if (isClose) {
-            if (currentBracketId === 1) {
-              isFinal = true;
-            }
-            if (currentBracketId === 0) {
-              const newNextArr = [...nextArr];
-              stringIndex += text.length + nextText.length;
-              newNextArr.splice(0, j + 1);
-              templateArr[nextId] = newNextArr.join("");
-              setRequest(newText + newNextText, i);
-              currentBracketId--;
-              i++;
-              break;
-            }
-            currentBracketId--;
-            newNextText += currentNextText;
-          } else if (isOpen) {
-            newNextText += currentNextText;
-            currentBracketId++;
-          } else {
-            if (isFinal) {
-              if (prepareText(currentNextText)) {
-                createError(
-                  `${PARSE_ERROR}: There is no empty space between the curly brackets`
-                );
-              }
-            } else {
-              newNextText += currentNextText;
-            }
-          }
-        }
-      }
-    } else {
-      stringIndex += text.length;
-    }
-  }
-  for (let i = 0; i < requests.length; i++) {
-    const request = requests[i];
-    const { arrId } = request;
+
+  for (let i = 0; i < requestsIndexes.length; i++) {
+    const reqId = requestsIndexes[i];
+    const reqVal = templateArr[reqId];
+    const firstBrace = reqVal.indexOf("{");
+    const newReqVal = reqVal.slice(firstBrace);
+    setRequest(newReqVal);
     const comment = `<!--hmpl${i}-->`;
-    templateArr[arrId!] = comment;
-    delete request.arrId;
+    templateArr[reqId] = comment;
   }
   template = templateArr.join("");
   let isRequest = false;

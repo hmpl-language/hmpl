@@ -6,6 +6,7 @@
 export type HMPLRequestGet = (
   prop: string,
   value: any,
+  context: HMPLInstanceContext,
   request?: HMPLRequest
 ) => void;
 
@@ -40,6 +41,7 @@ interface HMPLRequestInit {
  */
 interface HMPLRequestContext {
   event?: Event;
+  clearInterval?: HMPLClearInterval;
 }
 
 /**
@@ -56,6 +58,9 @@ type HMPLRequestInitFunction = (
   context: HMPLInstanceContext
 ) => HMPLRequestInit;
 
+/**
+ * An object containing information about a request and optionally related DOM elements or metadata.
+ */
 interface HMPLRequestsObject extends HMPLRequestInfo {
   arrId?: number; // Needed to replace the request object with a comment
   el?: Comment; // Optional comment node related to the request
@@ -167,6 +172,7 @@ interface HMPLRequestInfo {
   after?: string; // Optional identifier for actions to perform after this request.
   repeat?: boolean; // Indicates if this request should be repeated.
   memo?: boolean; // Indicates if this request should be memoized.
+  interval?: number; // Optional interval for repeated requests (in milliseconds)
   allowedContentTypes?: HMPLContentTypes; // Allowed Content-Types for response processing.
   indicators?: HMPLIndicator[]; // Array of indicators related to this request.
   sanitize?: HMPLSanitize; // Sanitize the response content, ensuring it is safe to render.
@@ -192,10 +198,16 @@ interface HMPLCompileOptions {
   disallowedTags?: HMPLDisallowedTags; // Tags to remove from response.
 }
 
+/**
+ * A dictionary of parsed indicator templates.
+ */
 interface HMPLParsedIndicators {
   [key: string]: HTMLTemplateElement; // A dictionary mapping keys to parsed HTML template elements.
 }
 
+/**
+ * Represents a compiled template, containing associated requests.
+ */
 interface HMPLTemplate {
   requests: HMPLRequestsObject[]; // Array of requests associated with this template.
 }
@@ -208,16 +220,22 @@ interface HMPLIdentificationRequestInit {
   id: string | number; // Unique identifier for this initialization reference.
 }
 
+/**
+ * Represents a node and its associated data in the DOM.
+ */
 interface HMPLNodeObj {
   id: number; // Unique identifier for this node object.
   nodes: null | ChildNode[]; // Child nodes associated with this node object or null if none exist.
   parentNode: null | ParentNode; // Parent node associated with this node object or null if it has no parent.
   comment: Comment; // Comment node associated with this node object.
   memo?: {
-    // Optional memoization data related to this node's response.
     response: null | string; // Cached response data or null if not cached.
     isPending?: boolean; // Indicates if a response is still pending.
     nodes?: ChildNode[]; // Cached child nodes or null if not cached.
+  };
+  interval?: {
+    value: NodeJS.Timeout; // Interval timer instance.
+    clearInterval: HMPLClearInterval; // Function to clear this interval.
   };
 }
 
@@ -254,41 +272,59 @@ interface HMPLInstance {
   requests?: HMPLRequest[]; // Array of requests associated with this instance.
 }
 
+/**
+ * Represents an element and its association with instance-specific data.
+ */
 interface HMPLElement {
   el: Element; // DOM element associated with this instance.
   id: number; // Unique identifier for this element instance.
   objNode?: HMPLNodeObj; // Optional reference to an associated node object.
 }
 
+/**
+ * Contains data storage objects related to requests and nodes.
+ */
 interface HMPLData {
   dataObjects: HMPLNodeObj[]; // Array of node objects containing data related to requests.
   els: HMPLElement[]; // Array of elements associated with these requests.
   currentId: number; // Current ID used in processing requests and elements.
 }
 
+/**
+ * Type for interval clearing function.
+ */
+type HMPLClearInterval = () => void;
+
+/**
+ * Type for the function that processes a request.
+ */
 type HMPLRequestFunction = (
-  el: Element, // The DOM element to which this function applies.
+  el: Element,
   options:
     | HMPLRequestInitFunction
     | HMPLRequestInit
-    | HMPLIdentificationRequestInit[], // Options or initialization references for requests.
-  templateObject: HMPLInstance, // Template instance associated with these requests.
-  data: HMPLData, // Data context containing relevant information about nodes and elements.
-  mainEl?: Element, // Optional main element used in processing requests.
-  isArray?: boolean, // Indicates if multiple requests are being handled as an array.
-  reqObject?: HMPLRequest, // Optional reference to a specific request object being processed.
-  isRequests?: boolean, // Indicates if multiple requests are being processed in bulk.
-  currentHMPLElement?: HMPLElement, // Optional reference to an element currently being processed.
-  event?: Event // The event object received after the event is triggered.
+    | HMPLIdentificationRequestInit[],
+  templateObject: HMPLInstance,
+  data: HMPLData,
+  mainEl?: Element,
+  isArray?: boolean,
+  reqObject?: HMPLRequest,
+  isRequests?: boolean,
+  currentHMPLElement?: HMPLElement,
+  event?: Event,
+  currentInterval?: NodeJS.Timeout | null
 ) => void;
 
+/**
+ * Type for a rendering function, which takes a request processor and produces a rendering operation.
+ */
 type HMPLRenderFunction = (
-  requestFunction: HMPLRequestFunction // Function responsible for handling requests during rendering process.
+  requestFunction: HMPLRequestFunction
 ) => (
   options?:
     | HMPLRequestInitFunction
     | HMPLRequestInit
-    | HMPLIdentificationRequestInit[] // Options or initialization references passed during rendering process.
+    | HMPLIdentificationRequestInit[]
 ) => HMPLInstance;
 
 /**
@@ -306,7 +342,7 @@ type HMPLTemplateFunction = (
   options?:
     | HMPLIdentificationRequestInit[]
     | HMPLRequestInit
-    | HMPLRequestInitFunction // Options or initialization references used when creating instances from templates.
+    | HMPLRequestInitFunction
 ) => HMPLInstance;
 
 // Exports
@@ -338,5 +374,6 @@ export {
   HMPLAutoBodyOptions,
   HMPLDisallowedTag,
   HMPLDisallowedTags,
-  HMPLSanitize
+  HMPLSanitize,
+  HMPLClearInterval
 };

@@ -21,7 +21,8 @@ import {
   HMPLAutoBodyOptions,
   HMPLDisallowedTag,
   HMPLDisallowedTags,
-  HMPLSanitize
+  HMPLSanitize,
+  HMPLClearInterval
 } from "../build/types";
 
 const hmpl = {
@@ -54,5 +55,6 @@ export type {
   HMPLAutoBodyOptions,
   HMPLDisallowedTag,
   HMPLDisallowedTags,
-  HMPLSanitize
+  HMPLSanitize,
+  HMPLClearInterval
 };
