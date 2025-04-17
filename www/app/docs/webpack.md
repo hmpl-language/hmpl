@@ -6,8 +6,10 @@ Module has its own loader for files with the `.hmpl` extension. You can include 
 
 ```hmpl
 <div>
-  #request{
-    "src":"/api/test"
+  {
+    {
+      "src":"/api/test"
+    }
   }
 </div>
 ```
