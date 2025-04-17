@@ -970,12 +970,6 @@ const elementObj = templateFn([
             <td>The HTTP method used for the request</td>
           </tr>
           <tr>
-            <td><code>initId</code></td>
-            <td><code>string | number</code></td>
-            <td>undefined</td>
-            <td>Identifier for request initialization</td>
-          </tr>
-          <tr>
             <td><code>after</code></td>
             <td><code>string</code></td>
             <td>undefined</td>
@@ -994,10 +988,28 @@ const elementObj = templateFn([
             <td>Optional interval for repeated requests (in milliseconds)</td>
           </tr>
           <tr>
+            <td><code>indicators</code></td>
+            <td><dfn>HMPLIndicator</dfn>[]</td>
+            <td>[]</td>
+            <td>Status-specific UI indicators</td>
+          </tr>
+          <tr>
+            <td><code>autoBody</code></td>
+            <td><code>boolean | </code><dfn>HMPLAutoBodyOptions</dfn></td>
+            <td>false</td>
+            <td>Configures automatic body generation</td>
+          </tr>
+          <tr>
             <td><code>memo</code></td>
             <td><code>boolean</code></td>
             <td>false</td>
             <td>Enables response caching</td>
+          </tr>
+          <tr>
+            <td><code>initId</code></td>
+            <td><code>string | number</code></td>
+            <td>undefined</td>
+            <td>Identifier for request initialization</td>
           </tr>
           <tr>
             <td><code>allowedContentTypes</code></td>
@@ -1006,10 +1018,10 @@ const elementObj = templateFn([
             <td>Permitted response Content-Types</td>
           </tr>
           <tr>
-            <td><code>indicators</code></td>
-            <td><dfn>HMPLIndicator</dfn>[]</td>
+            <td><code>disallowedTags</code></td>
+            <td><dfn>HMPLDisallowedTags</dfn></td>
             <td>[]</td>
-            <td>Status-specific UI indicators</td>
+            <td>HTML elements to remove from responses</td>
           </tr>
           <tr>
             <td><code>sanitize</code></td>
@@ -1017,50 +1029,37 @@ const elementObj = templateFn([
             <td>false</td>
             <td>Enables HTML sanitization</td>
           </tr>
-          <tr>
-            <td><code>disallowedTags</code></td>
-            <td><dfn>HMPLDisallowedTags</dfn></td>
-            <td>[]</td>
-            <td>HTML elements to remove from responses</td>
-          </tr>
-          <tr>
-            <td><code>autoBody</code></td>
-            <td>
-              <code>boolean | <dfn>HMPLAutoBodyOptions</dfn></code>
-            </td>
-            <td>false</td>
-            <td>Configures automatic body generation</td>
-          </tr>
         </tbody>
       </table>
     </emu-table>
 
     <emu-example>
       <pre><code class="html">
-      #request{
-        src: "/api/test",
-        method: "get",
-        after: "click:.target",
-        repeat: true,
-        interval: 1000,
-        indicators: [
-          {
-            trigger: "pending",
-            content: "&lt;p&gt;Loading...&lt;/p&gt;"
+        #request{
+          src: "/api/test",
+          method: "get",
+          after: "click:.target",
+          repeat: true,
+          interval: 1000,
+          indicators: [
+            {
+              trigger: "pending",
+              content: "&lt;p&gt;Loading...&lt;/p&gt;"
+            },
+            {
+              trigger: "rejected",
+              content: "&lt;p&gt;Error&lt;/p&gt;&lt;button&gt;reload&lt;/button&gt;"
+            }
+          ],
+          autoBody: {
+            formData: true
           },
-          {
-            trigger: "rejected",
-            content: "&lt;p&gt;Error&lt;/p&gt;&lt;button&gt;reload&lt;/button&gt;"
-          }
-        ],
-        autoBody: {
-          formData: true
-        },
-        sanitize: false,
-        disallowedTags: ["script", "style", "iframe"],
-        memo: true,
-        initId: "id1"
-      }
+          memo: true,
+          initId: "id1",
+          allowedContentTypes: ["text/html"],
+          disallowedTags: ["script", "style", "iframe"],
+          sanitize: false
+        }        
           </code></pre>
     </emu-example>
 
