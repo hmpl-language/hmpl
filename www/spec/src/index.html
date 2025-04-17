@@ -1449,14 +1449,12 @@ const elementObj = templateFn([
 
       <emu-example>
         <pre><code class="html">
-    {
-      {
+      #request{
         "allowedContentTypes": [
           "application/json; charset=utf-8",
           "text/plain"
         ]
       }
-    }
         </code></pre>
       </emu-example>
 
@@ -1561,9 +1559,10 @@ const elementObj = templateFn([
       <p>Provides execution context to request initialization functions.</p>
       <emu-example>
         <pre><code class="typescript">
-  interface HMPLInstanceContext {
-    request: HMPLRequestContext;
-  }
+          interface HMPLRequestContext {
+            event?: Event;
+            clearInterval?: HMPLClearInterval;
+          }
         </code></pre>
       </emu-example>
     </emu-clause>
@@ -1599,7 +1598,12 @@ const elementObj = templateFn([
       <p>Property change callback signature.</p>
       <emu-example>
         <pre><code class="typescript">
-  type HMPLRequestGet = (prop: string, value: any, request?: HMPLRequest) => void;
+          export type HMPLRequestGet = (
+            prop: string,
+            value: any,
+            context: HMPLInstanceContext,
+            request?: HMPLRequest
+          ) => void;
         </code></pre>
       </emu-example>
     </emu-clause>
@@ -1616,6 +1620,7 @@ const elementObj = templateFn([
     after?: string;
     repeat?: boolean;
     memo?: boolean;
+    interval?: number;
     allowedContentTypes?: HMPLContentTypes;
     indicators?: HMPLIndicator[];
     sanitize?: HMPLSanitize;
@@ -1666,6 +1671,21 @@ const elementObj = templateFn([
       | HMPLRequestInit
       | HMPLRequestInitFunction
   ) => HMPLInstance;
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplrequestget">
+      <h1>HMPLClearInterval</h1>
+      <p>Type for interval clearing function.</p>
+      <emu-example>
+        <pre><code class="typescript">
+          export type HMPLRequestGet = (
+            prop: string,
+            value: any,
+            context: HMPLInstanceContext,
+            request?: HMPLRequest
+          ) => void;
         </code></pre>
       </emu-example>
     </emu-clause>
