@@ -3,7 +3,7 @@
 /**
  * get function in options object
  */
-export type HMPLRequestGet = (
+type HMPLRequestGet = (
   prop: string,
   value: any,
   context: HMPLInstanceContext,
@@ -13,7 +13,7 @@ export type HMPLRequestGet = (
 /**
  * headers object in options object
  */
-export interface HMPLHeadersInit {
+interface HMPLHeadersInit {
   [key: string]: string; // Key-value pairs representing HTTP headers
 }
 
@@ -375,5 +375,7 @@ export {
   HMPLDisallowedTag,
   HMPLDisallowedTags,
   HMPLSanitize,
-  HMPLClearInterval
+  HMPLClearInterval,
+  HMPLRequestGet,
+  HMPLHeadersInit
 };
