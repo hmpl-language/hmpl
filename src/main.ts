@@ -1543,39 +1543,78 @@ export const compile: HMPLCompile = (
   if (!isSanitizeUndefined) validateSanitize(options[SANITIZE]!, true);
   const requests: HMPLRequestsObject[] = [];
   const requestsIndexes: number[] = [];
-
   const splitFetchBlocks = (str: string) => {
     const parts: string[] = [];
+    const markers = ["#request{", "#r{"];
+    const markerRegex = /#request{|#r{/g;
     let pos = 0;
-
     while (pos < str.length) {
-      const start = str.indexOf("#request{", pos);
-      if (start === -1) {
+      markerRegex.lastIndex = pos;
+      const match = markerRegex.exec(str);
+      if (!match) {
         parts.push(str.slice(pos));
         break;
       }
-
-      parts.push(str.slice(pos, start));
-
+      const nextStart = match.index;
+      const marker = match[0];
+      parts.push(str.slice(pos, nextStart));
       let braceCount = 1;
-      let i = start + "#request{".length;
-
+      let i = nextStart + marker.length;
+      let inString = false;
+      let stringChar: string | null = null;
+      let inComment = false;
       while (i < str.length && braceCount > 0) {
-        if (str[i] === "{") braceCount++;
-        else if (str[i] === "}") braceCount--;
+        const char = str[i];
+        const nextFour = str.slice(i, i + 4);
+        const nextThree = str.slice(i, i + 3);
+        if (!inComment && !inString) {
+          if (nextFour === "<!--") {
+            inComment = true;
+            i += 4;
+            continue;
+          }
+          if (str.startsWith(markers[0], i) || str.startsWith(markers[1], i)) {
+            throw new Error(
+              `${PARSE_ERROR}: Nested fetch block at position ${i}`
+            );
+          }
+        }
+        if (inComment) {
+          if (nextThree === "-->") {
+            inComment = false;
+            i += 3;
+            continue;
+          }
+        } else if (!inString) {
+          if (char === '"' || char === "'" || char === "`") {
+            inString = true;
+            stringChar = char;
+          } else if (char === "{") {
+            braceCount++;
+          } else if (char === "}") {
+            braceCount--;
+          }
+        } else if (char === stringChar) {
+          let backslashCount = 0;
+          let j = i - 1;
+          while (j >= 0 && str[j] === "\\") {
+            backslashCount++;
+            j--;
+          }
+          if (backslashCount % 2 === 0) {
+            inString = false;
+            stringChar = null;
+          }
+        }
         i++;
       }
-
-      if (braceCount !== 0)
-        createError(`${PARSE_ERROR}: Unpaired curly braces in fetch block`);
-
-      parts.push(str.slice(start, i));
-
+      if (braceCount !== 0) {
+        throw new Error(`${PARSE_ERROR}: Unpaired curly braces in fetch block`);
+      }
+      parts.push(str.slice(nextStart, i));
       requestsIndexes.push(parts.length - 1);
-
       pos = i;
     }
-
     return parts;
   };
   const templateArr = splitFetchBlocks(template);
