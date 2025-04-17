@@ -192,7 +192,7 @@ const DEFAULT_DISALLOWED_TAGS: HMPLDisallowedTags = [];
 const getTemplateWrapper = (str: string, sanitize: boolean = false) => {
   let sanitizedStr = str;
   if (sanitize) {
-    sanitizedStr = DOMPurify.sanitize(str);
+    sanitizedStr = (window as any).DOMPurify.sanitize(str);
   }
   const elementDocument = new DOMParser().parseFromString(
     `<template>${sanitizedStr}</template>`,
@@ -1493,7 +1493,9 @@ const validateIdentificationOptionsArray = (
  */
 const validateInterval = (time: any) => {
   if (typeof time !== "number") {
-    createError(`${REQUEST_OBJECT_ERROR}: interval is not a number`);
+    createError(
+      `${REQUEST_OBJECT_ERROR}: The "${INTERVAL}" value must be number`
+    );
   }
 };
 
@@ -1574,8 +1576,8 @@ export const compile: HMPLCompile = (
             continue;
           }
           if (str.startsWith(markers[0], i) || str.startsWith(markers[1], i)) {
-            throw new Error(
-              `${PARSE_ERROR}: Nested fetch block at position ${i}`
+            createError(
+              `${PARSE_ERROR}: Nesting of request objects is not supported`
             );
           }
         }
@@ -1609,7 +1611,7 @@ export const compile: HMPLCompile = (
         i++;
       }
       if (braceCount !== 0) {
-        throw new Error(`${PARSE_ERROR}: Unpaired curly braces in fetch block`);
+        createError(`${PARSE_ERROR}: Unpaired curly braces in fetch block`);
       }
       parts.push(str.slice(nextStart, i));
       requestsIndexes.push(parts.length - 1);

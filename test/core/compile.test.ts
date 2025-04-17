@@ -57,13 +57,53 @@ describe("compile function", () => {
 
   e(
     "",
-    () => compile(`<div>{{src:"123"}}<!--hmpl1--></div>`),
+    () => compile(`<div>#r{src:"123"}<!--hmpl1--></div>`),
     `${PARSE_ERROR}: Request object with id "1" not found`
   );
 
   e(
+    "",
+    () =>
+      compile(`<div>Hello #r{{ "foo": "bar" } some broken stuff here</div>`),
+    `${PARSE_ERROR}: Unpaired curly braces in fetch block`
+  );
+
+  e(
+    "",
+    () => compile(`#r{"text": "escaped quote here: \\" still in string"}`),
+    `${REQUEST_OBJECT_ERROR}: Property "text" is not processed`
+  );
+
+  e(
+    "",
+    () => compile(`#r{<!-- some comment -->"key": "value"}`),
+    `JSON5: invalid character '<' at 1:2`
+  );
+
+  e(
+    "",
+    () =>
+      compile(
+        `Some text before #r{<!-- comment starts and never ends "key": "value"}}`
+      ),
+    `${PARSE_ERROR}: Unpaired curly braces in fetch block`
+  );
+
+  e(
+    "",
+    () =>
+      compile(
+        `#r{
+          "a": "b",
+          "nested": #request{ "error": "nested" }
+        }`
+      ),
+    `${PARSE_ERROR}: Nesting of request objects is not supported`
+  );
+
+  e(
     `throws an error if the REQUEST OBJECT doesn't contain the '${SOURCE}' property`,
-    () => compile(createTestObj2(`{{ "repeat":true }}`)),
+    () => compile(createTestObj2(`#r{ "repeat":true }`)),
     `${REQUEST_OBJECT_ERROR}: The "${SOURCE}" property are not found or empty`
   );
 
@@ -130,7 +170,7 @@ describe("compile function", () => {
   e(
     "only accepts the 'allowedContentTypes' property in the COMPILE OPTIONS as a '*' or an array of strings",
     () =>
-      compile(createTestObj2(`{{ "src":"/api/test" }}`), {
+      compile(createTestObj2(`#r{ "src":"/api/test" }`), {
         allowedContentTypes: {} as any
       }),
     `${COMPILE_OPTIONS_ERROR}: Expected "*" or string array, but got neither`
@@ -139,7 +179,7 @@ describe("compile function", () => {
   e(
     "throws an error if the 'allowedContentTypes' property in the COMPILE OPTIONS contains non-string element at index 0 of the array",
     () =>
-      compile(createTestObj2(`{{ "src":"/api/test" }}`), {
+      compile(createTestObj2(`#r{ "src":"/api/test" }`), {
         allowedContentTypes: [1] as any
       }),
     `${COMPILE_OPTIONS_ERROR}: In the array, the element with index 0 is not a string`
@@ -147,7 +187,7 @@ describe("compile function", () => {
   e(
     ``,
     () =>
-      compile(createTestObj2(`{{ "src":"/api/test" }}`), {
+      compile(createTestObj2(`#r{ "src":"/api/test" }`), {
         disallowedTags: true as any
       }),
     `${COMPILE_OPTIONS_ERROR}: The value of the property "${DISALLOWED_TAGS}" must be an array`
@@ -155,7 +195,7 @@ describe("compile function", () => {
   e(
     ``,
     () =>
-      compile(createTestObj2(`{{ "src":"/api/test" }}`), {
+      compile(createTestObj2(`#r{ "src":"/api/test" }`), {
         disallowedTags: ["div" as any]
       }),
     `${COMPILE_OPTIONS_ERROR}: The value "div" is not processed`
@@ -163,7 +203,7 @@ describe("compile function", () => {
   e(
     ``,
     () =>
-      compile(createTestObj2(`{{ "src":"/api/test" }}`), {
+      compile(createTestObj2(`#r{ "src":"/api/test" }`), {
         sanitize: ["div"] as any
       }),
     `${COMPILE_OPTIONS_ERROR}: The value of the property "${SANITIZE}" must be a boolean`
@@ -173,26 +213,10 @@ describe("compile function", () => {
     () => compile(createTestObj1({ [SOURCE]: [] })),
     `${REQUEST_OBJECT_ERROR}: The value of the property "${SOURCE}" must be a string`
   );
-
   e(
     "",
     () => compile(createTestObj1({ [SOURCE]: [] })),
     `${REQUEST_OBJECT_ERROR}: The value of the property "${SOURCE}" must be a string`
-  );
-
-  e(
-    "throws an error if the REQUEST OBJECT doesn't has proper spacing between the curly brackets",
-    () => compile(createTestObj2(`{{ "src":"/api/test" }e}}`)),
-    `${PARSE_ERROR}: There is no empty space between the curly brackets`
-  );
-
-  e(
-    "",
-    () =>
-      compile(
-        createTestObj2(`{{ "src":"/api/test", "indicators":{"property":{}}}`)
-      ),
-    `${PARSE_ERROR}: There is no empty space between the curly brackets`
   );
 
   e(
@@ -210,7 +234,7 @@ describe("compile function", () => {
     </div>
   </form>
   <p>
-    {{src:"", c:{a:{d:{}}}, indicators:[{ a:{}, b:{} }] }}
+    #r{src:"", c:{a:{d:{}}}, indicators:[{ a:{}, b:{} }] }
   </p>
 </div>`)
       ),
@@ -232,7 +256,7 @@ describe("compile function", () => {
     </div>
   </form>
   <p>
-    {{src:"", indicators:{a:{d:{}}}, indicators:[{ a:{}, b:{} }] }}
+    #r{src:"", indicators:{a:{d:{}}}, indicators:[{ a:{}, b:{} }] }
   </p>
 </div>`)
       ),
@@ -240,35 +264,13 @@ describe("compile function", () => {
   );
 
   e(
-    "throws an error if the REQUEST OBJECT doesn't have proper spacing between the curly brackets",
-    () =>
-      compile(
-        createTestObj2(`<div>
-  <form onsubmit="function prevent(e){e.preventDefault();};return prevent(event);" id="form">
-    <div class="form-example">
-      <label for="login">Login: </label>
-      <input type="login" name="login" id="login" required />
-    </div>
-    <div class="form-example">
-      <input type="submit" value="Register!" />
-    </div>
-  </form>
-  <p>
-    { {src:"", c:{a:{d:{}}}, indicators:[{ a:{}, b:{} }] } test }
-  </p>
-</div>`)
-      ),
-    `${PARSE_ERROR}: There is no empty space between the curly brackets`
-  );
-
-  e(
     "throw an error if the TEMPLATE includes more than one top-level node",
-    () => compile(`${createTestObj2(`{{ "src":"/api/test" }}`)}<div></div>`),
+    () => compile(`${createTestObj2(`#r{ "src":"/api/test" }`)}<div></div>`),
     `${RENDER_ERROR}: Template includes only one node of the Element type or one response object`
   );
   e(
     `throws an error if the '${AUTO_BODY}' property in the REQUEST OBJECT is true without the '${AFTER}' property`,
-    () => compile(createTestObj2(`{{ "src":"/api/test", "autoBody": true }}`)),
+    () => compile(createTestObj2(`#r{ "src":"/api/test", "autoBody": true }`)),
     `${REQUEST_OBJECT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
   );
   e(
@@ -276,7 +278,7 @@ describe("compile function", () => {
     () =>
       compile(
         createTestObj2(
-          `<form id="form"></form>{{ "src":"/api/test", "after":"submit" }}`
+          `<form id="form"></form>#r{ "src":"/api/test", "after":"submit" }`
         )
       ),
     `${REQUEST_OBJECT_ERROR}: The "${AFTER}" property doesn't work without EventTargets`
@@ -286,7 +288,7 @@ describe("compile function", () => {
     () =>
       compile(
         createTestObj2(
-          `<form id="form"></form>{{ "src":"/api/test", "repeat":true }}`
+          `<form id="form"></form>#r{ "src":"/api/test", "repeat":true }`
         )
       ),
     `${REQUEST_OBJECT_ERROR}: The "${MODE}" property doesn't work without "${AFTER}" property`
@@ -294,32 +296,32 @@ describe("compile function", () => {
   e(
     ``,
     () =>
-      compile(createTestObj2(`{{ "src":"/api/test", "disallowedTags":true }}`)),
+      compile(createTestObj2(`#r{ "src":"/api/test", "disallowedTags":true }`)),
     `${REQUEST_OBJECT_ERROR}: The value of the property "${DISALLOWED_TAGS}" must be an array`
   );
   e(
     ``,
     () =>
       compile(
-        createTestObj2(`{{ "src":"/api/test", disallowedTags: ["div"] }}`)
+        createTestObj2(`#r{ "src":"/api/test", disallowedTags: ["div"] }`)
       ),
     `${REQUEST_OBJECT_ERROR}: The value "div" is not processed`
   );
   e(
     ``,
-    () => compile(createTestObj2(`{{ "src":"/api/test", sanitize: ["div"] }}`)),
+    () => compile(createTestObj2(`#r{ "src":"/api/test", sanitize: ["div"] }`)),
     `${REQUEST_OBJECT_ERROR}: The value of the property "${SANITIZE}" must be a boolean`
   );
   eq(
     `returns a template function when provided a TEMPLATE with just ${SOURCE} property`,
-    checkFunction(compile(createTestObj2(`{{ "src":"/api/test" }}`))),
+    checkFunction(compile(createTestObj2(`#r{ "src":"/api/test" }`))),
     true
   );
   eq(
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form", "autoBody": false }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": false }`
       ),
       {
         autoBody: true
@@ -331,7 +333,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form", "autoBody": true }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": true }`
       ),
       {
         autoBody: false
@@ -343,7 +345,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form" }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form" }`
       ),
       {
         autoBody: false
@@ -355,7 +357,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form" }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form" }`
       ),
       {
         autoBody: true
@@ -367,7 +369,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form" }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form" }`
       ),
       {
         autoBody: {
@@ -381,7 +383,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form" }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form" }`
       ),
       {
         autoBody: {
@@ -395,7 +397,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": true }  }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": true }  }`
       ),
       {
         autoBody: false
@@ -407,7 +409,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": true }  }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": true }  }`
       ),
       {
         autoBody: true
@@ -419,7 +421,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": true } }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": true } }`
       )
     )().response?.outerHTML,
     '<div><form id="form"></form><!--hmpl0--></div>'
@@ -428,7 +430,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": false } }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": false } }`
       )
     )().response?.outerHTML,
     '<div><form id="form"></form><!--hmpl0--></div>'
@@ -437,7 +439,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": false } }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": false } }`
       )
     )(() => ({})).response?.outerHTML,
     '<div><form id="form"></form><!--hmpl0--></div>'
@@ -446,7 +448,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": false }, "initId":"1" }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": false }, "initId":"1" }`
       )
     )([
       {
@@ -460,7 +462,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>{{ "src":"/api/test", "after":"submit:#form", "initId":"1" }} {{ "src":"/api/test", "after":"submit:#form", "initId":"2" }}`
+        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "initId":"1" } #r{ "src":"/api/test", "after":"submit:#form", "initId":"2" }`
       )
     )([
       {
