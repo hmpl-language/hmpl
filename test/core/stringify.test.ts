@@ -2,7 +2,7 @@ import { stringify } from "../../src/main";
 import { eq } from "./functions";
 
 /**
- * Function "stringify" — тесты для всех атрибутов HMPLRequestInfo
+ * Function "stringify"
  */
 
 describe("stringify function — HMPLRequestInfo attributes", () => {
