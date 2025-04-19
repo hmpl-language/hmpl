@@ -89,7 +89,7 @@
   location: https://spec.hmpl-lang.dev
   copyright: false
   contributors: Anthony Max
-  date: 2025-03-09
+  date: 2025-04-20
 </pre>
 <link
   rel="icon"
@@ -202,10 +202,10 @@
         const templateFn = hmpl.compile(
           `&lt;div&gt;
               &lt;button data-action="increment" id="btn"&gt;Click!&lt;/button&gt;
-              &lt;div&gt;Clicks: {{
-                "src": "/api/clicks",
-                "after": "click:#btn"
-              }}&lt;/div&gt;
+              &lt;div&gt;Clicks: {{#request
+                src="/api/clicks"
+                after="click:#btn"
+              }}{{/request}}&lt;/div&gt;
           &lt;/div&gt;`
         );
         
@@ -247,7 +247,9 @@
           <tr>
             <td><code>stringify</code></td>
             <td><code>(info: HMPLRequestInfo) => string</code></td>
-            <td>Serializes request configuration objects to JSON5 strings</td>
+            <td>
+              Serializes request configuration objects to component string
+            </td>
           </tr>
         </tbody>
       </table>
@@ -291,11 +293,9 @@
       <emu-example>
         <pre><code class="javascript">
           const templateFn = hmpl.compile(
-            `{ 
-               {
-                 "src":"/api/test" 
-               } 
-             }`,
+            `{{#request
+              src="/api/test" 
+            }}{{/request}}`,
             {
               memo: true,
               autoBody: {
@@ -312,22 +312,55 @@
         <h1>Template Syntax</h1>
         <p>
           HMPL templates consist of standard HTML markup interspersed with
-          request configuration objects delimited by single curly braces
-          (<code>{$config}</code>).
+          request configuration components delimited by special markers:
+          <code>{{#request}}...{{/request}}</code> or the short form
+          <code>{{#r}}...{{/r}}</code>.
         </p>
+
+        <p>
+          These markers embed request configuration components directly into the
+          HTML. The contents inside must be valid JSON5 and enclosed within
+          curly braces.
+        </p>
+
         <emu-example>
           <pre><code class="html">
             &lt;div&gt;
               &lt;button data-action="increment" id="btn"&gt;Click!&lt;/button&gt;
-              &lt;div&gt;Clicks: {{ "src": "/api/clicks", "after": "click:#btn" }}&lt;/div&gt;
+              &lt;div&gt;
+                Clicks:
+                {{#request
+                  src="/api/clicks"
+                  after="click:#btn"
+                }}{{/request}}
+              &lt;/div&gt;
+              &lt;div&gt;
+                Count:
+                {{#r
+                  src="/api/count"
+                  after="click:#btn"
+                }}{{/r}}
+              &lt;/div&gt;
             &lt;/div&gt;
           </code></pre>
         </emu-example>
+
         <p>Key characteristics:</p>
         <ul>
           <li>Request configurations must be valid JSON5</li>
-          <li>Nested within <code>{}</code> delimiters</li>
+          <li>
+            Always nested within a <code>{{#request}}...{{/request}}</code> or
+            <code>{{#r}}...{{/r}}</code> marker
+          </li>
           <li>May appear anywhere within HTML markup</li>
+          <li>Nested fetch blocks (one inside another) are not allowed</li>
+          <li>
+            Unpaired curly braces inside the block will cause a parse error
+          </li>
+          <li>
+            Blocks can contain strings, numbers, booleans, arrays, and objects,
+            following JSON5 rules
+          </li>
         </ul>
       </emu-clause>
       <emu-clause id="options">
@@ -394,10 +427,10 @@
       </p>
       <emu-example>
         <pre><code class="javascript">
-          const request = hmpl.stringify({
+          const info = hmpl.stringify({
             src: "/api/test"
           });
-          const templateFn = hmpl.compile(`{${request}}`);
+          const templateFn = hmpl.compile(`{{#request}}${info}{{/request}}`);
         </code></pre>
       </emu-example>
       <p>Implementation notes:</p>
@@ -585,10 +618,17 @@
                 <td>The new property value</td>
               </tr>
               <tr>
-                <td>requestObject</td>
+                <td>requestContext</td>
+                <td>HMPLRequestContext</td>
+                <td>
+                  The context of the current request sent to the HMPLInstance.
+                </td>
+              </tr>
+              <tr>
+                <td>request</td>
                 <td>HMPLRequest</td>
                 <td>
-                  The associated request object (for multi-request templates)
+                  The associated request component (for multi-request templates)
                 </td>
               </tr>
             </tbody>
@@ -598,10 +638,10 @@
         <emu-example>
           <pre><code class="javascript">
     const elementObj = templateFn({
-      get: (prop, value, requestObject) => {
+      get: (prop, value, context, request) => {
         switch (prop) {
           case "response":
-            if (!requestObject) console.log(requestObject);
+            if (!request) console.log(request);
             console.log("Response:");
             console.log(value);
             break;
@@ -629,7 +669,7 @@
           <pre><code class="javascript">
     const val = await new Promise((res, rej) => {
       templateFn({
-        get: (prop, value, requestObject) => {
+        get: (prop, value, context, request) => {
           switch (prop) {
             case "response":
               if (!value) return;
@@ -721,11 +761,9 @@ const elementObj = templateFn([
           <emu-example>
             <pre><code class="javascript">
       const templateFn = hmpl.compile(
-        `{ 
-           {
-             "src":"/api/test" 
-           } 
-         }`
+        `{{#request
+          src="/api/test" 
+         }}{{/request}}`
       );
       const elementObj = templateFn();
             </code></pre>
@@ -761,16 +799,12 @@ const elementObj = templateFn([
             <pre><code class="javascript">
       const templateFn = hmpl.compile(
         `&lt;div&gt;
-         {
-           {
-             "src":"/api/test"
-           }
-         }
-         {
-           {
-             "src":"/api/test"
-           }
-         }
+         {{#request
+          src="/api/test"
+         }}{{/request}}
+         {{#request
+          src="/api/test"
+         }}{{/request}}
       &lt;/div&gt;`
       );
       const elementObj = templateFn();
@@ -836,8 +870,9 @@ const elementObj = templateFn([
       <emu-example>
         <pre><code class="javascript">
     const elementObj = templateFn(({
-      request: { event }
+      request: { event, clearInterval }
     })=>{
+      clearInterval?.();
       return {
           mode: "cors",
           cache: "no-cache",
@@ -886,7 +921,7 @@ const elementObj = templateFn([
       <pre><code class="html">
   &lt;div&gt;
     &lt;button id="getHTML"&gt;Get HTML!&lt;/button&gt;
-    {{ "src":"/api/getHTML", method:"POST", after:"click:#getHTML" }}
+    {{#request src="/api/getHTML" method="POST" after="click:#getHTML"}}{{/request}}
   &lt;/div&gt;
       </code></pre>
     </emu-example>
@@ -894,8 +929,9 @@ const elementObj = templateFn([
     <emu-example>
       <pre><code class="javascript">
   const initFn = (ctx) => {
-    const event = ctx.request.event;
+    const { event, clearInterval } = ctx.request;
     const text = event.target.textContent;
+    clearInterval?.();
     return {
       body: text
     };
@@ -908,7 +944,7 @@ const elementObj = templateFn([
   <emu-clause id="request-configuration">
     <h1>Request Configuration</h1>
     <p>
-      Request objects define how and when the template makes server requests.
+      Request components define how and when the template makes server requests.
       These JSON5 objects appear within template markup and support the
       following properties:
     </p>
@@ -937,12 +973,6 @@ const elementObj = templateFn([
             <td>The HTTP method used for the request</td>
           </tr>
           <tr>
-            <td><code>initId</code></td>
-            <td><code>string | number</code></td>
-            <td>undefined</td>
-            <td>Identifier for request initialization</td>
-          </tr>
-          <tr>
             <td><code>after</code></td>
             <td><code>string</code></td>
             <td>undefined</td>
@@ -955,16 +985,10 @@ const elementObj = templateFn([
             <td>Whether the request repeats on subsequent triggers</td>
           </tr>
           <tr>
-            <td><code>memo</code></td>
-            <td><code>boolean</code></td>
-            <td>false</td>
-            <td>Enables response caching</td>
-          </tr>
-          <tr>
-            <td><code>allowedContentTypes</code></td>
-            <td><dfn>HMPLContentTypes</dfn></td>
-            <td>["text/html"]</td>
-            <td>Permitted response Content-Types</td>
+            <td><code>interval</code></td>
+            <td><code>number</code></td>
+            <td>undefined</td>
+            <td>Optional interval for repeated requests (in milliseconds)</td>
           </tr>
           <tr>
             <td><code>indicators</code></td>
@@ -973,10 +997,28 @@ const elementObj = templateFn([
             <td>Status-specific UI indicators</td>
           </tr>
           <tr>
-            <td><code>sanitize</code></td>
-            <td><dfn>HMPLSanitize</dfn></td>
+            <td><code>autoBody</code></td>
+            <td><code>boolean | </code><dfn>HMPLAutoBodyOptions</dfn></td>
             <td>false</td>
-            <td>Enables HTML sanitization</td>
+            <td>Configures automatic body generation</td>
+          </tr>
+          <tr>
+            <td><code>memo</code></td>
+            <td><code>boolean</code></td>
+            <td>false</td>
+            <td>Enables response caching</td>
+          </tr>
+          <tr>
+            <td><code>initId</code></td>
+            <td><code>string | number</code></td>
+            <td>undefined</td>
+            <td>Identifier for request initialization</td>
+          </tr>
+          <tr>
+            <td><code>allowedContentTypes</code></td>
+            <td><dfn>HMPLContentTypes</dfn></td>
+            <td>["text/html"]</td>
+            <td>Permitted response Content-Types</td>
           </tr>
           <tr>
             <td><code>disallowedTags</code></td>
@@ -985,12 +1027,10 @@ const elementObj = templateFn([
             <td>HTML elements to remove from responses</td>
           </tr>
           <tr>
-            <td><code>autoBody</code></td>
-            <td>
-              <code>boolean | <dfn>HMPLAutoBodyOptions</dfn></code>
-            </td>
+            <td><code>sanitize</code></td>
+            <td><dfn>HMPLSanitize</dfn></td>
             <td>false</td>
-            <td>Configures automatic body generation</td>
+            <td>Enables HTML sanitization</td>
           </tr>
         </tbody>
       </table>
@@ -998,31 +1038,31 @@ const elementObj = templateFn([
 
     <emu-example>
       <pre><code class="html">
-    {
-      {
-        src: "/api/test",
-        method: "get",
-        after: "click:.target",
-        repeat: true,
-        indicators: [
-          {
-            trigger: "pending",
-            content: "&lt;p&gt;Loading...&lt;/p&gt;"
-          },
-          {
-            trigger: "rejected",
-            content: "&lt;p&gt;Error&lt;/p&gt;&lt;button&gt;reload&lt;/button&gt;"
+        {{#request
+          src="/api/test"
+          method="get"
+          after="click:.target"
+          repeat=true
+          interval=1000
+          indicators=[
+            {
+              trigger: "pending"
+              content: "&lt;p&gt;Loading...&lt;/p&gt;"
+            }
+            {
+              trigger: "rejected"
+              content: "&lt;p&gt;Error&lt;/p&gt;&lt;button&gt;reload&lt;/button&gt;"
+            }
+          ]
+          autoBody={
+            formData: true
           }
-        ],
-        autoBody: {
-          formData: true
-        },
-        sanitize: false,
-        disallowedTags: ["script", "style", "iframe"],
-        memo: true,
-        initId: "id1"
-      }
-    }
+          memo=true
+          initId="id1"
+          allowedContentTypes=["text/html"]
+          disallowedTags=["script" "style" "iframe"]
+          sanitize=false
+        }}{{/request}}        
           </code></pre>
     </emu-example>
 
@@ -1042,11 +1082,11 @@ const elementObj = templateFn([
           </thead>
           <tbody>
             <tr>
-              <td><code>"src":"http://github.com/api"</code></td>
+              <td><code>src="http://github.com/api"</code></td>
               <td>Absolute URL used as-is</td>
             </tr>
             <tr>
-              <td><code>"src":"/api/test"</code></td>
+              <td><code>src="/api/test"</code></td>
               <td>Resolved relative to current origin</td>
             </tr>
           </tbody>
@@ -1120,6 +1160,61 @@ const elementObj = templateFn([
           <code>false</code>: Request executes once, then removes listeners
         </li>
       </ul>
+    </emu-clause>
+
+    <emu-clause id="sec-interval-property">
+      <h1>interval</h1>
+      <p>
+        The <code>interval</code> property specifies a time-based trigger for
+        sending a request to the server at regular intervals.
+      </p>
+
+      <p>
+        The value of <code>interval</code> must be a
+        <code>number</code> representing the delay between consecutive requests,
+        in milliseconds, following the JavaScript
+        <code>setInterval</code> timing model.
+      </p>
+
+      <p>
+        When the <code>interval</code> property is set, the request is
+        automatically sent to the server at the specified interval, starting
+        immediately when the template is initialized or rendered, unless
+        combined with other trigger properties such as <code>after</code>.
+      </p>
+
+      <p>
+        The associated request context, <code>HMPLRequestContext</code>,
+        provides a <code>clearInterval</code> method that can be used to stop
+        the interval-based updates programmatically.
+      </p>
+
+      <emu-note>
+        The <code>interval</code> property is currently compatible either:
+        <ul>
+          <li>
+            on its own — without any <code>after</code> property, in which case
+            it starts immediately
+          </li>
+          <li>
+            with <code>after</code>, but only when the repeat mode is disabled
+            (i.e. the event specified by <code>after</code> triggers a one-time
+            start of the interval)
+          </li>
+        </ul>
+      </emu-note>
+
+      <emu-example>
+        <pre><code class="html">
+          &lt;div&gt;
+            Server time:
+            {{#request
+              src="/api/time"
+              interval=5000
+            }}{{/request}}
+          &lt;/div&gt;
+        </code></pre>
+      </emu-example>
     </emu-clause>
 
     <emu-clause id="sec-indicators-property">
@@ -1256,13 +1351,11 @@ const elementObj = templateFn([
           &lt;input type=&quot;submit&quot; value=&quot;Subscribe!&quot; /&gt;
         &lt;/div&gt;
       &lt;/form&gt;
-      {
-        {
-          &quot;src&quot;:&quot;/api/subscribe&quot;,
-          &quot;after&quot;:&quot;submit:#form&quot;,
-          &quot;autoBody&quot;:true
-        }
-      }
+      {{#request
+        src="/api/subscribe"
+        after="submit:#form"
+        autoBody=true
+      }}{{/request}}
     &lt;/div&gt;
         </code></pre>
       </emu-example>
@@ -1399,18 +1492,14 @@ const elementObj = templateFn([
       <emu-example>
         <pre><code class="html">
     &lt;div&gt;
-      {
-        {
-          "src": "/api/test",
-          "initId": "1"
-        }
-      }
-      {
-        {
-          "src": "/api/test",
-          "initId": 2
-        }
-      }
+      {{#request
+        src="/api/test"
+        initId="1"
+      }}{{/request}}
+      {{#request
+        src="/api/test"
+        initId=2
+      }}{{/request}}
     &lt;/div&gt;
         </code></pre>
       </emu-example>
@@ -1465,14 +1554,12 @@ const elementObj = templateFn([
 
       <emu-example>
         <pre><code class="html">
-    {
-      {
-        "allowedContentTypes": [
-          "application/json; charset=utf-8",
+      {{#request
+        allowedContentTypes=[
+          "application/json; charset=utf-8"
           "text/plain"
         ]
-      }
-    }
+      }}{{/request}}
         </code></pre>
       </emu-example>
 
@@ -1577,9 +1664,10 @@ const elementObj = templateFn([
       <p>Provides execution context to request initialization functions.</p>
       <emu-example>
         <pre><code class="typescript">
-  interface HMPLInstanceContext {
-    request: HMPLRequestContext;
-  }
+          interface HMPLRequestContext {
+            event?: Event;
+            clearInterval?: HMPLClearInterval;
+          }
         </code></pre>
       </emu-example>
     </emu-clause>
@@ -1615,7 +1703,12 @@ const elementObj = templateFn([
       <p>Property change callback signature.</p>
       <emu-example>
         <pre><code class="typescript">
-  type HMPLRequestGet = (prop: string, value: any, request?: HMPLRequest) => void;
+          type HMPLRequestGet = (
+            prop: string,
+            value: any,
+            context: HMPLInstanceContext,
+            request?: HMPLRequest
+          ) => void;
         </code></pre>
       </emu-example>
     </emu-clause>
@@ -1632,6 +1725,7 @@ const elementObj = templateFn([
     after?: string;
     repeat?: boolean;
     memo?: boolean;
+    interval?: number;
     allowedContentTypes?: HMPLContentTypes;
     indicators?: HMPLIndicator[];
     sanitize?: HMPLSanitize;
@@ -1682,6 +1776,16 @@ const elementObj = templateFn([
       | HMPLRequestInit
       | HMPLRequestInitFunction
   ) => HMPLInstance;
+        </code></pre>
+      </emu-example>
+    </emu-clause>
+
+    <emu-clause id="sec-hmplrequestget">
+      <h1>HMPLClearInterval</h1>
+      <p>Type for interval clearing function.</p>
+      <emu-example>
+        <pre><code class="typescript">
+          type HMPLClearInterval = () => void;
         </code></pre>
       </emu-example>
     </emu-clause>

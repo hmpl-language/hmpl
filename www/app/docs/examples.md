@@ -19,19 +19,18 @@ import { compile } from "hmpl-js";
 const templateFn = compile(
   `<div>
     <button class="getHTML">Get HTML!</button>
-    { 
-      {
-        "src":"/api/test",
-        "after":"click:.getHTML",
-        "repeat":false,
-        "indicators": [
-           {
-             "trigger": "pending",
-             "content": "<div>Loading...</div>"
-           }
-        ]
-      } 
-    }
+    {{#request
+      src="/api/test"
+      after="click:.getHTML"
+      repeat=false
+      indicators=[
+        {
+          trigger: "pending",
+          content: "<p>Loading...</p>"
+        }
+      ]
+    }}
+    {{/request}}
   </div>`
 );
 
@@ -82,19 +81,18 @@ const templateFn = compile(
     </div>
   </form>
   <p>
-    {
-      {
-        "src":"/api/register",
-        "after":"submit:#form",
-        "repeat":false,
-        "indicators": [
-          {
-            "trigger": "pending",
-            "content": "<p>Loading...</p>"
-          }
-        ]
-      }
-    }
+    {{#request
+      src="/api/register"
+      after="submit:#form"
+      repeat=false
+      indicators=[
+        {
+          trigger: "pending",
+          content: "<p>Loading...</p>"
+        }
+      ]
+    }}
+    {{/request}}
   </p>
 </div>`
 );
@@ -103,7 +101,7 @@ const initFn = (ctx) => {
 
   return {
     body: new FormData(event.target, event.submitter),
-    credentials: "same-origin",
+    credentials: "same-origin"
   };
 };
 const obj = templateFn(initFn);
@@ -173,19 +171,18 @@ const templateFn = compile(
         <td>Lays</td>
         <td>4</td>
       </tr>
-      {
-        {
-          "src":"/api/products",
-          "after":"submit:#form",
-          "autoBody":true,
-          "indicators": [
-            {
-              "trigger": "pending",
-              "content": "<tr><td>Loading...</td><td>Loading...</td></tr>"
-            }
-          ]
-        }
-      }
+      {{#request
+        src="/api/products"
+        after="submit:#form"
+        autoBody=true
+        indicators=[
+          {
+            trigger: "pending",
+            content: "<tr><td>Loading...</td><td>Loading...</td></tr>"
+          }
+        ]
+      }}
+      {{/request}}
     </tbody>
   </table>
   <form id="form">

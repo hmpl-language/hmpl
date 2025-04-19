@@ -14,11 +14,7 @@
 <script>
   const templateFn = hmpl.compile(
     `<div>
-       { 
-         {
-           "src":"http://localhost:8000/api/test" 
-         } 
-       }
+      {{#request src="http://localhost:8000/api/test"}}{{/request}}
     </div>`
   );
 
@@ -68,19 +64,18 @@ const templateFn = compile(
     </div>
   </form>
   <p>
-    {
-      {
-        src: "/api/register",
-        after: "submit:#form",
-        repeat: false,
-        indicators: [
-          {
-            trigger: "pending",
-            content: "<p>Loading...</p>"
-          }
-        ]
-      }
-    }
+    {{#request         
+      src="/api/register"
+      after="submit:#form"
+      repeat=false
+      indicators=[
+        {
+          trigger: "pending",
+          content: "<p>Loading...</p>"
+        }
+      ]
+    }}
+    {{/request}}
   </p>
 </div>`
 );

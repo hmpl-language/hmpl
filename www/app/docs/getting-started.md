@@ -35,21 +35,22 @@ Create a file named `HelloWorld.hmpl` inside `/src/hmpl` and add the following c
 ```hmpl
 <div>
   <div>
-    {
-      {
-        src: "/api/hello",
-        indicators: [
-          {
-            trigger: "pending",
-            content: "<p>Loading...</p>;"
-          },
-          {
-            trigger: "rejected",
-            content: "<p>Error!</p>;"
-          }
-        ]
-      }
-    }
+    {{#request
+      src="/api/hello"
+      after="submit:#form"
+      repeat=false
+      indicators=[
+        {
+          trigger: "pending",
+          content: "<p>Loading...</p>"
+        },
+        {
+          trigger: "rejected",
+          content: "<p>Error!</p>;"
+        }
+      ]
+    }}
+    {{/request}}
   </div>
 </div>
 ```
@@ -90,20 +91,22 @@ Create a new file `Form.hmpl` inside the `hmpl` directory and add the following 
     <input type="submit" value="Submit" />
   </form>
 
-  {
-    {
-      src: "/api/hello",
-      method: "POST",
-      after: "submit:#form",
-      autoBody: true,
-      indicators: [
-        {
-          trigger: "pending",
-          content: "<p>Loading...</p>;"
-        }
-      ]
-    }
-  }
+  {{#request
+    src="/api/hello"
+    after="submit:#form"
+    repeat=false
+    indicators=[
+      {
+        trigger: "pending",
+        content: "<p>Loading...</p>"
+      },
+      {
+        trigger: "rejected",
+        content: "<p>Error!</p>;"
+      }
+    ]
+  }}
+  {{/request}}
 </div>
 ```
 
@@ -138,11 +141,7 @@ If you already have a project, then after connecting HMPL you can use the `hmpl`
 ```javascript
 const templateFn = hmpl.compile(
   `<div>
-    {
-      {
-        src: "/hello-world"
-      }
-    }
+    {{#request src="/hello-world"}}{{/request}}
   </div>`
 );
 ```
