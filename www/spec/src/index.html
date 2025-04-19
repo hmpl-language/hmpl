@@ -312,57 +312,70 @@
         <h1>Template Syntax</h1>
         <p>
           HMPL templates consist of standard HTML markup interspersed with
-          request configuration components delimited by special markers:
-          <code>{{#request}}...{{/request}}</code> or the short form
-          <code>{{#r}}...{{/r}}</code>.
+          request configuration components, enclosed by special markers:
+          <code>{{#request ...}}</code> or the short form
+          <code>{{#r ...}}</code>.
         </p>
 
         <p>
           These markers embed request configuration components directly into the
-          HTML. The contents inside must be valid JSON5 and enclosed within
-          curly braces.
+          HTML. Request attributes are written as key-value pairs separated by
+          <code>=</code>, supporting strings, numbers, booleans, arrays, and
+          objects. Attributes inside must follow a simplified JSON5-like syntax,
+          where:
+        </p>
+        <ul>
+          <li>Strings are enclosed in double quotes (<code>"value"</code>)</li>
+          <li>
+            Numbers and booleans are written directly (<code>42</code>,
+            <code>true</code>)
+          </li>
+          <li>
+            Arrays are enclosed in square brackets: <code>[1, 2, 3]</code>
+          </li>
+          <li>
+            Objects are enclosed in curly braces:
+            <code>{key:"value", anotherKey:123}</code>
+          </li>
+        </ul>
+
+        <p>
+          The request block is always closed with the corresponding
+          <code>{{/request}}</code> or <code>{{/r}}</code>.
         </p>
 
         <emu-example>
           <pre><code class="html">
-            &lt;div&gt;
-              &lt;button data-action="increment" id="btn"&gt;Click!&lt;/button&gt;
-              &lt;div&gt;
-                Clicks:
-                {{#request
-                  src="/api/clicks"
-                  after="click:#btn"
-                }}{{/request}}
-              &lt;/div&gt;
-              &lt;div&gt;
-                Count:
-                {{#r
-                  src="/api/count"
-                  after="click:#btn"
-                }}{{/r}}
-              &lt;/div&gt;
-            &lt;/div&gt;
-          </code></pre>
+      &lt;div&gt;
+        &lt;button data-action="increment" id="btn"&gt;Click!&lt;/button&gt;
+        &lt;div&gt;
+          Clicks:
+          {{#request src="/api/clicks" after="click:#btn"}}{{/request}}
+        &lt;/div&gt;
+        &lt;div&gt;
+          Count:
+          {{#r src="/api/count" after="click:#btn"}}{{/r}}
+        &lt;/div&gt;
+      &lt;/div&gt;
+    </code></pre>
         </emu-example>
 
         <p>Key characteristics:</p>
         <ul>
-          <li>Request configurations must be valid JSON5</li>
+          <li>Attributes must follow a JSON5-like syntax for values</li>
           <li>
-            Always nested within a <code>{{#request}}...{{/request}}</code> or
-            <code>{{#r}}...{{/r}}</code> marker
+            Always enclosed within <code>{{#request ...}}{{/request}}</code> or
+            <code>{{#r ...}}{{/r}}</code>
           </li>
-          <li>May appear anywhere within HTML markup</li>
-          <li>Nested fetch blocks (one inside another) are not allowed</li>
+          <li>Blocks can appear anywhere within HTML markup</li>
+          <li><strong>Nested request blocks are not allowed</strong></li>
+          <li>Unclosed or malformed blocks will cause a parse error</li>
           <li>
-            Unpaired curly braces inside the block will cause a parse error
-          </li>
-          <li>
-            Blocks can contain strings, numbers, booleans, arrays, and objects,
-            following JSON5 rules
+            Supported value types: strings, numbers, booleans, arrays, objects
           </li>
         </ul>
       </emu-clause>
+
       <emu-clause id="options">
         <h1>Compilation Options</h1>
         <p>
