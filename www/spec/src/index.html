@@ -422,20 +422,20 @@
     <emu-clause id="stringify">
       <h1>stringify</h1>
       <p>
-        Serializes <dfn>HMPLRequestInfo</dfn> objects into JSON5 strings
-        suitable for template embedding.
+        Serializes <dfn>HMPLRequestInfo</dfn> objects into request component
+        strings suitable for template embedding.
       </p>
       <emu-example>
         <pre><code class="javascript">
           const info = hmpl.stringify({
             src: "/api/test"
           });
-          const templateFn = hmpl.compile(`{{#request}}${info}{{/request}}`);
+          const templateFn = hmpl.compile(`${info}`);
+          // {{#request src="/api/test"}}{{/request}}
         </code></pre>
       </emu-example>
       <p>Implementation notes:</p>
       <ul>
-        <li>Uses JSON5 serialization for improved readability</li>
         <li>Maintains all original object properties</li>
         <li>Produces valid template syntax</li>
       </ul>
