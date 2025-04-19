@@ -1,7 +1,7 @@
 import nock from "nock";
 import {
   RENDER_ERROR,
-  REQUEST_OBJECT_ERROR,
+  REQUEST_COMPONENT_ERROR,
   METHOD,
   BASE_URL,
   RESPONSE_ERROR,
@@ -10,8 +10,6 @@ import {
   REQUEST_INIT_GET,
   INTERVAL
 } from "../config/config";
-import { JSDOM } from "jsdom";
-import createDOMPurify from "dompurify";
 import { compile, stringify } from "../../src/main";
 import {
   waeq,
@@ -164,40 +162,42 @@ const contentType1 = "application/octet-stream";
 
 describe("template function", () => {
   e(
-    `only accepts the '${METHOD}' property in the REQUEST OBJECT as GET, POST, PUT, PATCH or DELETE`,
+    `only accepts the '${METHOD}' property in the REQUEST COMPONENT as GET, POST, PUT, PATCH or DELETE`,
     () =>
       compile(
         createTestObj2(
-          `<button>Click</button>#r{ "src":"/api/test", "method": "test", "after": "click:#increment" }`
+          `<button>Click</button>{{#r src="/api/test" method="test" after="click:#increment"}}{{/r}}`
         )
       )(),
-    `${REQUEST_OBJECT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH or DELETE values`
+    `${REQUEST_COMPONENT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH or DELETE values`
   );
   e(
     "throws an error if the EVENT TARGET doesn't exist",
-    () => compile(`#r{ "src":"/api/test", "after": "click:#increment" }`)(),
+    () => compile(`{{#r src="/api/test" after="click:#increment"}}{{/r}}`)(),
     `${RENDER_ERROR}: EventTarget is undefined`
   );
   e(
     "throws an error if Memoization enabled without the Repetition mode enabled",
-    () => compile(`#r{ "src":"/api/test", "memo": true }`)(),
-    `${REQUEST_OBJECT_ERROR}: Memoization works in the enabled repetition mode`
+    () => compile(`{{#r src="/api/test" memo=true}}{{/r}}`)(),
+    `${REQUEST_COMPONENT_ERROR}: Memoization works in the enabled repetition mode`
   );
   e(
     `throws an error if the '${REQUEST_INIT_GET}' property in the RequestInit object is a function`,
-    () => compile(createTestObj2(`#r{ "src":"123" }`))({ get: "" as any }),
+    () => compile(createTestObj2(`{{#r src="123"}}{{/r}}`))({ get: "" as any }),
     `${REQUEST_INIT_ERROR}: The "${REQUEST_INIT_GET}" property has a function value`
   );
   e(
     "throws an error if the value being passed is a number for RequestInit",
     () =>
-      compile(createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`))(123 as any),
+      compile(createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`))(
+        123 as any
+      ),
     `${REQUEST_INIT_ERROR}: The type of the value being passed does not match the supported types for RequestInit`
   );
   e(
     "throws an error if passed duplicate IDs for the RequestInit objects",
     () =>
-      compile(createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`))([
+      compile(createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`))([
         { id: "1", value: {} },
         { id: "1", value: {} }
       ]),
@@ -206,7 +206,7 @@ describe("template function", () => {
   e(
     "",
     () =>
-      compile(createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`))([
+      compile(createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`))([
         { id: 1, value: {} },
         { id: 1, value: {} }
       ]),
@@ -215,7 +215,7 @@ describe("template function", () => {
   e(
     "throws an error if the ID is not a string or a number",
     () =>
-      compile(createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`))([
+      compile(createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`))([
         { id: [] as any, value: {} },
         { id: 1, value: {} }
       ]),
@@ -224,7 +224,7 @@ describe("template function", () => {
   e(
     "throws an error if the value is not an object for RequestInit object",
     () =>
-      compile(createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`))([
+      compile(createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`))([
         "123" as any,
         { id: 1, value: {} }
       ]),
@@ -233,7 +233,7 @@ describe("template function", () => {
   e(
     "throws an error if the ID or value is not present for RequestInit object",
     () =>
-      compile(createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`))([
+      compile(createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`))([
         {} as any,
         { id: 1, value: {} }
       ]),
@@ -244,17 +244,17 @@ describe("template function", () => {
     () =>
       compile(
         createTestObj2(
-          `<button>Click</button>#r{ "src":"/api/test", "after": "click:#increment", "memo": true, "repeat": false }`
+          `<button>Click</button>{{#r src="/api/test" after="click:#increment" memo=true repeat=false}}{{/r}}`
         )
       )(),
-    `${REQUEST_OBJECT_ERROR}: Memoization works in the enabled repetition mode`
+    `${REQUEST_COMPONENT_ERROR}: Memoization works in the enabled repetition mode`
   );
   e(
     "throws an error if the selector nodes are not found",
     () =>
       compile(
         createTestObj2(
-          `<button>Click</button>#r{ "src":"/api/test", "after":"click:#increment" }`
+          `<button>Click</button>{{#r src="/api/test" after="click:#increment"}}{{/r}}`
         )
       )(),
     `${RENDER_ERROR}: Selectors nodes not found`
@@ -263,7 +263,7 @@ describe("template function", () => {
     "",
     compile(
       createTestObj2(
-        `<button id="increment">Click</button>#r{ "src":"/api/test", "after":"click:#increment" }`
+        `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment"}}{{/r}}`
       ),
       { memo: true }
     )().response?.outerHTML,
@@ -273,7 +273,7 @@ describe("template function", () => {
     "",
     compile(
       createTestObj2(
-        `<button id="increment">Click</button>#r{ "src":"/api/test", "after":"click:#increment", "repeat": false }`
+        `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment" repeat=false}}{{/r}}`
       ),
       { memo: true }
     )().response?.outerHTML,
@@ -281,49 +281,49 @@ describe("template function", () => {
   );
   e(
     "throws an error if passed duplicate indicator triggers",
-    () => compile(createTestObj2(`#r${eq0}`))(),
-    `${REQUEST_OBJECT_ERROR}: Indicator trigger must be unique`
+    () => compile(createTestObj2(`${eq0}`))(),
+    `${REQUEST_COMPONENT_ERROR}: Indicator trigger must be unique`
   );
   e(
     "throws an error if provided an invalid indicator trigger",
-    () => compile(createTestObj2(`#r${eq1}`))(),
-    `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+    () => compile(createTestObj2(`${eq1}`))(),
+    `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
   );
   e(
     "throws an error if trigger is not provided to the indicators",
-    () => compile(createTestObj2(`#r${eq2}`))(),
-    `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+    () => compile(createTestObj2(`${eq2}`))(),
+    `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
   );
   e(
     "throws an error if trigger is a number and the value is not provided to the indicators",
-    () => compile(createTestObj2(`#r${eq3}`))(),
-    `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+    () => compile(createTestObj2(`${eq3}`))(),
+    `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
   );
   e(
     "",
     () =>
       compile(
         createTestObj2(
-          `<button id="increment">Click</button>#r{ "src":"/api/test", "after":"click:#increment", "memo": true, interval:1000 }`
+          `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment" memo=true interval=1000}}{{/r}}`
         )
       )(),
-    `${REQUEST_OBJECT_ERROR}: The "${INTERVAL}" property does not work with repetiton mode yet`
+    `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" property does not work with repetiton mode yet`
   );
   e(
     "",
     () =>
       compile(
         createTestObj2(
-          `<button id="increment">Click</button>#r{ "src":"/api/test", "after":"click:#increment", "memo": true, interval:"1000" }`
+          `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment" memo=true interval="1000"}}{{/r}}`
         )
       )(),
-    `${REQUEST_OBJECT_ERROR}: The "${INTERVAL}" value must be number`
+    `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" value must be number`
   );
   eq(
     "",
     compile(
       createTestObj2(
-        `<button id="increment">Click</button>#r{ "src":"/api/test", "after":"click:#increment", "memo": true }`
+        `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment" memo=true}}{{/r}}`
       ),
       { memo: false }
     )().response?.outerHTML,
@@ -333,7 +333,7 @@ describe("template function", () => {
     "",
     compile(
       createTestObj2(
-        `<button id="increment">Click</button>#r{ "src":"/api/test", "after":"click:#increment", "memo": true }`
+        `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment" memo=true}}{{/r}}`
       ),
       { memo: false }
     )().response?.outerHTML,
@@ -343,7 +343,7 @@ describe("template function", () => {
     "",
     compile(
       createTestObj2(
-        `<button id="increment">Click</button>#r{ "src":"/api/test", "after":"click:#increment", "memo": false }`
+        `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment" memo=false}}{{/r}}`
       ),
       { memo: true }
     )().response?.outerHTML,
@@ -351,21 +351,21 @@ describe("template function", () => {
   );
   eq(
     "",
-    compile(createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`))().response
-      ?.outerHTML,
+    compile(createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`))()
+      .response?.outerHTML,
     "<div><!--hmpl0--></div>"
   );
   eq(
     "",
     compile(
       createTestObj2(
-        `<button id="increment">Click</button>#r{ "src":"/api/test", "after":"click:#increment" }`
+        `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment"}}{{/r}}`
       )
     )().response?.outerHTML,
     '<div><button id="increment">Click</button><!--hmpl0--></div>'
   );
   eaeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${RESPONSE_ERROR}: Expected ${DEFAULT_ALLOWED_CONTENT_TYPES.map(
       (type) => `"${type}"`
     ).join(", ")}, but received "${contentType1}"`,
@@ -379,7 +379,7 @@ describe("template function", () => {
     }
   );
   eaeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${RESPONSE_ERROR}: Expected ${DEFAULT_ALLOWED_CONTENT_TYPES.map(
       (type) => `"${type}"`
     ).join(", ")}, but received ""`,
@@ -393,7 +393,7 @@ describe("template function", () => {
     }
   );
   eaeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${REQUEST_INIT_ERROR}: Expected type string, but received type object`,
     () => ({}) as any,
     {
@@ -404,7 +404,7 @@ describe("template function", () => {
     {}
   );
   eaeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${REQUEST_INIT_ERROR}: Expected an object with initialization options`,
     () => ({}) as any,
     () => () => 1 as any,
@@ -412,7 +412,7 @@ describe("template function", () => {
   );
   eaeq(
     createTestObj2(
-      `#r{ "src":"${BASE_URL}/api/test" }#r{ "src":"${BASE_URL}/api/test" }`
+      `{{#r src="${BASE_URL}/api/test"}}{{/r}}{{#r src="${BASE_URL}/api/test"}}{{/r}}`
     ),
     `${REQUEST_INIT_ERROR}: Expected an object with initialization options`,
     () => ({}) as any,
@@ -420,7 +420,7 @@ describe("template function", () => {
     {}
   );
   eaeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${REQUEST_INIT_ERROR}: The "headers" property must contain a value object`,
     () => ({}) as any,
     {
@@ -429,8 +429,8 @@ describe("template function", () => {
     {}
   );
   eaeq(
-    createTestObj2(`#r${eaeq1}`),
-    `${REQUEST_OBJECT_ERROR}: ID referenced by request not found`,
+    createTestObj2(`${eaeq1}`),
+    `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`,
     () => ({}) as any,
     (res: any) => [
       {
@@ -441,8 +441,8 @@ describe("template function", () => {
     {}
   );
   eaeq(
-    createTestObj2(`#r${eaeq1}`),
-    `${REQUEST_OBJECT_ERROR}: ID referenced by request not found`,
+    createTestObj2(`${eaeq1}`),
+    `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`,
     () => ({}) as any,
     (res: any) => [
       {
@@ -453,14 +453,14 @@ describe("template function", () => {
     {}
   );
   eaeq(
-    createTestObj2(`#r${eaeq1}`),
-    `${REQUEST_OBJECT_ERROR}: ID referenced by request not found`,
+    createTestObj2(`${eaeq1}`),
+    `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`,
     () => ({}) as any,
     (res: any) => ({}),
     {}
   );
   aeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test", initId:"" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test" initId=""}}{{/r}}`),
     () => ({}),
     (res: any) => [
       {
@@ -473,7 +473,7 @@ describe("template function", () => {
     true
   );
   aeq(
-    `#r{ "src":"${BASE_URL}/api/test" }`,
+    `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -488,7 +488,7 @@ describe("template function", () => {
     {}
   );
   aeq(
-    `#r{ "src":"${BASE_URL}/api/test", interval: 100 }`,
+    `{{#r src="${BASE_URL}/api/test" interval=100}}{{/r}}`,
     (res, prop, value, context) => {
       context.request.clearInterval();
       switch (prop) {
@@ -504,7 +504,7 @@ describe("template function", () => {
     {}
   );
   aeq(
-    createTestObj2(`#r${aeq5}`),
+    createTestObj2(`${aeq5}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -522,7 +522,7 @@ describe("template function", () => {
     }
   );
   aeq(
-    createTestObj2(`#r{ src: "${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
         case "status":
@@ -538,7 +538,7 @@ describe("template function", () => {
     }
   );
   aeq(
-    createTestObj2(`#r${aeq7}`),
+    createTestObj2(`${aeq7}`),
     (res, prop, value) => {
       switch (prop) {
         case "status":
@@ -554,7 +554,7 @@ describe("template function", () => {
     }
   );
   aeq(
-    createTestObj2(`#r{ src: "${BASE_URL}/api/test", indicators:[] }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test" indicators=[]}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
         case "status":
@@ -570,7 +570,7 @@ describe("template function", () => {
     }
   );
   aeq(
-    createTestObj2(`#r${aeq6}`),
+    createTestObj2(`${aeq6}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -588,7 +588,7 @@ describe("template function", () => {
     }
   );
   aeq(
-    createTestObj2(`#r${aeq7}`),
+    createTestObj2(`${aeq7}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -606,7 +606,7 @@ describe("template function", () => {
     }
   );
   waeq(
-    `#r{ "src":"${BASE_URL}/api/test" }`,
+    `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
     `${REQUEST_INIT_ERROR}: The "signal" property overwrote the AbortSignal from "timeout"`,
     () => ({}) as any,
     {
@@ -616,7 +616,7 @@ describe("template function", () => {
     {}
   );
   waeq(
-    `#r{ "src":"${BASE_URL}/api/test" }`,
+    `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
     `${REQUEST_INIT_ERROR}: The "keepalive" property is not yet supported`,
     () => ({}) as any,
     {
@@ -626,7 +626,7 @@ describe("template function", () => {
   );
   aeq(
     createTestObj2(
-      `#r{ "src":"${BASE_URL}/api/test", disallowedTags:["script"] }`
+      `{{#r src="${BASE_URL}/api/test" disallowedTags=["script"]}}{{/r}}`
     ),
     (res, prop, value) => {
       switch (prop) {
@@ -646,7 +646,7 @@ describe("template function", () => {
   );
   aeq(
     createTestObj2(
-      `#r{ "src":"${BASE_URL}/api/test", disallowedTags:["script"] }`
+      `{{#r src="${BASE_URL}/api/test" disallowedTags=["script"]}}{{/r}}`
     ),
     (res, prop, value) => {
       switch (prop) {
@@ -670,7 +670,7 @@ describe("template function", () => {
 
   aeq(
     createTestObj2(
-      `#r{ "src":"${BASE_URL}/api/test", disallowedTags:["script"], interval: 100 }`
+      `{{#r src="${BASE_URL}/api/test" disallowedTags=["script"] interval=100}}{{/r}}`
     ),
     (res, prop, value, context) => {
       context.request.clearInterval();
@@ -694,7 +694,7 @@ describe("template function", () => {
   );
 
   aeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test", sanitize:true }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test" sanitize=true}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -713,7 +713,7 @@ describe("template function", () => {
     {}
   );
   aeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test", sanitize:true }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test" sanitize=true}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -734,7 +734,7 @@ describe("template function", () => {
     }
   );
   aeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -753,7 +753,7 @@ describe("template function", () => {
     }
   );
   aeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -767,12 +767,9 @@ describe("template function", () => {
     }
   );
   aeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test",     indicators: [
-      {
-        trigger: "pending",
-        content: "<p>Loading...</p>"
-      }
-    ] }`),
+    createTestObj2(
+      `{{#r src="${BASE_URL}/api/test" indicators=[{trigger:"pending", content:"<p>Loading...</p>"}]}}{{/r}}`
+    ),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -786,7 +783,7 @@ describe("template function", () => {
     }
   );
   aeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -811,7 +808,7 @@ describe("template function", () => {
   );
 
   aeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -836,7 +833,7 @@ describe("template function", () => {
   );
 
   aeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -862,7 +859,7 @@ describe("template function", () => {
 
   aeq(
     createTestObj2(
-      `#r{ "src":"${BASE_URL}/api/test" }#r{ "src":"${BASE_URL}/api/test" }`
+      `{{#r src="${BASE_URL}/api/test"}}{{/r}}{{#r src="${BASE_URL}/api/test"}}{{/r}}`
     ),
     (res, prop, value) => {
       switch (prop) {
@@ -877,7 +874,7 @@ describe("template function", () => {
   );
 
   aeq(
-    createTestObj2(`#r{ "src":"${BASE_URL}/api/test" }`),
+    createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -903,7 +900,7 @@ describe("template function", () => {
 
   aeq(
     createTestObj2(
-      `#r{ "src":"${BASE_URL}/api/test", allowedContentTypes: ["application/octet-stream"] }`
+      `{{#r src="${BASE_URL}/api/test" allowedContentTypes=["application/octet-stream"]}}{{/r}}`
     ),
     (res, prop, value) => {
       switch (prop) {
@@ -930,7 +927,7 @@ describe("template function", () => {
 
   aeq(
     createTestObj2(
-      `#r{ "src":"${BASE_URL}/api/test", allowedContentTypes: ["application/octet-stream"] }`
+      `{{#r src="${BASE_URL}/api/test" allowedContentTypes=["application/octet-stream"]}}{{/r}}`
     ),
     (res, prop, value) => {
       switch (prop) {
@@ -953,7 +950,7 @@ describe("template function", () => {
       }
     }
   );
-  aeq(createTestObj2(`#r${aeq0}`), (res, prop, value) => {
+  aeq(createTestObj2(`${aeq0}`), (res, prop, value) => {
     switch (prop) {
       case "response":
         if (value?.outerHTML === `<div><p>Loading...</p></div>`) {
@@ -964,7 +961,7 @@ describe("template function", () => {
         break;
     }
   });
-  aeq(`#r${aeq0}`, (res, prop, value) => {
+  aeq(`${aeq0}`, (res, prop, value) => {
     switch (prop) {
       case "response":
         if (value?.outerHTML === `<template><div>123</div></template>`) {
@@ -974,7 +971,7 @@ describe("template function", () => {
     }
   });
   aeq(
-    `#r${aeq4}`,
+    `${aeq4}`,
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -990,7 +987,7 @@ describe("template function", () => {
     }
   );
   aeq(
-    `#r${aeq5}`,
+    `${aeq5}`,
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1006,7 +1003,7 @@ describe("template function", () => {
     }
   );
   aeq(
-    createTestObj2(`#r${aeq0}`),
+    createTestObj2(`${aeq0}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1033,7 +1030,7 @@ describe("template function", () => {
     }
   );
   aeqe(
-    `<pre><button id="click">click</button>#r${aeq1}</pre>`,
+    `<pre><button id="click">click</button>${aeq1}</pre>`,
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1050,7 +1047,7 @@ describe("template function", () => {
     }
   );
   aeqe(
-    createTestObj3(`#r${aeq1}`),
+    createTestObj3(`${aeq1}`),
     () => ({}),
     {},
     (res: any) => () => {
@@ -1073,7 +1070,7 @@ describe("template function", () => {
     }
   );
   aeqe(
-    createTestObj3(`#r${aeqe0}`),
+    createTestObj3(`${aeqe0}`),
     () => ({}),
     {},
     (res: any) => [
@@ -1096,7 +1093,7 @@ describe("template function", () => {
       }
     ]
   );
-  aeqe(createTestObj3(`#r${aeq1}#r${aeq1}`), (res, prop, value) => {
+  aeqe(createTestObj3(`${aeq1}${aeq1}`), (res, prop, value) => {
     switch (prop) {
       case "response":
         if (
@@ -1110,7 +1107,7 @@ describe("template function", () => {
   });
   let memoItem: Element | undefined = undefined;
   aeqe(
-    createTestObj3(`#r${aeq1}`),
+    createTestObj3(`${aeq1}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1138,7 +1135,7 @@ describe("template function", () => {
   );
 
   aeqe(
-    createTestObj3(`#r${aeq8}#r${aeq8}`),
+    createTestObj3(`${aeq8}${aeq8}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1158,7 +1155,7 @@ describe("template function", () => {
   );
 
   aeqe(
-    createTestObj3(`<pre>#r${aeq8}</pre>`),
+    createTestObj3(`<pre>${aeq8}</pre>`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1181,7 +1178,7 @@ describe("template function", () => {
 
   let memoItem1: Element | undefined = undefined;
   aeqe(
-    createTestObj3(`#r${aeq1}`),
+    createTestObj3(`${aeq1}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1208,7 +1205,7 @@ describe("template function", () => {
   );
   let memoItem2: Element | undefined = undefined;
   aeqe(
-    createTestObj3(`#r${aeq2}`),
+    createTestObj3(`${aeq2}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1232,7 +1229,7 @@ describe("template function", () => {
   );
   let count = 0;
   aeqe(
-    createTestObj3(`#r${aeq1}`),
+    createTestObj3(`${aeq1}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1259,7 +1256,7 @@ describe("template function", () => {
     3
   );
   aeqe(
-    createTestObj3(`#r${aeq2}`),
+    createTestObj3(`${aeq2}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1285,7 +1282,7 @@ describe("template function", () => {
   );
   // status templateObject check
   aeqe(
-    createTestObj3(`#r${aeq1}`),
+    createTestObj3(`${aeq1}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1318,7 +1315,7 @@ describe("template function", () => {
     }
   );
   aeqe(
-    createTestObj3(`#r${aeq2}`),
+    createTestObj3(`${aeq2}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1344,7 +1341,7 @@ describe("template function", () => {
   );
 
   aeqe(
-    createTestObj4(`#r${aeq3}`),
+    createTestObj4(`${aeq3}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1375,7 +1372,7 @@ describe("template function", () => {
   );
 
   aeqe(
-    `#r${aeq0}`,
+    `${aeq0}`,
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1393,7 +1390,7 @@ describe("template function", () => {
   );
 
   aeqe(
-    createTestObj3(`#r${aeq0}#r${aeq0}`),
+    createTestObj3(`${aeq0}${aeq0}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1417,7 +1414,7 @@ describe("template function", () => {
   );
 
   aeqe(
-    createTestObj3(`#r${aeq1}`),
+    createTestObj3(`${aeq1}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1446,7 +1443,7 @@ describe("template function", () => {
   let memoItem3: Element | undefined;
 
   aeqe(
-    createTestObj3(`#r${aeq2}`),
+    createTestObj3(`${aeq2}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1477,7 +1474,7 @@ describe("template function", () => {
   );
 
   aeqe(
-    createTestObj3(`#r${aeq2}`),
+    createTestObj3(`${aeq2}`),
     (res, prop, value) => {
       switch (prop) {
         case "response":
@@ -1503,7 +1500,7 @@ describe("template function", () => {
   );
 
   aeqe(
-    `#r${aeq0}`,
+    `${aeq0}`,
     (res, prop, value) => {
       switch (prop) {
         case "response":

@@ -16,7 +16,7 @@ const INTERVAL = `interval`;
 const RESPONSE_ERROR = `BadResponseError`;
 const REQUEST_INIT_ERROR = `RequestInitError`;
 const RENDER_ERROR = `RenderError`;
-const REQUEST_OBJECT_ERROR = `RequestObjectError`;
+const REQUEST_COMPONENT_ERROR = `RequestComponentError`;
 const COMPILE_OPTIONS_ERROR = `CompileOptionsError`;
 const PARSE_ERROR = `ParseError`;
 const COMPILE_ERROR = `CompileError`;
@@ -42,7 +42,7 @@ export {
   RESPONSE_ERROR,
   REQUEST_INIT_ERROR,
   RENDER_ERROR,
-  REQUEST_OBJECT_ERROR,
+  REQUEST_COMPONENT_ERROR,
   COMPILE_OPTIONS_ERROR,
   PARSE_ERROR,
   COMPILE_ERROR,

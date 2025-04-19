@@ -200,7 +200,7 @@ const aeqe = (
 };
 
 const createTestObj1 = (obj: Record<string, any>) => {
-  return `<div>#r${stringify(obj as HMPLRequestInfo)}</div>`;
+  return `<div>${stringify(obj as HMPLRequestInfo)}</div>`;
 };
 
 const createTestObj2 = (text: string) => {

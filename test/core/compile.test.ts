@@ -9,7 +9,7 @@ import {
   ALLOWED_CONTENT_TYPES,
   PARSE_ERROR,
   RENDER_ERROR,
-  REQUEST_OBJECT_ERROR,
+  REQUEST_COMPONENT_ERROR,
   COMPILE_OPTIONS_ERROR,
   SOURCE,
   AFTER,
@@ -31,13 +31,11 @@ describe("compile function", () => {
     () => compile(123 as any),
     `${COMPILE_ERROR}: Template was not found or the type of the passed value is not string`
   );
-
   e(
     "throws an error if the TEMPLATE is an empty string",
     () => compile(""),
     `${COMPILE_ERROR}: Template must not be a falsey value`
   );
-
   e(
     "only accepts COMPILES OPTIONS as an object",
     () => compile("some template", "some text" as any),
@@ -48,138 +46,109 @@ describe("compile function", () => {
     () => compile("some template", { memo: 123 as unknown as boolean }),
     `${COMPILE_OPTIONS_ERROR}: The value of the property ${MEMO} must be a boolean`
   );
-
   e(
     "throws an error if the TEMPLATE string doesn't contain a request object",
     () => compile("<div></div>"),
     `${PARSE_ERROR}: Request object not found`
   );
-
   e(
     "",
-    () => compile(`<div>#r{src:"123"}<!--hmpl1--></div>`),
+    () => compile("<div>{{#request src='test'</div>"),
+    `${PARSE_ERROR}: Unclosed block (no ending '}}') for {{#request`
+  );
+  e(
+    "",
+    () => compile("<div>{{#request src='test'}}Some content</div>"),
+    `${PARSE_ERROR}: No closing '{{/request}}' found for {{#request`
+  );
+  e(
+    "",
+    () =>
+      compile(
+        "<div>{{#request src='test'}}{{#request src='inner'}}{{/request}}{{/request}}</div>"
+      ),
+    `${PARSE_ERROR}: Nested {{#request}} blocks are not supported`
+  );
+  e(
+    "",
+    () =>
+      compile(
+        "<div>{{#request src='test', autoBody=true, }}</div>{{/request}}"
+      ),
+    `${REQUEST_COMPONENT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
+  );
+  e(
+    "",
+    () => compile(`<div>{{#r src="123"}}{{/r}}<!--hmpl1--></div>`),
     `${PARSE_ERROR}: Request object with id "1" not found`
   );
-
   e(
-    "",
-    () =>
-      compile(`<div>Hello #r{{ "foo": "bar" } some broken stuff here</div>`),
-    `${PARSE_ERROR}: Unpaired curly braces in fetch block`
+    `throws an error if the REQUEST COMPONENT doesn't contain the '${SOURCE}' property`,
+    () => compile(createTestObj2(`{{#r repeat=true}}{{/r}}`)),
+    `${REQUEST_COMPONENT_ERROR}: The "${SOURCE}" property are not found or empty`
   );
-
   e(
-    "",
-    () => compile(`#r{"text": "escaped quote here: \\" still in string"}`),
-    `${REQUEST_OBJECT_ERROR}: Property "text" is not processed`
-  );
-
-  e(
-    "",
-    () => compile(`#r{<!-- some comment -->"key": "value"}`),
-    `JSON5: invalid character '<' at 1:2`
-  );
-
-  e(
-    "",
-    () =>
-      compile(
-        `Some text before #r{<!-- comment starts and never ends "key": "value"}}`
-      ),
-    `${PARSE_ERROR}: Unpaired curly braces in fetch block`
-  );
-
-  e(
-    "",
-    () =>
-      compile(
-        `#r{
-          "a": "b",
-          "nested": #request{ "error": "nested" }
-        }`
-      ),
-    `${PARSE_ERROR}: Nesting of request objects is not supported`
-  );
-
-  e(
-    `throws an error if the REQUEST OBJECT doesn't contain the '${SOURCE}' property`,
-    () => compile(createTestObj2(`#r{ "repeat":true }`)),
-    `${REQUEST_OBJECT_ERROR}: The "${SOURCE}" property are not found or empty`
-  );
-
-  e(
-    "throws an error if the REQUEST OBJECT contains invalid properties",
+    "throws an error if the REQUEST COMPONENT contains invalid properties",
     () => compile(createTestObj1({ a: "" })),
-    `${REQUEST_OBJECT_ERROR}: Property "a" is not processed`
+    `${REQUEST_COMPONENT_ERROR}: Property "a" is not processed`
   );
-
   e(
-    `only accepts the '${INDICATORS}' property in the REQUEST OBJECT as an array`,
+    `only accepts the '${INDICATORS}' property in the REQUEST COMPONENT as an array`,
     () => compile(createTestObj1({ [INDICATORS]: "" })),
-    `${REQUEST_OBJECT_ERROR}: The value of the property "${INDICATORS}" must be an array`
+    `${REQUEST_COMPONENT_ERROR}: The value of the property "${INDICATORS}" must be an array`
   );
-
   e(
-    `only accepts the '${ID}' property in the REQUEST OBJECT as a string`,
+    `only accepts the '${ID}' property in the REQUEST COMPONENT as a string`,
     () => compile(createTestObj1({ [ID]: [] })),
-    `${REQUEST_OBJECT_ERROR}: The value of the property "${ID}" must be a string`
+    `${REQUEST_COMPONENT_ERROR}: The value of the property "${ID}" must be a string`
   );
-
   e(
-    `only accepts the '${MEMO}' property in the REQUEST OBJECT as a boolean`,
+    `only accepts the '${MEMO}' property in the REQUEST COMPONENT as a boolean`,
     () => compile(createTestObj1({ [MEMO]: [] })),
-    `${REQUEST_OBJECT_ERROR}: The value of the property "${MEMO}" must be a boolean value`
+    `${REQUEST_COMPONENT_ERROR}: The value of the property "${MEMO}" must be a boolean value`
   );
-
   e(
-    `only accepts the '${MODE}' property in the REQUEST OBJECT as a boolean`,
+    `only accepts the '${MODE}' property in the REQUEST COMPONENT as a boolean`,
     () => compile(createTestObj1({ [MODE]: [] })),
-    `${REQUEST_OBJECT_ERROR}: The value of the property "${MODE}" must be a boolean value`
+    `${REQUEST_COMPONENT_ERROR}: The value of the property "${MODE}" must be a boolean value`
   );
-
   e(
-    `only accepts the '${AUTO_BODY}' property in the REQUEST OBJECT as a boolean or an object`,
+    `only accepts the '${AUTO_BODY}' property in the REQUEST COMPONENT as a boolean or an object`,
     () => compile(createTestObj1({ [AUTO_BODY]: [] })),
-    `${REQUEST_OBJECT_ERROR}: Expected a boolean or object, but got neither`
+    `${REQUEST_COMPONENT_ERROR}: Expected a boolean or object, but got neither`
   );
-
   e(
-    `throws an error if the '${AUTO_BODY}' property in the REQUEST OBJECT contains invalid properties`,
+    `throws an error if the '${AUTO_BODY}' property in the REQUEST COMPONENT contains invalid properties`,
     () => compile(createTestObj1({ [AUTO_BODY]: { a: "" } })),
-    `${REQUEST_OBJECT_ERROR}: Unexpected property "a"`
+    `${REQUEST_COMPONENT_ERROR}: Unexpected property "a"`
   );
-
   e(
-    `only accepts the '${AUTO_BODY}.${FORM_DATA}' property in the REQUEST OBJECT as a boolean`,
+    `only accepts the '${AUTO_BODY}.${FORM_DATA}' property in the REQUEST COMPONENT as a boolean`,
     () => compile(createTestObj1({ [AUTO_BODY]: { [FORM_DATA]: "" } })),
-    `${REQUEST_OBJECT_ERROR}: The "${FORM_DATA}" property should be a boolean`
+    `${REQUEST_COMPONENT_ERROR}: The "${FORM_DATA}" property should be a boolean`
   );
-
   e(
-    `only accepts the '${ALLOWED_CONTENT_TYPES}' property in the REQUEST OBJECT as a "*" or an array of strings`,
+    `only accepts the '${ALLOWED_CONTENT_TYPES}' property in the REQUEST COMPONENT as a "*" or an array of strings`,
     () => compile(createTestObj1({ [ALLOWED_CONTENT_TYPES]: {} })),
-    `${REQUEST_OBJECT_ERROR}: Expected "*" or string array, but got neither`
+    `${REQUEST_COMPONENT_ERROR}: Expected "*" or string array, but got neither`
   );
-
   e(
-    `throws an error if the '${ALLOWED_CONTENT_TYPES}' property in the REQUEST OBJECT contains non-string element at index 0 of the array`,
+    `throws an error if the '${ALLOWED_CONTENT_TYPES}' property in the REQUEST COMPONENT contains non-string element at index 0 of the array`,
     () => compile(createTestObj1({ [ALLOWED_CONTENT_TYPES]: [1] })),
-    `${REQUEST_OBJECT_ERROR}: In the array, the element with index 0 is not a string`
+    `${REQUEST_COMPONENT_ERROR}: In the array, the element with index 0 is not a string`
   );
-
   e(
     "only accepts the 'allowedContentTypes' property in the COMPILE OPTIONS as a '*' or an array of strings",
     () =>
-      compile(createTestObj2(`#r{ "src":"/api/test" }`), {
+      compile(createTestObj2(`{{#r src="/api/test"}}{{/r}}`), {
         allowedContentTypes: {} as any
       }),
     `${COMPILE_OPTIONS_ERROR}: Expected "*" or string array, but got neither`
   );
-
   e(
     "throws an error if the 'allowedContentTypes' property in the COMPILE OPTIONS contains non-string element at index 0 of the array",
     () =>
-      compile(createTestObj2(`#r{ "src":"/api/test" }`), {
+      compile(createTestObj2(`{{#r src="/api/test"}}{{/r}}`), {
         allowedContentTypes: [1] as any
       }),
     `${COMPILE_OPTIONS_ERROR}: In the array, the element with index 0 is not a string`
@@ -187,7 +156,7 @@ describe("compile function", () => {
   e(
     ``,
     () =>
-      compile(createTestObj2(`#r{ "src":"/api/test" }`), {
+      compile(createTestObj2(`{{#r src="/api/test"}}{{/r}}`), {
         disallowedTags: true as any
       }),
     `${COMPILE_OPTIONS_ERROR}: The value of the property "${DISALLOWED_TAGS}" must be an array`
@@ -195,7 +164,7 @@ describe("compile function", () => {
   e(
     ``,
     () =>
-      compile(createTestObj2(`#r{ "src":"/api/test" }`), {
+      compile(createTestObj2(`{{#r src="/api/test"}}{{/r}}`), {
         disallowedTags: ["div" as any]
       }),
     `${COMPILE_OPTIONS_ERROR}: The value "div" is not processed`
@@ -203,125 +172,126 @@ describe("compile function", () => {
   e(
     ``,
     () =>
-      compile(createTestObj2(`#r{ "src":"/api/test" }`), {
+      compile(createTestObj2(`{{#r src="/api/test"}}{{/r}}`), {
         sanitize: ["div"] as any
       }),
     `${COMPILE_OPTIONS_ERROR}: The value of the property "${SANITIZE}" must be a boolean`
   );
   e(
-    `throws an error if the '${SOURCE}' property in the REQUEST OBJECT is an array instead of a string`,
+    `throws an error if the '${SOURCE}' property in the REQUEST COMPONENT is an array instead of a string`,
     () => compile(createTestObj1({ [SOURCE]: [] })),
-    `${REQUEST_OBJECT_ERROR}: The value of the property "${SOURCE}" must be a string`
+    `${REQUEST_COMPONENT_ERROR}: The value of the property "${SOURCE}" must be a string`
   );
   e(
     "",
     () => compile(createTestObj1({ [SOURCE]: [] })),
-    `${REQUEST_OBJECT_ERROR}: The value of the property "${SOURCE}" must be a string`
+    `${REQUEST_COMPONENT_ERROR}: The value of the property "${SOURCE}" must be a string`
   );
-
   e(
-    "throws an error if the REQUEST OBJECT contains invalid property",
+    "throws an error if the REQUEST COMPONENT contains invalid property",
     () =>
       compile(
         createTestObj2(`<div>
-  <form onsubmit="function prevent(e){e.preventDefault();};return prevent(event);" id="form">
-    <div class="form-example">
-      <label for="login">Login: </label>
-      <input type="login" name="login" id="login" required />
-    </div>
-    <div class="form-example">
-      <input type="submit" value="Register!" />
-    </div>
-  </form>
-  <p>
-    #r{src:"", c:{a:{d:{}}}, indicators:[{ a:{}, b:{} }] }
-  </p>
-</div>`)
+    <form onsubmit="function prevent(e){e.preventDefault();};return prevent(event);" id="form">
+      <div class="form-example">
+        <label for="login">Login: </label>
+        <input type="login" name="login" id="login" required />
+      </div>
+      <div class="form-example">
+        <input type="submit" value="Register!" />
+      </div>
+    </form>
+    <p>
+      {{#r src="" c="d" indicators=[{ a:{}, b:{} }] }}{{/r}}
+    </p>
+  </div>`)
       ),
-    `${REQUEST_OBJECT_ERROR}: Property "c" is not processed`
+    `${REQUEST_COMPONENT_ERROR}: Property "c" is not processed`
   );
-
   e(
-    `throws an error if the REQUEST OBJECT doesn't have the ${SOURCE} property is an empty string`,
+    `throws an error if the REQUEST COMPONENT doesn't have the ${SOURCE} property is an empty string`,
     () =>
       compile(
         createTestObj2(`<div>
-  <form onsubmit="function prevent(e){e.preventDefault();};return prevent(event);" id="form">
-    <div class="form-example">
-      <label for="login">Login: </label>
-      <input type="login" name="login" id="login" required />
-    </div>
-    <div class="form-example">
-      <input type="submit" value="Register!" />
-    </div>
-  </form>
-  <p>
-    #r{src:"", indicators:{a:{d:{}}}, indicators:[{ a:{}, b:{} }] }
-  </p>
-</div>`)
+    <form onsubmit="function prevent(e){e.preventDefault();};return prevent(event);" id="form">
+      <div class="form-example">
+        <label for="login">Login: </label>
+        <input type="login" name="login" id="login" required />
+      </div>
+      <div class="form-example">
+        <input type="submit" value="Register!" />
+      </div>
+    </form>
+    <p>
+      {{#r src="" indicators={a:{d:{}}}, indicators=[{ a:{}, b:{} }] }}{{/r}}
+    </p>
+  </div>`)
       ),
-    `${REQUEST_OBJECT_ERROR}: The "${SOURCE}" property are not found or empty`
+    `${REQUEST_COMPONENT_ERROR}: The "${SOURCE}" property are not found or empty`
   );
-
   e(
     "throw an error if the TEMPLATE includes more than one top-level node",
-    () => compile(`${createTestObj2(`#r{ "src":"/api/test" }`)}<div></div>`),
+    () =>
+      compile(`${createTestObj2(`{{#r src="/api/test"}}{{/r}}`)}<div></div>`),
     `${RENDER_ERROR}: Template includes only one node of the Element type or one response object`
   );
   e(
-    `throws an error if the '${AUTO_BODY}' property in the REQUEST OBJECT is true without the '${AFTER}' property`,
-    () => compile(createTestObj2(`#r{ "src":"/api/test", "autoBody": true }`)),
-    `${REQUEST_OBJECT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
+    `throws an error if the '${AUTO_BODY}' property in the REQUEST COMPONENT is true without the '${AFTER}' property`,
+    () => compile(createTestObj2(`{{#r src="/api/test" autoBody=true}}{{/r}}`)),
+    `${REQUEST_COMPONENT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
   );
   e(
-    `throws an error if the event target is not provided for '${AFTER}' property in the REQUEST OBJECT`,
+    `throws an error if the event target is not provided for '${AFTER}' property in the REQUEST COMPONENT`,
     () =>
       compile(
         createTestObj2(
-          `<form id="form"></form>#r{ "src":"/api/test", "after":"submit" }`
+          `<form id="form"></form>{{#r src="/api/test" after="submit"}}{{/r}}`
         )
       ),
-    `${REQUEST_OBJECT_ERROR}: The "${AFTER}" property doesn't work without EventTargets`
+    `${REQUEST_COMPONENT_ERROR}: The "${AFTER}" property doesn't work without EventTargets`
   );
   e(
-    `throws an error if the '${MODE}' property in the REQUEST OBJECT is true without the '${AFTER}' property`,
+    `throws an error if the '${MODE}' property in the REQUEST COMPONENT is true without the '${AFTER}' property`,
     () =>
       compile(
         createTestObj2(
-          `<form id="form"></form>#r{ "src":"/api/test", "repeat":true }`
+          `<form id="form"></form>{{#r src="/api/test" repeat=true}}{{/r}}`
         )
       ),
-    `${REQUEST_OBJECT_ERROR}: The "${MODE}" property doesn't work without "${AFTER}" property`
-  );
-  e(
-    ``,
-    () =>
-      compile(createTestObj2(`#r{ "src":"/api/test", "disallowedTags":true }`)),
-    `${REQUEST_OBJECT_ERROR}: The value of the property "${DISALLOWED_TAGS}" must be an array`
+    `${REQUEST_COMPONENT_ERROR}: The "${MODE}" property doesn't work without "${AFTER}" property`
   );
   e(
     ``,
     () =>
       compile(
-        createTestObj2(`#r{ "src":"/api/test", disallowedTags: ["div"] }`)
+        createTestObj2(`{{#r src="/api/test" disallowedTags=true}}{{/r}}`)
       ),
-    `${REQUEST_OBJECT_ERROR}: The value "div" is not processed`
+    `${REQUEST_COMPONENT_ERROR}: The value of the property "${DISALLOWED_TAGS}" must be an array`
   );
   e(
     ``,
-    () => compile(createTestObj2(`#r{ "src":"/api/test", sanitize: ["div"] }`)),
-    `${REQUEST_OBJECT_ERROR}: The value of the property "${SANITIZE}" must be a boolean`
+    () =>
+      compile(
+        createTestObj2(`{{#r src="/api/test" disallowedTags=["div"]}}{{/r}}`)
+      ),
+    `${REQUEST_COMPONENT_ERROR}: The value "div" is not processed`
+  );
+  e(
+    ``,
+    () =>
+      compile(createTestObj2(`{{#r src="/api/test" sanitize=["div"]}}{{/r}}`)),
+    `${REQUEST_COMPONENT_ERROR}: The value of the property "${SANITIZE}" must be a boolean`
   );
   eq(
     `returns a template function when provided a TEMPLATE with just ${SOURCE} property`,
-    checkFunction(compile(createTestObj2(`#r{ "src":"/api/test" }`))),
+    checkFunction(compile(createTestObj2(`{{#r src="/api/test"}}{{/r}}`))),
     true
   );
   eq(
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": false }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody=false}}{{/r}}`
       ),
       {
         autoBody: true
@@ -333,7 +303,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": true }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody=true}}{{/r}}`
       ),
       {
         autoBody: false
@@ -345,7 +315,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form" }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form"}}{{/r}}`
       ),
       {
         autoBody: false
@@ -357,7 +327,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form" }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form"}}{{/r}}`
       ),
       {
         autoBody: true
@@ -369,7 +339,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form" }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form"}}{{/r}}`
       ),
       {
         autoBody: {
@@ -383,7 +353,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form" }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form"}}{{/r}}`
       ),
       {
         autoBody: {
@@ -397,7 +367,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": true }  }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:true } }}{{/r}}`
       ),
       {
         autoBody: false
@@ -409,7 +379,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": true }  }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:true } }}{{/r}}`
       ),
       {
         autoBody: true
@@ -421,7 +391,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": true } }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:true } }}{{/r}}`
       )
     )().response?.outerHTML,
     '<div><form id="form"></form><!--hmpl0--></div>'
@@ -430,7 +400,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": false } }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:false } }}{{/r}}`
       )
     )().response?.outerHTML,
     '<div><form id="form"></form><!--hmpl0--></div>'
@@ -439,7 +409,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": false } }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:false } }}{{/r}}`
       )
     )(() => ({})).response?.outerHTML,
     '<div><form id="form"></form><!--hmpl0--></div>'
@@ -448,7 +418,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "autoBody": { "formData": false }, "initId":"1" }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:false } initId="1" }}{{/r}}`
       )
     )([
       {
@@ -462,7 +432,7 @@ describe("compile function", () => {
     "",
     compile(
       createTestObj2(
-        `<form id="form"></form>#r{ "src":"/api/test", "after":"submit:#form", "initId":"1" } #r{ "src":"/api/test", "after":"submit:#form", "initId":"2" }`
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form" initId="1" }}{{/r}} {{#r src="/api/test" after="submit:#form" initId="2" }}{{/r}}`
       )
     )([
       {

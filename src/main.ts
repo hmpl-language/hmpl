@@ -124,7 +124,7 @@ const INTERVAL = `interval`;
 const RESPONSE_ERROR = `BadResponseError`;
 const REQUEST_INIT_ERROR = `RequestInitError`;
 const RENDER_ERROR = `RenderError`;
-const REQUEST_OBJECT_ERROR = `RequestObjectError`;
+const REQUEST_COMPONENT_ERROR = `RequestComponentError`;
 const COMPILE_OPTIONS_ERROR = `CompileOptionsError`;
 const PARSE_ERROR = `ParseError`;
 const COMPILE_ERROR = `CompileError`;
@@ -781,7 +781,7 @@ const renderTemplate = (
       const method = (req[METHOD] || "GET").toLowerCase();
       if (getIsMethodValid(method)) {
         createError(
-          `${REQUEST_OBJECT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH or DELETE values`
+          `${REQUEST_COMPONENT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH or DELETE values`
         );
       } else {
         const after = req[AFTER];
@@ -800,7 +800,7 @@ const renderTemplate = (
             if (req[MEMO]) {
               if (!isAll) {
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: Memoization works in the enabled repetition mode`
+                  `${REQUEST_COMPONENT_ERROR}: Memoization works in the enabled repetition mode`
                 );
               } else {
                 isMemo = true;
@@ -810,7 +810,7 @@ const renderTemplate = (
             }
           } else {
             createError(
-              `${REQUEST_OBJECT_ERROR}: Memoization works in the enabled repetition mode`
+              `${REQUEST_COMPONENT_ERROR}: Memoization works in the enabled repetition mode`
             );
           }
         } else {
@@ -827,7 +827,7 @@ const renderTemplate = (
         if (!isReqIntervalUndefined) {
           if (isAll && after) {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The "${INTERVAL}" property does not work with repetiton mode yet`
+              `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" property does not work with repetiton mode yet`
             );
           }
         }
@@ -855,7 +855,7 @@ const renderTemplate = (
           } else {
             autoBody = false;
             createError(
-              `${REQUEST_OBJECT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
+              `${REQUEST_COMPONENT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
             );
           }
         } else {
@@ -904,11 +904,11 @@ const renderTemplate = (
             const { trigger, content } = val;
             if (!trigger)
               createError(
-                `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+                `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
               );
             if (!content)
               createError(
-                `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+                `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
               );
             if (
               CODES.indexOf(trigger as number) === -1 &&
@@ -917,7 +917,7 @@ const renderTemplate = (
               trigger !== "error"
             ) {
               createError(
-                `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+                `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
               );
             }
             const elWrapper = getTemplateWrapper(
@@ -937,7 +937,7 @@ const renderTemplate = (
               uniqueTriggers.push(trigger);
             } else {
               createError(
-                `${REQUEST_OBJECT_ERROR}: Indicator trigger must be unique`
+                `${REQUEST_COMPONENT_ERROR}: Indicator trigger must be unique`
               );
             }
             newOn[`${trigger}`] = currentIndicator.content;
@@ -969,7 +969,7 @@ const renderTemplate = (
               }
               if (!result) {
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: ID referenced by request not found`
+                  `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`
                 );
               }
               return result as HMPLRequestInit;
@@ -979,7 +979,7 @@ const renderTemplate = (
           } else {
             if (initId)
               createError(
-                `${REQUEST_OBJECT_ERROR}: ID referenced by request not found`
+                `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`
               );
             return options as HMPLRequestInit;
           }
@@ -1230,13 +1230,13 @@ const renderTemplate = (
             };
           } else {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The "${AFTER}" property doesn't work without EventTargets`
+              `${REQUEST_COMPONENT_ERROR}: The "${AFTER}" property doesn't work without EventTargets`
             );
           }
         } else {
           if (!isModeUndefined) {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The "${REPEAT}" property doesn't work without "${AFTER}" property`
+              `${REQUEST_COMPONENT_ERROR}: The "${REPEAT}" property doesn't work without "${AFTER}" property`
             );
           }
         }
@@ -1244,7 +1244,7 @@ const renderTemplate = (
       }
     } else {
       createError(
-        `${REQUEST_OBJECT_ERROR}: The "${SOURCE}" property are not found or empty`
+        `${REQUEST_COMPONENT_ERROR}: The "${SOURCE}" property are not found or empty`
       );
     }
   };
@@ -1360,7 +1360,9 @@ const validateAllowedContentTypes = (
   allowedContentTypes: any,
   isCompile = false
 ) => {
-  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_OBJECT_ERROR;
+  const currentError = isCompile
+    ? COMPILE_OPTIONS_ERROR
+    : REQUEST_COMPONENT_ERROR;
   if (
     allowedContentTypes !== "*" &&
     !checkIsStringArray(allowedContentTypes, currentError)
@@ -1383,7 +1385,9 @@ const validateAutoBody = (
   isCompile = false
 ) => {
   const isObject = checkObject(autoBody);
-  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_OBJECT_ERROR;
+  const currentError = isCompile
+    ? COMPILE_OPTIONS_ERROR
+    : REQUEST_COMPONENT_ERROR;
   if (typeof autoBody !== "boolean" && !isObject)
     createError(
       `${currentError}: Expected a boolean or object, but got neither`
@@ -1413,7 +1417,9 @@ const validateAutoBody = (
  * @throws An error if the input is not an array or contains unexpected disallowed tag values.
  */
 const validateDisallowedTags = (disallowedTags: any, isCompile = false) => {
-  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_OBJECT_ERROR;
+  const currentError = isCompile
+    ? COMPILE_OPTIONS_ERROR
+    : REQUEST_COMPONENT_ERROR;
   const isArray = Array.isArray(disallowedTags);
   if (!isArray)
     createError(
@@ -1437,7 +1443,9 @@ const validateDisallowedTags = (disallowedTags: any, isCompile = false) => {
  * @throws An error if the input is not a boolean.
  */
 const validateSanitize = (sanitize: any, isCompile = false) => {
-  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_OBJECT_ERROR;
+  const currentError = isCompile
+    ? COMPILE_OPTIONS_ERROR
+    : REQUEST_COMPONENT_ERROR;
   if (typeof sanitize !== "boolean") {
     createError(
       `${currentError}: The value of the property "${SANITIZE}" must be a boolean`
@@ -1494,7 +1502,7 @@ const validateIdentificationOptionsArray = (
 const validateInterval = (time: any) => {
   if (typeof time !== "number") {
     createError(
-      `${REQUEST_OBJECT_ERROR}: The "${INTERVAL}" value must be number`
+      `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" value must be number`
     );
   }
 };
@@ -1502,10 +1510,36 @@ const validateInterval = (time: any) => {
 /**
  * Converts a HMPLRequestInfo object to a JSON string.
  * @param info - The HMPLRequestInfo object.
- * @returns The JSON string representation.
+ * @returns Request block.
  */
 export const stringify = (info: HMPLRequestInfo) => {
-  return JSON5.stringify(info);
+  const formatValue = (value: any): string => {
+    if (typeof value === "string") {
+      return `"${value}"`;
+    }
+    if (typeof value === "number" || typeof value === "boolean") {
+      return `${value}`;
+    }
+    if (Array.isArray(value)) {
+      return `[${value.map((item) => formatValue(item)).join(",")}]`;
+    }
+    if (typeof value === "object" && value !== null) {
+      return `{${Object.entries(value)
+        .map(([k, v]) => `${k}:${formatValue(v)}`)
+        .join(",")}}`;
+    }
+    return "";
+  };
+
+  let body = Object.entries(info)
+    .map(([key, value]) => `${key}=${formatValue(value)}`)
+    .join(" ");
+
+  if (body.endsWith("}")) {
+    body += " ";
+  }
+
+  return `{{#request ${body}}}{{/request}}`;
 };
 
 /**
@@ -1545,81 +1579,82 @@ export const compile: HMPLCompile = (
   if (!isSanitizeUndefined) validateSanitize(options[SANITIZE]!, true);
   const requests: HMPLRequestsObject[] = [];
   const requestsIndexes: number[] = [];
-  const splitFetchBlocks = (str: string) => {
+
+  const parseTemplate = (str: string) => {
     const parts: string[] = [];
-    const markers = ["#request{", "#r{"];
-    const markerRegex = /#request{|#r{/g;
     let pos = 0;
+
+    const openTags = [
+      { open: "{{#request", close: "{{/request}}" },
+      { open: "{{#r", close: "{{/r}}" }
+    ];
+
     while (pos < str.length) {
-      markerRegex.lastIndex = pos;
-      const match = markerRegex.exec(str);
-      if (!match) {
+      const openIndexes = openTags
+        .map((tag) => ({ ...tag, index: str.indexOf(tag.open, pos) }))
+        .filter((item) => item.index !== -1);
+
+      if (openIndexes.length === 0) {
         parts.push(str.slice(pos));
         break;
       }
-      const nextStart = match.index;
-      const marker = match[0];
-      parts.push(str.slice(pos, nextStart));
-      let braceCount = 1;
-      let i = nextStart + marker.length;
-      let inString = false;
-      let stringChar: string | null = null;
-      let inComment = false;
-      while (i < str.length && braceCount > 0) {
-        const char = str[i];
-        const nextFour = str.slice(i, i + 4);
-        const nextThree = str.slice(i, i + 3);
-        if (!inComment && !inString) {
-          if (nextFour === "<!--") {
-            inComment = true;
-            i += 4;
-            continue;
-          }
-          if (str.startsWith(markers[0], i) || str.startsWith(markers[1], i)) {
-            createError(
-              `${PARSE_ERROR}: Nesting of request objects is not supported`
-            );
-          }
-        }
-        if (inComment) {
-          if (nextThree === "-->") {
-            inComment = false;
-            i += 3;
-            continue;
-          }
-        } else if (!inString) {
-          if (char === '"' || char === "'" || char === "`") {
-            inString = true;
-            stringChar = char;
-          } else if (char === "{") {
-            braceCount++;
-          } else if (char === "}") {
-            braceCount--;
-          }
-        } else if (char === stringChar) {
-          let backslashCount = 0;
-          let j = i - 1;
-          while (j >= 0 && str[j] === "\\") {
-            backslashCount++;
-            j--;
-          }
-          if (backslashCount % 2 === 0) {
-            inString = false;
-            stringChar = null;
-          }
-        }
-        i++;
+
+      const nextOpen = openIndexes.sort((a, b) => a.index - b.index)[0];
+
+      parts.push(str.slice(pos, nextOpen.index));
+
+      const attrStart = nextOpen.index + nextOpen.open.length;
+      const attrEnd = str.indexOf("}}", attrStart);
+      if (attrEnd === -1) {
+        createError(
+          `${PARSE_ERROR}: Unclosed block (no ending '}}') for ${nextOpen.open}`
+        );
       }
-      if (braceCount !== 0) {
-        createError(`${PARSE_ERROR}: Unpaired curly braces in fetch block`);
+
+      const rawAttrs = str.slice(attrStart, attrEnd).trim();
+
+      const blockEnd = str.indexOf(nextOpen.close, attrEnd);
+      if (blockEnd === -1) {
+        createError(
+          `${PARSE_ERROR}: No closing '${nextOpen.close}' found for ${nextOpen.open}`
+        );
       }
-      parts.push(str.slice(nextStart, i));
+
+      const innerContent = str.slice(attrEnd + 2, blockEnd);
+      if (innerContent.includes(nextOpen.open)) {
+        createError(
+          `${PARSE_ERROR}: Nested ${nextOpen.open}}} blocks are not supported`
+        );
+      }
+
+      const transformedAttrs = safeReplaceEquals(rawAttrs);
+
+      parts.push(`{${transformedAttrs}}`);
       requestsIndexes.push(parts.length - 1);
-      pos = i;
+      pos = blockEnd + nextOpen.close.length;
     }
+
     return parts;
   };
-  const templateArr = splitFetchBlocks(template);
+
+  const safeReplaceEquals = (input: string): string => {
+    let result = "";
+
+    const regex =
+      /\s*([a-zA-Z0-9_-]+)\s*=\s*(("[^"]*"|'[^']*'|`[^`]*`|\[[^\]]*\]|\{[^}]*\}|true|false|\d+)(?=\s|,|$))\s*/g;
+
+    let match;
+    while ((match = regex.exec(input)) !== null) {
+      const key = match[1].trim();
+      const value = match[2].trim();
+
+      result += `${key}:${value},`;
+    }
+
+    return result.replace(/,$/, "").trim();
+  };
+
+  const templateArr = parseTemplate(template);
   if (requestsIndexes.length === 0)
     createError(`${PARSE_ERROR}: Request object not found`);
   const setRequest = (text: string) => {
@@ -1628,20 +1663,20 @@ export const compile: HMPLCompile = (
       const value = parsedData[key];
       if (!REQUEST_OPTIONS.includes(key))
         createError(
-          `${REQUEST_OBJECT_ERROR}: Property "${key}" is not processed`
+          `${REQUEST_COMPONENT_ERROR}: Property "${key}" is not processed`
         );
       switch (key) {
         case INDICATORS:
           if (!Array.isArray(value)) {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be an array`
+              `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be an array`
             );
           }
           break;
         case ID:
           if (typeof value !== "string" && typeof value !== "number") {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be a string`
+              `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be a string`
             );
           }
           break;
@@ -1649,7 +1684,7 @@ export const compile: HMPLCompile = (
         case REPEAT:
           if (typeof value !== "boolean") {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be a boolean value`
+              `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be a boolean value`
             );
           }
           break;
@@ -1671,7 +1706,7 @@ export const compile: HMPLCompile = (
         default:
           if (typeof value !== "string") {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be a string`
+              `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be a string`
             );
           }
           break;
@@ -1686,9 +1721,7 @@ export const compile: HMPLCompile = (
   for (let i = 0; i < requestsIndexes.length; i++) {
     const reqId = requestsIndexes[i];
     const reqVal = templateArr[reqId];
-    const firstBrace = reqVal.indexOf("{");
-    const newReqVal = reqVal.slice(firstBrace);
-    setRequest(newReqVal);
+    setRequest(reqVal);
     const comment = `<!--hmpl${i}-->`;
     templateArr[reqId] = comment;
   }
