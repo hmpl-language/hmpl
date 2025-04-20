@@ -76,10 +76,11 @@ var DISALLOWED_TAGS = `disallowedTags`;
 var SANITIZE = `sanitize`;
 var ALLOWED_CONTENT_TYPES = "allowedContentTypes";
 var REQUEST_INIT_GET = `get`;
+var INTERVAL = `interval`;
 var RESPONSE_ERROR = `BadResponseError`;
 var REQUEST_INIT_ERROR = `RequestInitError`;
 var RENDER_ERROR = `RenderError`;
-var REQUEST_OBJECT_ERROR = `RequestObjectError`;
+var REQUEST_COMPONENT_ERROR = `RequestComponentError`;
 var COMPILE_OPTIONS_ERROR = `CompileOptionsError`;
 var PARSE_ERROR = `ParseError`;
 var COMPILE_ERROR = `CompileError`;
@@ -89,8 +90,6 @@ var DEFAULT_AUTO_BODY = {
 var DEFAULT_FALSE_AUTO_BODY = {
   formData: false
 };
-var MAIN_REGEX = /(\{\{(?:.|\n|\r)*?\}\}|\{\s*\{(?:.|\n|\r)*?\}\s*\})/g;
-var BRACKET_REGEX = /([{}])|([^{}]+)/g;
 var REQUEST_OPTIONS = [
   SOURCE,
   METHOD,
@@ -102,7 +101,8 @@ var REQUEST_OPTIONS = [
   AUTO_BODY,
   ALLOWED_CONTENT_TYPES,
   DISALLOWED_TAGS,
-  SANITIZE
+  SANITIZE,
+  INTERVAL
 ];
 var CODES = [
   100,
@@ -199,7 +199,7 @@ var getIsNotAllowedContentType = (contentType, allowedContentTypes) => {
   }
   return !isContain;
 };
-var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, isMemo, options = {}, templateObject, allowedContentTypes, disallowedTags, sanitize, reqObject, indicators) => {
+var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, isMemo, options = {}, templateObject, allowedContentTypes, disallowedTags, sanitize, reqObject, indicators, currentClearInterval) => {
   const {
     mode,
     cache,
@@ -286,17 +286,21 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
   }
   const isRequestMemo = isMemo && !isRequest && dataObj?.memo;
   const getIsNotFullfilledStatus = (status) => status === "rejected" || typeof status === "number" && (status < 200 || status > 299);
+  const requestContext = getInstanceContext(
+    void 0,
+    currentClearInterval
+  );
   const callGetResponse = (reqResponse) => {
     if (isRequests) {
       reqObject.response = reqResponse;
-      get?.("response", reqResponse, reqObject);
+      get?.("response", reqResponse, requestContext, reqObject);
     }
-    get?.("response", mainEl);
+    get?.("response", mainEl, requestContext);
   };
   const updateNodes = (content, isClone = true, isNodes = false) => {
     if (isRequest) {
       templateObject.response = content.cloneNode(true);
-      get?.("response", content);
+      get?.("response", content, requestContext);
     } else {
       let reqResponse = [];
       const newContent = isClone ? content.cloneNode(true) : content;
@@ -343,7 +347,7 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
   const setComment = () => {
     if (isRequest) {
       templateObject.response = void 0;
-      get?.("response", void 0);
+      get?.("response", void 0, requestContext);
     } else {
       if (dataObj?.nodes) {
         const parentNode = dataObj.parentNode;
@@ -359,9 +363,9 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
         dataObj.parentNode = null;
         if (isRequests) {
           reqObject.response = void 0;
-          get?.("response", void 0, reqObject);
+          get?.("response", void 0, requestContext, reqObject);
         }
-        get?.("response", mainEl);
+        get?.("response", mainEl, requestContext);
       }
     }
     if (isRequestMemo) {
@@ -427,12 +431,12 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
     if (isRequests) {
       if (reqObject.status !== status) {
         reqObject.status = status;
-        get?.("status", status, reqObject);
+        get?.("status", status, requestContext, reqObject);
       }
     } else {
       if (templateObject.status !== status) {
         templateObject.status = status;
-        get?.("status", status);
+        get?.("status", status, requestContext);
       }
     }
     if (isRequestMemo && getIsNotFullfilledStatus(status)) {
@@ -512,7 +516,7 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
       );
       if (isRequest) {
         templateObject.response = templateWrapper;
-        get?.("response", templateWrapper);
+        get?.("response", templateWrapper, requestContext);
       } else {
         const reqResponse = [];
         const nodes = [
@@ -532,9 +536,9 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
           parentNode.removeChild(el);
           if (isRequests) {
             reqObject.response = reqResponse;
-            get?.("response", reqResponse, reqObject);
+            get?.("response", reqResponse, requestContext, reqObject);
           }
-          get?.("response", mainEl);
+          get?.("response", mainEl, requestContext);
         }
       }
     }
@@ -552,14 +556,23 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
     throw error;
   });
 };
-var getRequestInitFromFn = (fn, event) => {
+var getInstanceContext = (event, currentClearInterval) => {
   const request = {};
   if (event !== void 0) {
     request.event = event;
   }
-  const context = {
+  if (currentClearInterval) {
+    request.clearInterval = currentClearInterval;
+  }
+  return {
     request
   };
+};
+var getRequestInitFromFn = (fn, event, currentClearInterval) => {
+  const context = getInstanceContext(
+    event,
+    currentClearInterval
+  );
   const result = fn(context);
   return result;
 };
@@ -570,7 +583,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
       const method = (req[METHOD] || "GET").toLowerCase();
       if (getIsMethodValid(method)) {
         createError(
-          `${REQUEST_OBJECT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH or DELETE values`
+          `${REQUEST_COMPONENT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH or DELETE values`
         );
       } else {
         const after = req[AFTER];
@@ -580,14 +593,16 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
         const oldMode = isModeUndefined ? true : req[REPEAT];
         const modeAttr = oldMode ? "all" : "one";
         const isAll = modeAttr === "all";
+        const interval = req[INTERVAL];
         const isReqMemoUndefined = !req.hasOwnProperty(MEMO);
+        const isReqIntervalUndefined = !req.hasOwnProperty(INTERVAL);
         let isMemo = isMemoUndefined ? false : compileOptions[MEMO];
         if (!isReqMemoUndefined) {
           if (after) {
             if (req[MEMO]) {
               if (!isAll) {
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: Memoization works in the enabled repetition mode`
+                  `${REQUEST_COMPONENT_ERROR}: Memoization works in the enabled repetition mode`
                 );
               } else {
                 isMemo = true;
@@ -597,7 +612,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
             }
           } else {
             createError(
-              `${REQUEST_OBJECT_ERROR}: Memoization works in the enabled repetition mode`
+              `${REQUEST_COMPONENT_ERROR}: Memoization works in the enabled repetition mode`
             );
           }
         } else {
@@ -609,6 +624,13 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
             } else {
               isMemo = false;
             }
+          }
+        }
+        if (!isReqIntervalUndefined) {
+          if (isAll && after) {
+            createError(
+              `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" property does not work with repetiton mode yet`
+            );
           }
         }
         const isReqAutoBodyUndefined = !req.hasOwnProperty(AUTO_BODY);
@@ -635,7 +657,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
           } else {
             autoBody = false;
             createError(
-              `${REQUEST_OBJECT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
+              `${REQUEST_COMPONENT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
             );
           }
         } else {
@@ -669,7 +691,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
           validateSanitize(currentSanitize);
           sanitize = currentSanitize;
         }
-        const initId = req.initId;
+        const initId = req[ID];
         const nodeId = req.nodeId;
         let indicators = req.indicators;
         if (indicators) {
@@ -677,15 +699,15 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
             const { trigger, content } = val;
             if (!trigger)
               createError(
-                `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+                `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
               );
             if (!content)
               createError(
-                `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+                `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
               );
             if (CODES.indexOf(trigger) === -1 && trigger !== "pending" && trigger !== "rejected" && trigger !== "error") {
               createError(
-                `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+                `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
               );
             }
             const elWrapper = getTemplateWrapper(
@@ -705,7 +727,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
               uniqueTriggers.push(trigger);
             } else {
               createError(
-                `${REQUEST_OBJECT_ERROR}: Indicator trigger must be unique`
+                `${REQUEST_COMPONENT_ERROR}: Indicator trigger must be unique`
               );
             }
             newOn[`${trigger}`] = currentIndicator.content;
@@ -725,7 +747,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
               }
               if (!result) {
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: ID referenced by request not found`
+                  `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`
                 );
               }
               return result;
@@ -735,13 +757,14 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
           } else {
             if (initId)
               createError(
-                `${REQUEST_OBJECT_ERROR}: ID referenced by request not found`
+                `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`
               );
             return options;
           }
         };
-        const isDataObj = isAll && after;
-        const reqFunction = (reqEl, options, templateObject, data, reqMainEl, isArray = false, reqObject, isRequests = false, currentHMPLElement, event) => {
+        const isInterval = interval !== void 0;
+        const isDataObj = isAll && after || isInterval;
+        const reqFunction = (reqEl, options, templateObject, data, reqMainEl, isArray = false, reqObject, isRequests = false, currentHMPLElement, event, currentInterval) => {
           const id = data.currentId;
           if (isRequest) {
             if (!reqEl) reqEl = mainEl;
@@ -760,7 +783,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
               reqEl = currentEl2;
             }
           }
-          let dataObj;
+          let dataObj = void 0;
           if (!isRequest) {
             if (isDataObj || indicators) {
               dataObj = currentHMPLElement.objNode;
@@ -777,6 +800,14 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
                   };
                   if (indicators) {
                     dataObj.memo.isPending = false;
+                  }
+                }
+                if (isInterval) {
+                  if (currentInterval) {
+                    dataObj.interval = {
+                      value: currentInterval,
+                      clearInterval: () => clearInterval(currentInterval)
+                    };
                   }
                 }
                 currentHMPLElement.objNode = dataObj;
@@ -798,9 +829,12 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
               );
             }
           }
+          let currentClearInterval = currentInterval ? () => clearInterval(currentInterval) : void 0;
+          currentClearInterval = isRequest ? currentClearInterval : dataObj?.interval?.clearInterval;
           const requestInit = isOptionsFunction ? getRequestInitFromFn(
             currentOptions,
-            event
+            event,
+            currentClearInterval
           ) : currentOptions;
           if (!checkObject(requestInit) && requestInit !== void 0)
             createError(
@@ -821,10 +855,34 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
             disallowedTags,
             sanitize,
             reqObject,
-            indicators
+            indicators,
+            currentClearInterval
           );
         };
-        let requestFunction = reqFunction;
+        let currentReqFunction = reqFunction;
+        if (interval) {
+          validateInterval(interval);
+          const time = Number(interval);
+          currentReqFunction = (reqEl, options, templateObject, data, reqMainEl, isArray = false, reqObject, isRequests = false, currentHMPLElement, event) => {
+            let interval2 = null;
+            interval2 = setInterval(() => {
+              reqFunction(
+                reqEl,
+                options,
+                templateObject,
+                data,
+                reqMainEl,
+                isArray,
+                reqObject,
+                isRequests,
+                currentHMPLElement,
+                event,
+                interval2
+              );
+            }, time);
+          };
+        }
+        let requestFunction = currentReqFunction;
         if (after) {
           const setEvents = (reqEl, event, selector, options, templateObject, data, isArray, isRequests, reqMainEl, reqObject, currentHMPLElement) => {
             const els = reqMainEl.querySelectorAll(selector);
@@ -832,7 +890,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
               createError(`${RENDER_ERROR}: Selectors nodes not found`);
             }
             const afterFn = isAll ? (evt) => {
-              reqFunction(
+              currentReqFunction(
                 reqEl,
                 options,
                 templateObject,
@@ -845,7 +903,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
                 evt
               );
             } : (evt) => {
-              reqFunction(
+              currentReqFunction(
                 reqEl,
                 options,
                 templateObject,
@@ -888,13 +946,13 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
             };
           } else {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The "${AFTER}" property doesn't work without EventTargets`
+              `${REQUEST_COMPONENT_ERROR}: The "${AFTER}" property doesn't work without EventTargets`
             );
           }
         } else {
           if (!isModeUndefined) {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The "${REPEAT}" property doesn't work without "${AFTER}" property`
+              `${REQUEST_COMPONENT_ERROR}: The "${REPEAT}" property doesn't work without "${AFTER}" property`
             );
           }
         }
@@ -902,7 +960,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
       }
     } else {
       createError(
-        `${REQUEST_OBJECT_ERROR}: The "${SOURCE}" property are not found or empty`
+        `${REQUEST_COMPONENT_ERROR}: The "${SOURCE}" property are not found or empty`
       );
     }
   };
@@ -989,7 +1047,7 @@ var validateOptions = (currentOptions) => {
   }
 };
 var validateAllowedContentTypes = (allowedContentTypes, isCompile = false) => {
-  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_OBJECT_ERROR;
+  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_COMPONENT_ERROR;
   if (allowedContentTypes !== "*" && !checkIsStringArray(allowedContentTypes, currentError)) {
     createError(
       `${currentError}: Expected "*" or string array, but got neither`
@@ -998,7 +1056,7 @@ var validateAllowedContentTypes = (allowedContentTypes, isCompile = false) => {
 };
 var validateAutoBody = (autoBody, isCompile = false) => {
   const isObject = checkObject(autoBody);
-  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_OBJECT_ERROR;
+  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_COMPONENT_ERROR;
   if (typeof autoBody !== "boolean" && !isObject)
     createError(
       `${currentError}: Expected a boolean or object, but got neither`
@@ -1020,7 +1078,7 @@ var validateAutoBody = (autoBody, isCompile = false) => {
   }
 };
 var validateDisallowedTags = (disallowedTags, isCompile = false) => {
-  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_OBJECT_ERROR;
+  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_COMPONENT_ERROR;
   const isArray = Array.isArray(disallowedTags);
   if (!isArray)
     createError(
@@ -1036,7 +1094,7 @@ var validateDisallowedTags = (disallowedTags, isCompile = false) => {
   }
 };
 var validateSanitize = (sanitize, isCompile = false) => {
-  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_OBJECT_ERROR;
+  const currentError = isCompile ? COMPILE_OPTIONS_ERROR : REQUEST_COMPONENT_ERROR;
   if (typeof sanitize !== "boolean") {
     createError(
       `${currentError}: The value of the property "${SANITIZE}" must be a boolean`
@@ -1070,8 +1128,34 @@ var validateIdentificationOptionsArray = (currentOptions) => {
     }
   }
 };
+var validateInterval = (time) => {
+  if (typeof time !== "number") {
+    createError(
+      `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" value must be number`
+    );
+  }
+};
 var stringify = (info) => {
-  return import_json5.default.stringify(info);
+  const formatValue = (value) => {
+    if (typeof value === "string") {
+      return `"${value}"`;
+    }
+    if (typeof value === "number" || typeof value === "boolean") {
+      return `${value}`;
+    }
+    if (Array.isArray(value)) {
+      return `[${value.map((item) => formatValue(item)).join(",")}]`;
+    }
+    if (typeof value === "object" && value !== null) {
+      return `{${Object.entries(value).map(([k, v]) => `${k}:${formatValue(v)}`).join(",")}}`;
+    }
+    return "";
+  };
+  let body = Object.entries(info).map(([key, value]) => `${key}=${formatValue(value)}`).join(" ");
+  if (body.endsWith("}")) {
+    body += " ";
+  }
+  return `{{#request ${body}}}{{/request}}`;
 };
 var compile = (template, options = {}) => {
   if (typeof template !== "string")
@@ -1100,38 +1184,83 @@ var compile = (template, options = {}) => {
   const isSanitizeUndefined = !options.hasOwnProperty(SANITIZE);
   if (!isSanitizeUndefined) validateSanitize(options[SANITIZE], true);
   const requests = [];
-  const templateArr = template.split(MAIN_REGEX).filter(Boolean);
   const requestsIndexes = [];
-  for (const match of template.matchAll(MAIN_REGEX)) {
-    requestsIndexes.push(match.index);
-  }
+  const parseTemplate = (str) => {
+    const parts = [];
+    let pos = 0;
+    const openTags = [
+      { open: "{{#request", close: "{{/request}}" },
+      { open: "{{#r", close: "{{/r}}" }
+    ];
+    while (pos < str.length) {
+      const openIndexes = openTags.map((tag) => ({ ...tag, index: str.indexOf(tag.open, pos) })).filter((item) => item.index !== -1);
+      if (openIndexes.length === 0) {
+        parts.push(str.slice(pos));
+        break;
+      }
+      const nextOpen = openIndexes.sort((a, b) => a.index - b.index)[0];
+      parts.push(str.slice(pos, nextOpen.index));
+      const attrStart = nextOpen.index + nextOpen.open.length;
+      const attrEnd = str.indexOf("}}", attrStart);
+      if (attrEnd === -1) {
+        createError(
+          `${PARSE_ERROR}: Unclosed block (no ending '}}') for ${nextOpen.open}`
+        );
+      }
+      const rawAttrs = str.slice(attrStart, attrEnd).trim();
+      const blockEnd = str.indexOf(nextOpen.close, attrEnd);
+      if (blockEnd === -1) {
+        createError(
+          `${PARSE_ERROR}: No closing '${nextOpen.close}' found for ${nextOpen.open}`
+        );
+      }
+      const innerContent = str.slice(attrEnd + 2, blockEnd);
+      if (innerContent.includes(nextOpen.open)) {
+        createError(
+          `${PARSE_ERROR}: Nested ${nextOpen.open}}} blocks are not supported`
+        );
+      }
+      const transformedAttrs = safeReplaceEquals(rawAttrs);
+      parts.push(`{${transformedAttrs}}`);
+      requestsIndexes.push(parts.length - 1);
+      pos = blockEnd + nextOpen.close.length;
+    }
+    return parts;
+  };
+  const safeReplaceEquals = (input) => {
+    let result = "";
+    const regex = /\s*([a-zA-Z0-9_-]+)\s*=\s*(("[^"]*"|'[^']*'|`[^`]*`|\[[^\]]*\]|\{[^}]*\}|true|false|\d+)(?=\s|,|$))\s*/g;
+    let match;
+    while ((match = regex.exec(input)) !== null) {
+      const key = match[1].trim();
+      const value = match[2].trim();
+      result += `${key}:${value},`;
+    }
+    return result.replace(/,$/, "").trim();
+  };
+  const templateArr = parseTemplate(template);
   if (requestsIndexes.length === 0)
     createError(`${PARSE_ERROR}: Request object not found`);
-  const prepareText = (text) => {
-    text = text.trim();
-    text = text.replace(/\r?\n|\r/g, "");
-    return text;
-  };
-  const setRequest = (text, i) => {
+  const setRequest = (text) => {
     const parsedData = import_json5.default.parse(text);
     for (const key in parsedData) {
       const value = parsedData[key];
       if (!REQUEST_OPTIONS.includes(key))
         createError(
-          `${REQUEST_OBJECT_ERROR}: Property "${key}" is not processed`
+          `${REQUEST_COMPONENT_ERROR}: Property "${key}" is not processed`
         );
       switch (key) {
         case INDICATORS:
           if (!Array.isArray(value)) {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be an array`
+              `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be an array`
             );
           }
           break;
         case ID:
           if (typeof value !== "string" && typeof value !== "number") {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be a string`
+              `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be a string`
             );
           }
           break;
@@ -1139,7 +1268,7 @@ var compile = (template, options = {}) => {
         case REPEAT:
           if (typeof value !== "boolean") {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be a boolean value`
+              `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be a boolean value`
             );
           }
           break;
@@ -1155,117 +1284,29 @@ var compile = (template, options = {}) => {
         case SANITIZE:
           validateSanitize(value);
           break;
+        case INTERVAL:
+          validateInterval(value);
+          break;
         default:
           if (typeof value !== "string") {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be a string`
+              `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be a string`
             );
           }
           break;
       }
     }
     const requestObject = {
-      ...parsedData,
-      arrId: i
+      ...parsedData
     };
     requests.push(requestObject);
   };
-  let stringIndex = 0;
-  for (let i = 0; i < templateArr.length; i++) {
-    const text = templateArr[i];
-    if (requestsIndexes.includes(stringIndex)) {
-      const requestObjectArr = text.split(BRACKET_REGEX).filter(Boolean);
-      let currentBracketId = -1;
-      let newText = "";
-      let isFirst = true;
-      let isFinal = false;
-      for (let j = 0; j < requestObjectArr.length; j++) {
-        const requestText = requestObjectArr[j];
-        const isOpen = requestText === "{";
-        const isClose = requestText === "}";
-        if (isOpen) {
-          if (isFirst) {
-            isFirst = false;
-            if (requestObjectArr[j + 1] !== "{") j++;
-          } else {
-            newText += requestText;
-          }
-          currentBracketId++;
-        } else if (isClose) {
-          if (currentBracketId === 1) {
-            isFinal = true;
-          }
-          if (currentBracketId === 0) {
-            setRequest(newText, i);
-            currentBracketId--;
-            stringIndex += text.length;
-            break;
-          }
-          currentBracketId--;
-          newText += requestText;
-        } else {
-          if (isFinal) {
-            if (prepareText(requestText)) {
-              createError(
-                `${PARSE_ERROR}: There is no empty space between the curly brackets`
-              );
-            }
-          } else {
-            newText += requestText;
-          }
-        }
-      }
-      if (currentBracketId !== -1) {
-        const nextId = i + 1;
-        const nextText = templateArr[nextId];
-        const nextArr = nextText.split(BRACKET_REGEX).filter(Boolean);
-        let newNextText = "";
-        for (let j = 0; j < nextArr.length; j++) {
-          const currentNextText = nextArr[j];
-          const isOpen = currentNextText === "{";
-          const isClose = currentNextText === "}";
-          if (isClose) {
-            if (currentBracketId === 1) {
-              isFinal = true;
-            }
-            if (currentBracketId === 0) {
-              const newNextArr = [...nextArr];
-              stringIndex += text.length + nextText.length;
-              newNextArr.splice(0, j + 1);
-              templateArr[nextId] = newNextArr.join("");
-              setRequest(newText + newNextText, i);
-              currentBracketId--;
-              i++;
-              break;
-            }
-            currentBracketId--;
-            newNextText += currentNextText;
-          } else if (isOpen) {
-            newNextText += currentNextText;
-            currentBracketId++;
-          } else {
-            if (isFinal) {
-              if (prepareText(currentNextText)) {
-                createError(
-                  `${PARSE_ERROR}: There is no empty space between the curly brackets`
-                );
-              }
-            } else {
-              newNextText += currentNextText;
-            }
-          }
-        }
-      }
-    } else {
-      stringIndex += text.length;
-    }
-  }
-  for (let i = 0; i < requests.length; i++) {
-    const request = requests[i];
-    const { arrId } = request;
+  for (let i = 0; i < requestsIndexes.length; i++) {
+    const reqId = requestsIndexes[i];
+    const reqVal = templateArr[reqId];
+    setRequest(reqVal);
     const comment = `<!--hmpl${i}-->`;
-    templateArr[arrId] = comment;
-    delete request.arrId;
+    templateArr[reqId] = comment;
   }
   template = templateArr.join("");
   let isRequest = false;

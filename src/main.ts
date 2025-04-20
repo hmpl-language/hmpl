@@ -76,7 +76,7 @@ const checkFunction = (val: any) => {
  * Throws a new error with the provided message.
  * @param text - The error message.
  */
-export const createError = (text: string) => {
+const createError = (text: string) => {
   throw new Error(text);
 };
 
@@ -84,7 +84,7 @@ export const createError = (text: string) => {
  * Logs a warning message to the console.
  * @param text - The warning message.
  */
-export const createWarning = (text: string) => {
+const createWarning = (text: string) => {
   console.warn(text);
 };
 
@@ -192,7 +192,7 @@ const DEFAULT_DISALLOWED_TAGS: HMPLDisallowedTags = [];
 const getTemplateWrapper = (str: string, sanitize: boolean = false) => {
   let sanitizedStr = str;
   if (sanitize) {
-    sanitizedStr = (window as any).DOMPurify.sanitize(str);
+    sanitizedStr = DOMPurify.sanitize(str);
   }
   const elementDocument = new DOMParser().parseFromString(
     `<template>${sanitizedStr}</template>`,

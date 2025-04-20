@@ -95,10 +95,11 @@
     const SANITIZE = `sanitize`;
     const ALLOWED_CONTENT_TYPES = "allowedContentTypes";
     const REQUEST_INIT_GET = `get`;
+    const INTERVAL = `interval`;
     const RESPONSE_ERROR = `BadResponseError`;
     const REQUEST_INIT_ERROR = `RequestInitError`;
     const RENDER_ERROR = `RenderError`;
-    const REQUEST_OBJECT_ERROR = `RequestObjectError`;
+    const REQUEST_COMPONENT_ERROR = `RequestComponentError`;
     const COMPILE_OPTIONS_ERROR = `CompileOptionsError`;
     const PARSE_ERROR = `ParseError`;
     const COMPILE_ERROR = `CompileError`;
@@ -108,8 +109,6 @@
     const DEFAULT_FALSE_AUTO_BODY = {
       formData: false
     };
-    const MAIN_REGEX = /(\{\{(?:.|\n|\r)*?\}\}|\{\s*\{(?:.|\n|\r)*?\}\s*\})/g;
-    const BRACKET_REGEX = /([{}])|([^{}]+)/g;
     /**
      * List of request options that are allowed.
      */
@@ -124,7 +123,8 @@
       AUTO_BODY,
       ALLOWED_CONTENT_TYPES,
       DISALLOWED_TAGS,
-      SANITIZE
+      SANITIZE,
+      INTERVAL
     ];
     /**
      * HTTP status codes without successful responses.
@@ -239,7 +239,8 @@
       disallowedTags,
       sanitize,
       reqObject,
-      indicators
+      indicators,
+      currentClearInterval
     ) => {
       const {
         mode,
@@ -332,6 +333,10 @@
       const getIsNotFullfilledStatus = (status) =>
         status === "rejected" ||
         (typeof status === "number" && (status < 200 || status > 299));
+      const requestContext = getInstanceContext(
+        undefined,
+        currentClearInterval
+      );
       /**
        * Calls the 'get' function with the response if provided.
        * @param reqResponse - The response to pass to the 'get' function.
@@ -339,9 +344,9 @@
       const callGetResponse = (reqResponse) => {
         if (isRequests) {
           reqObject.response = reqResponse;
-          get?.("response", reqResponse, reqObject);
+          get?.("response", reqResponse, requestContext, reqObject);
         }
-        get?.("response", mainEl);
+        get?.("response", mainEl, requestContext);
       };
       /**
        * Updates the DOM nodes with new content.
@@ -352,7 +357,7 @@
       const updateNodes = (content, isClone = true, isNodes = false) => {
         if (isRequest) {
           templateObject.response = content.cloneNode(true);
-          get?.("response", content);
+          get?.("response", content, requestContext);
         } else {
           let reqResponse = [];
           const newContent = isClone ? content.cloneNode(true) : content;
@@ -402,7 +407,7 @@
       const setComment = () => {
         if (isRequest) {
           templateObject.response = undefined;
-          get?.("response", undefined);
+          get?.("response", undefined, requestContext);
         } else {
           if (dataObj?.nodes) {
             const parentNode = dataObj.parentNode;
@@ -418,9 +423,9 @@
             dataObj.parentNode = null;
             if (isRequests) {
               reqObject.response = undefined;
-              get?.("response", undefined, reqObject);
+              get?.("response", undefined, requestContext, reqObject);
             }
-            get?.("response", mainEl);
+            get?.("response", mainEl, requestContext);
           }
         }
         if (isRequestMemo) {
@@ -498,12 +503,12 @@
         if (isRequests) {
           if (reqObject.status !== status) {
             reqObject.status = status;
-            get?.("status", status, reqObject);
+            get?.("status", status, requestContext, reqObject);
           }
         } else {
           if (templateObject.status !== status) {
             templateObject.status = status;
-            get?.("status", status);
+            get?.("status", status, requestContext);
           }
         }
         if (isRequestMemo && getIsNotFullfilledStatus(status)) {
@@ -594,7 +599,7 @@
             );
             if (isRequest) {
               templateObject.response = templateWrapper;
-              get?.("response", templateWrapper);
+              get?.("response", templateWrapper, requestContext);
             } else {
               const reqResponse = [];
               const nodes = [...templateWrapper.content.childNodes];
@@ -612,9 +617,9 @@
                 parentNode.removeChild(el);
                 if (isRequests) {
                   reqObject.response = reqResponse;
-                  get?.("response", reqResponse, reqObject);
+                  get?.("response", reqResponse, requestContext, reqObject);
                 }
-                get?.("response", mainEl);
+                get?.("response", mainEl, requestContext);
               }
             }
           }
@@ -635,19 +640,31 @@
         });
     };
     /**
+     * Creates a context object for HMPL instance with optional event and clearInterval function.
+     * @param event - Optional event object.
+     * @param currentClearInterval - Optional function to clear interval.
+     * @returns HMPLInstanceContext object with request context.
+     */
+    const getInstanceContext = (event, currentClearInterval) => {
+      const request = {};
+      if (event !== undefined) {
+        request.event = event;
+      }
+      if (currentClearInterval) {
+        request.clearInterval = currentClearInterval;
+      }
+      return {
+        request
+      };
+    };
+    /**
      * Executes a HMPLRequestInitFunction to obtain request initialization options.
      * @param fn - The function to execute.
      * @param event - The event object (if any).
      * @returns The HMPLRequestInit object.
      */
-    const getRequestInitFromFn = (fn, event) => {
-      const request = {};
-      if (event !== undefined) {
-        request.event = event;
-      }
-      const context = {
-        request
-      };
+    const getRequestInitFromFn = (fn, event, currentClearInterval) => {
+      const context = getInstanceContext(event, currentClearInterval);
       const result = fn(context);
       return result;
     };
@@ -683,7 +700,7 @@
           const method = (req[METHOD] || "GET").toLowerCase();
           if (getIsMethodValid(method)) {
             createError(
-              `${REQUEST_OBJECT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH or DELETE values`
+              `${REQUEST_COMPONENT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH or DELETE values`
             );
           } else {
             const after = req[AFTER];
@@ -693,14 +710,16 @@
             const oldMode = isModeUndefined ? true : req[REPEAT];
             const modeAttr = oldMode ? "all" : "one";
             const isAll = modeAttr === "all";
+            const interval = req[INTERVAL];
             const isReqMemoUndefined = !req.hasOwnProperty(MEMO);
+            const isReqIntervalUndefined = !req.hasOwnProperty(INTERVAL);
             let isMemo = isMemoUndefined ? false : compileOptions[MEMO];
             if (!isReqMemoUndefined) {
               if (after) {
                 if (req[MEMO]) {
                   if (!isAll) {
                     createError(
-                      `${REQUEST_OBJECT_ERROR}: Memoization works in the enabled repetition mode`
+                      `${REQUEST_COMPONENT_ERROR}: Memoization works in the enabled repetition mode`
                     );
                   } else {
                     isMemo = true;
@@ -710,7 +729,7 @@
                 }
               } else {
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: Memoization works in the enabled repetition mode`
+                  `${REQUEST_COMPONENT_ERROR}: Memoization works in the enabled repetition mode`
                 );
               }
             } else {
@@ -722,6 +741,13 @@
                 } else {
                   isMemo = false;
                 }
+              }
+            }
+            if (!isReqIntervalUndefined) {
+              if (isAll && after) {
+                createError(
+                  `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" property does not work with repetiton mode yet`
+                );
               }
             }
             const isReqAutoBodyUndefined = !req.hasOwnProperty(AUTO_BODY);
@@ -752,7 +778,7 @@
               } else {
                 autoBody = false;
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
+                  `${REQUEST_COMPONENT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
                 );
               }
             } else {
@@ -793,7 +819,7 @@
               validateSanitize(currentSanitize);
               sanitize = currentSanitize;
             }
-            const initId = req.initId;
+            const initId = req[ID];
             const nodeId = req.nodeId;
             let indicators = req.indicators;
             if (indicators) {
@@ -801,11 +827,11 @@
                 const { trigger, content } = val;
                 if (!trigger)
                   createError(
-                    `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+                    `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
                   );
                 if (!content)
                   createError(
-                    `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+                    `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
                   );
                 if (
                   CODES.indexOf(trigger) === -1 &&
@@ -814,7 +840,7 @@
                   trigger !== "error"
                 ) {
                   createError(
-                    `${REQUEST_OBJECT_ERROR}: Failed to activate or detect the indicator`
+                    `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
                   );
                 }
                 const elWrapper = getTemplateWrapper(content);
@@ -832,7 +858,7 @@
                   uniqueTriggers.push(trigger);
                 } else {
                   createError(
-                    `${REQUEST_OBJECT_ERROR}: Indicator trigger must be unique`
+                    `${REQUEST_COMPONENT_ERROR}: Indicator trigger must be unique`
                   );
                 }
                 newOn[`${trigger}`] = currentIndicator.content;
@@ -852,7 +878,7 @@
                   }
                   if (!result) {
                     createError(
-                      `${REQUEST_OBJECT_ERROR}: ID referenced by request not found`
+                      `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`
                     );
                   }
                   return result;
@@ -862,12 +888,13 @@
               } else {
                 if (initId)
                   createError(
-                    `${REQUEST_OBJECT_ERROR}: ID referenced by request not found`
+                    `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`
                   );
                 return options;
               }
             };
-            const isDataObj = isAll && after;
+            const isInterval = interval !== undefined;
+            const isDataObj = (isAll && after) || isInterval;
             const reqFunction = (
               reqEl,
               options,
@@ -878,7 +905,8 @@
               reqObject,
               isRequests = false,
               currentHMPLElement,
-              event
+              event,
+              currentInterval
             ) => {
               const id = data.currentId;
               if (isRequest) {
@@ -898,7 +926,7 @@
                   reqEl = currentEl;
                 }
               }
-              let dataObj;
+              let dataObj = undefined;
               if (!isRequest) {
                 if (isDataObj || indicators) {
                   dataObj = currentHMPLElement.objNode;
@@ -915,6 +943,14 @@
                       };
                       if (indicators) {
                         dataObj.memo.isPending = false;
+                      }
+                    }
+                    if (isInterval) {
+                      if (currentInterval) {
+                        dataObj.interval = {
+                          value: currentInterval,
+                          clearInterval: () => clearInterval(currentInterval)
+                        };
                       }
                     }
                     currentHMPLElement.objNode = dataObj;
@@ -943,8 +979,18 @@
                   currentOptions.body = new FormData(target, event.submitter);
                 }
               }
+              let currentClearInterval = currentInterval
+                ? () => clearInterval(currentInterval)
+                : undefined;
+              currentClearInterval = isRequest
+                ? currentClearInterval
+                : dataObj?.interval?.clearInterval;
               const requestInit = isOptionsFunction
-                ? getRequestInitFromFn(currentOptions, event)
+                ? getRequestInitFromFn(
+                    currentOptions,
+                    event,
+                    currentClearInterval
+                  )
                 : currentOptions;
               if (!checkObject(requestInit) && requestInit !== undefined)
                 createError(
@@ -965,10 +1011,45 @@
                 disallowedTags,
                 sanitize,
                 reqObject,
-                indicators
+                indicators,
+                currentClearInterval
               );
             };
-            let requestFunction = reqFunction;
+            let currentReqFunction = reqFunction;
+            if (interval) {
+              validateInterval(interval);
+              const time = Number(interval);
+              currentReqFunction = (
+                reqEl,
+                options,
+                templateObject,
+                data,
+                reqMainEl,
+                isArray = false,
+                reqObject,
+                isRequests = false,
+                currentHMPLElement,
+                event
+              ) => {
+                let interval = null;
+                interval = setInterval(() => {
+                  reqFunction(
+                    reqEl,
+                    options,
+                    templateObject,
+                    data,
+                    reqMainEl,
+                    isArray,
+                    reqObject,
+                    isRequests,
+                    currentHMPLElement,
+                    event,
+                    interval
+                  );
+                }, time);
+              };
+            }
+            let requestFunction = currentReqFunction;
             if (after) {
               const setEvents = (
                 reqEl,
@@ -989,7 +1070,7 @@
                 }
                 const afterFn = isAll
                   ? (evt) => {
-                      reqFunction(
+                      currentReqFunction(
                         reqEl,
                         options,
                         templateObject,
@@ -1003,7 +1084,7 @@
                       );
                     }
                   : (evt) => {
-                      reqFunction(
+                      currentReqFunction(
                         reqEl,
                         options,
                         templateObject,
@@ -1056,13 +1137,13 @@
                 };
               } else {
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: The "${AFTER}" property doesn't work without EventTargets`
+                  `${REQUEST_COMPONENT_ERROR}: The "${AFTER}" property doesn't work without EventTargets`
                 );
               }
             } else {
               if (!isModeUndefined) {
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: The "${REPEAT}" property doesn't work without "${AFTER}" property`
+                  `${REQUEST_COMPONENT_ERROR}: The "${REPEAT}" property doesn't work without "${AFTER}" property`
                 );
               }
             }
@@ -1070,7 +1151,7 @@
           }
         } else {
           createError(
-            `${REQUEST_OBJECT_ERROR}: The "${SOURCE}" property are not found or empty`
+            `${REQUEST_COMPONENT_ERROR}: The "${SOURCE}" property are not found or empty`
           );
         }
       };
@@ -1180,7 +1261,7 @@
     ) => {
       const currentError = isCompile
         ? COMPILE_OPTIONS_ERROR
-        : REQUEST_OBJECT_ERROR;
+        : REQUEST_COMPONENT_ERROR;
       if (
         allowedContentTypes !== "*" &&
         !checkIsStringArray(allowedContentTypes, currentError)
@@ -1201,7 +1282,7 @@
       const isObject = checkObject(autoBody);
       const currentError = isCompile
         ? COMPILE_OPTIONS_ERROR
-        : REQUEST_OBJECT_ERROR;
+        : REQUEST_COMPONENT_ERROR;
       if (typeof autoBody !== "boolean" && !isObject)
         createError(
           `${currentError}: Expected a boolean or object, but got neither`
@@ -1232,7 +1313,7 @@
     const validateDisallowedTags = (disallowedTags, isCompile = false) => {
       const currentError = isCompile
         ? COMPILE_OPTIONS_ERROR
-        : REQUEST_OBJECT_ERROR;
+        : REQUEST_COMPONENT_ERROR;
       const isArray = Array.isArray(disallowedTags);
       if (!isArray)
         createError(
@@ -1257,7 +1338,7 @@
     const validateSanitize = (sanitize, isCompile = false) => {
       const currentError = isCompile
         ? COMPILE_OPTIONS_ERROR
-        : REQUEST_OBJECT_ERROR;
+        : REQUEST_COMPONENT_ERROR;
       if (typeof sanitize !== "boolean") {
         createError(
           `${currentError}: The value of the property "${SANITIZE}" must be a boolean`
@@ -1303,12 +1384,46 @@
       }
     };
     /**
+     * Validates the interval time value against a number
+     * @param time - The HMPLRequestInfo object.
+     */
+    const validateInterval = (time) => {
+      if (typeof time !== "number") {
+        createError(
+          `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" value must be number`
+        );
+      }
+    };
+    /**
      * Converts a HMPLRequestInfo object to a JSON string.
      * @param info - The HMPLRequestInfo object.
-     * @returns The JSON string representation.
+     * @returns Request block.
      */
     const stringify = (info) => {
-      return JSON5.stringify(info);
+      const formatValue = (value) => {
+        if (typeof value === "string") {
+          return `"${value}"`;
+        }
+        if (typeof value === "number" || typeof value === "boolean") {
+          return `${value}`;
+        }
+        if (Array.isArray(value)) {
+          return `[${value.map((item) => formatValue(item)).join(",")}]`;
+        }
+        if (typeof value === "object" && value !== null) {
+          return `{${Object.entries(value)
+            .map(([k, v]) => `${k}:${formatValue(v)}`)
+            .join(",")}}`;
+        }
+        return "";
+      };
+      let body = Object.entries(info)
+        .map(([key, value]) => `${key}=${formatValue(value)}`)
+        .join(" ");
+      if (body.endsWith("}")) {
+        body += " ";
+      }
+      return `{{#request ${body}}}{{/request}}`;
     };
     /**
      * Compiles a template string into a HMPLTemplateFunction.
@@ -1344,38 +1459,86 @@
       const isSanitizeUndefined = !options.hasOwnProperty(SANITIZE);
       if (!isSanitizeUndefined) validateSanitize(options[SANITIZE], true);
       const requests = [];
-      const templateArr = template.split(MAIN_REGEX).filter(Boolean);
       const requestsIndexes = [];
-      for (const match of template.matchAll(MAIN_REGEX)) {
-        requestsIndexes.push(match.index);
-      }
+      const parseTemplate = (str) => {
+        const parts = [];
+        let pos = 0;
+        const openTags = [
+          { open: "{{#request", close: "{{/request}}" },
+          { open: "{{#r", close: "{{/r}}" }
+        ];
+        while (pos < str.length) {
+          const openIndexes = openTags
+            .map((tag) => ({ ...tag, index: str.indexOf(tag.open, pos) }))
+            .filter((item) => item.index !== -1);
+          if (openIndexes.length === 0) {
+            parts.push(str.slice(pos));
+            break;
+          }
+          const nextOpen = openIndexes.sort((a, b) => a.index - b.index)[0];
+          parts.push(str.slice(pos, nextOpen.index));
+          const attrStart = nextOpen.index + nextOpen.open.length;
+          const attrEnd = str.indexOf("}}", attrStart);
+          if (attrEnd === -1) {
+            createError(
+              `${PARSE_ERROR}: Unclosed block (no ending '}}') for ${nextOpen.open}`
+            );
+          }
+          const rawAttrs = str.slice(attrStart, attrEnd).trim();
+          const blockEnd = str.indexOf(nextOpen.close, attrEnd);
+          if (blockEnd === -1) {
+            createError(
+              `${PARSE_ERROR}: No closing '${nextOpen.close}' found for ${nextOpen.open}`
+            );
+          }
+          const innerContent = str.slice(attrEnd + 2, blockEnd);
+          if (innerContent.includes(nextOpen.open)) {
+            createError(
+              `${PARSE_ERROR}: Nested ${nextOpen.open}}} blocks are not supported`
+            );
+          }
+          const transformedAttrs = safeReplaceEquals(rawAttrs);
+          parts.push(`{${transformedAttrs}}`);
+          requestsIndexes.push(parts.length - 1);
+          pos = blockEnd + nextOpen.close.length;
+        }
+        return parts;
+      };
+      const safeReplaceEquals = (input) => {
+        let result = "";
+        const regex =
+          /\s*([a-zA-Z0-9_-]+)\s*=\s*(("[^"]*"|'[^']*'|`[^`]*`|\[[^\]]*\]|\{[^}]*\}|true|false|\d+)(?=\s|,|$))\s*/g;
+        let match;
+        while ((match = regex.exec(input)) !== null) {
+          const key = match[1].trim();
+          const value = match[2].trim();
+          result += `${key}:${value},`;
+        }
+        return result.replace(/,$/, "").trim();
+      };
+      const templateArr = parseTemplate(template);
       if (requestsIndexes.length === 0)
         createError(`${PARSE_ERROR}: Request object not found`);
-      const prepareText = (text) => {
-        text = text.trim();
-        text = text.replace(/\r?\n|\r/g, "");
-        return text;
-      };
-      const setRequest = (text, i) => {
+      const setRequest = (text) => {
         const parsedData = JSON5.parse(text);
         for (const key in parsedData) {
           const value = parsedData[key];
           if (!REQUEST_OPTIONS.includes(key))
             createError(
-              `${REQUEST_OBJECT_ERROR}: Property "${key}" is not processed`
+              `${REQUEST_COMPONENT_ERROR}: Property "${key}" is not processed`
             );
           switch (key) {
             case INDICATORS:
               if (!Array.isArray(value)) {
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be an array`
+                  `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be an array`
                 );
               }
               break;
             case ID:
               if (typeof value !== "string" && typeof value !== "number") {
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be a string`
+                  `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be a string`
                 );
               }
               break;
@@ -1383,7 +1546,7 @@
             case REPEAT:
               if (typeof value !== "boolean") {
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be a boolean value`
+                  `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be a boolean value`
                 );
               }
               break;
@@ -1399,117 +1562,29 @@
             case SANITIZE:
               validateSanitize(value);
               break;
+            case INTERVAL:
+              validateInterval(value);
+              break;
             default:
               if (typeof value !== "string") {
                 createError(
-                  `${REQUEST_OBJECT_ERROR}: The value of the property "${key}" must be a string`
+                  `${REQUEST_COMPONENT_ERROR}: The value of the property "${key}" must be a string`
                 );
               }
               break;
           }
         }
         const requestObject = {
-          ...parsedData,
-          arrId: i
+          ...parsedData
         };
         requests.push(requestObject);
       };
-      let stringIndex = 0;
-      for (let i = 0; i < templateArr.length; i++) {
-        const text = templateArr[i];
-        if (requestsIndexes.includes(stringIndex)) {
-          const requestObjectArr = text.split(BRACKET_REGEX).filter(Boolean);
-          let currentBracketId = -1;
-          let newText = "";
-          let isFirst = true;
-          let isFinal = false;
-          for (let j = 0; j < requestObjectArr.length; j++) {
-            const requestText = requestObjectArr[j];
-            const isOpen = requestText === "{";
-            const isClose = requestText === "}";
-            if (isOpen) {
-              if (isFirst) {
-                isFirst = false;
-                if (requestObjectArr[j + 1] !== "{") j++;
-              } else {
-                newText += requestText;
-              }
-              currentBracketId++;
-            } else if (isClose) {
-              if (currentBracketId === 1) {
-                isFinal = true;
-              }
-              if (currentBracketId === 0) {
-                setRequest(newText, i);
-                currentBracketId--;
-                stringIndex += text.length;
-                break;
-              }
-              currentBracketId--;
-              newText += requestText;
-            } else {
-              if (isFinal) {
-                if (prepareText(requestText)) {
-                  createError(
-                    `${PARSE_ERROR}: There is no empty space between the curly brackets`
-                  );
-                }
-              } else {
-                newText += requestText;
-              }
-            }
-          }
-          if (currentBracketId !== -1) {
-            const nextId = i + 1;
-            const nextText = templateArr[nextId];
-            const nextArr = nextText.split(BRACKET_REGEX).filter(Boolean);
-            let newNextText = "";
-            for (let j = 0; j < nextArr.length; j++) {
-              const currentNextText = nextArr[j];
-              const isOpen = currentNextText === "{";
-              const isClose = currentNextText === "}";
-              if (isClose) {
-                if (currentBracketId === 1) {
-                  isFinal = true;
-                }
-                if (currentBracketId === 0) {
-                  const newNextArr = [...nextArr];
-                  stringIndex += text.length + nextText.length;
-                  newNextArr.splice(0, j + 1);
-                  templateArr[nextId] = newNextArr.join("");
-                  setRequest(newText + newNextText, i);
-                  currentBracketId--;
-                  i++;
-                  break;
-                }
-                currentBracketId--;
-                newNextText += currentNextText;
-              } else if (isOpen) {
-                newNextText += currentNextText;
-                currentBracketId++;
-              } else {
-                if (isFinal) {
-                  if (prepareText(currentNextText)) {
-                    createError(
-                      `${PARSE_ERROR}: There is no empty space between the curly brackets`
-                    );
-                  }
-                } else {
-                  newNextText += currentNextText;
-                }
-              }
-            }
-          }
-        } else {
-          stringIndex += text.length;
-        }
-      }
-      for (let i = 0; i < requests.length; i++) {
-        const request = requests[i];
-        const { arrId } = request;
+      for (let i = 0; i < requestsIndexes.length; i++) {
+        const reqId = requestsIndexes[i];
+        const reqVal = templateArr[reqId];
+        setRequest(reqVal);
         const comment = `<!--hmpl${i}-->`;
-        templateArr[arrId] = comment;
-        delete request.arrId;
+        templateArr[reqId] = comment;
       }
       template = templateArr.join("");
       let isRequest = false;
