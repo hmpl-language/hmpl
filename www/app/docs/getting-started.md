@@ -35,7 +35,7 @@ Create a file named `HelloWorld.hmpl` inside `/src/hmpl` and add the following c
 ```hmpl
 <div>
   <div>
-    {{#request
+    { {#request
       src="/api/hello"
       after="submit:#form"
       repeat=false
@@ -91,7 +91,7 @@ Create a new file `Form.hmpl` inside the `hmpl` directory and add the following 
     <input type="submit" value="Submit" />
   </form>
 
-  {{#request
+  { {#request
     src="/api/hello"
     after="submit:#form"
     repeat=false

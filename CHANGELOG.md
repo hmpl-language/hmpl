@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.0 (2025-04-20)
+
+- Changed syntax to `{{#request}}`
+- Added interval for sending requests
+- Changed error handling
+- Bug fixes
+
 ## 2.2.6 (2025-03-09)
 
 - Updating README.md

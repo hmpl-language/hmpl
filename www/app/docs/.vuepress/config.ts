@@ -114,7 +114,11 @@ export default defineUserConfig({
             {
               text: "Server-side rendering",
               link: "server-side-rendering.md"
-            }
+            },
+            {
+              text: "Migration from v2 to v3 version",
+              link: "migration-from-v2-to-v3-version.md"
+            },
           ]
         },
         {

@@ -394,7 +394,7 @@
               <a
                 class="item-link"
                 href="https://bundlephobia.com/package/hmpl-js"
-                >~15 kilobytes</a
+                >~22 kilobytes</a
               >
             </p>
           </div>

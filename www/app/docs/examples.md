@@ -19,7 +19,7 @@ import { compile } from "hmpl-js";
 const templateFn = compile(
   `<div>
     <button class="getHTML">Get HTML!</button>
-    {{#request
+    { {#request
       src="/api/test"
       after="click:.getHTML"
       repeat=false
@@ -81,7 +81,7 @@ const templateFn = compile(
     </div>
   </form>
   <p>
-    {{#request
+    { {#request
       src="/api/register"
       after="submit:#form"
       repeat=false
@@ -171,7 +171,7 @@ const templateFn = compile(
         <td>Lays</td>
         <td>4</td>
       </tr>
-      {{#request
+      { {#request
         src="/api/products"
         after="submit:#form"
         autoBody=true

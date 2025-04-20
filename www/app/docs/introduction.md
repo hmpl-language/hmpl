@@ -64,7 +64,7 @@ const templateFn = compile(
     </div>
   </form>
   <p>
-    {{#request         
+    { {#request         
       src="/api/register"
       after="submit:#form"
       repeat=false
