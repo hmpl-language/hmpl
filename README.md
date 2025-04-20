@@ -19,7 +19,7 @@
 
 <a href="https://hmpl-lang.dev">Website</a> • <a href="https://spec.hmpl-lang.dev">Specification</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples.html">Examples</a>
 
-hmpl is a small template language for displaying UI from server to client. It is based on <em>customizable</em> requests sent to the server via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> and processed into ready-made HTML. The language is syntactically object-based and integrated with <a href="https://www.npmjs.com/package/json5">JSON5</a> and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>. Reduce the size of your javascript files and display the same UI as if it was written in a modern framework and apply Server-Side Rendering, Static Site Generation, Incremental Static Generation (SSR, SSG, ISG) without robot indexing on any sites without Next.js, Remix, Nuxt.js!
+hmpl is a small template language for displaying UI from server to client. It is based on <em>customizable</em> requests sent to the server via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> and processed into ready-made HTML. The language is syntactically component-based and integrated with <a href="https://www.npmjs.com/package/json5">JSON5</a> and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>. Reduce the size of your javascript files and display the same UI as if it was written in a modern framework and apply Server-Side Rendering, Static Site Generation, Incremental Static Generation (SSR, SSG, ISG) without robot indexing on any sites without Next.js, Remix, Nuxt.js!
 
 ☆ If you find HMPL useful, please consider giving us a star on GitHub! Your support helps us continue to innovate and deliver exciting features.
 
@@ -29,7 +29,16 @@ hmpl is a small template language for displaying UI from server to client. It is
   </a>
 </div>
 
-## Usage
+## Example
+
+```html
+<div>
+  {{#request src="/api/my-component"}}
+  {{/request}}`
+</div>
+```
+
+## Basic usage
 
 ```javascript
 import hmpl from "hmpl-js";
@@ -37,7 +46,7 @@ import hmpl from "hmpl-js";
 const templateFn = hmpl.compile(
   `<div>
       <button data-action="increment" id="btn">Click!</button>
-      <div>Clicks: {{ src: "/api/clicks", after: "click:#btn" }}</div>
+      <div>Clicks: {{#request src="/api/clicks" after="click:#btn" }}{{/request}}</div>
   </div>`
 );
 
@@ -59,7 +68,8 @@ const templateFn = hmpl.compile(
   `<div>
       <button data-action="increment" id="btn">Click!</button>
       <!-- This div will update with the click count from /api/clicks -->
-      <div>Clicks: {{ src: "/api/clicks", after: "click:#btn" }}</div>
+      <div>Clicks: {{#request src="/api/clicks" after="click:#btn" }}{{/request}}</div>
+      <!-- Also, you can write in short: {{#r src="..."}}{{/r}} -->
   </div>`
 );
 
@@ -77,6 +87,32 @@ document.querySelector("#app").append(clicker);
 In this example, we create a dynamic clicker component in which, when a `button` is pressed, we will receive the value of the current clicks that will come from the server. The advantage of this approach is that we can take out not only data in the form of `Text`, but also entire components and even pages!
 
 </details>
+
+## Request Configuration
+
+Request configuration blocks specify the parameters for server requests that the client will perform when certain events occur. 
+These parameters are provided inside the opening marker
+`{{#request ...}}` or `{{#r ...}}` using **key=value** pairs.
+
+
+The following attributes are supported:
+
+| **Attribute**               | **Type**                          | **Example**                                                                                               | **Description**                              |
+|:--------------------------|:----------------------------------|:----------------------------------------------------------------------------------------------------------|:----------------------------------------------|
+| `src`                      | `string`                          | `"/api/test"`                                                                                              | The request's source URL.                     |
+| `method`                   | `string`                          | `"get"`                                                                                                     | The HTTP method for the request.               |
+| `after`                    | `string`                          | `"click:.target"`                                                                                           | Event trigger specification.                   |
+| `repeat`                   | `boolean`                         | `true`                                                                                                       | Whether to repeat the request on future triggers. |
+| `interval`                 | `number`                          | `1000`                                                                                                       | Interval in milliseconds for repeated requests. |
+| `indicators`               | `HMPLIndicator[]`                 | `[ { trigger: "pending" content: "<p>Loading...</p>" } ]` | UI indicators for different request states.     |
+| `autoBody`                 | `boolean \| HMPLAutoBodyOptions`  | `{ formData: true }`                                                                                        | Configures automatic request body generation.   |
+| `memo`                     | `boolean`                         | `true`                                                                                                       | Enables caching of the response.                |
+| `initId`                   | `string \| number`                 | `"id1"`                                                                                                      | Identifier for request initialization.          |
+| `allowedContentTypes`      | `HMPLContentTypes`                 | `["text/html"]`                                                                                              | Allowed Content-Type values in the response.     |
+| `disallowedTags`           | `HMPLDisallowedTags`               | `["script" "style" "iframe"]`                                                                                | HTML tags to be removed from the response.       |
+| `sanitize`                 | `HMPLSanitize`                     | `false`                                                                                                      | Enables sanitization of the HTML content.        |
+
+---
 
 ## Why HMPL?
 
