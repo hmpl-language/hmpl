@@ -6,6 +6,10 @@ import { eq } from "./functions";
  */
 
 describe("stringify function — HMPLRequestInfo attributes", () => {
+  /**
+   * This test checks if the `stringify` function converts an object with a `src` key
+   * into the expected string representation.
+   */
   eq(
     "src (string)",
     stringify({ src: "/api/test" }),
