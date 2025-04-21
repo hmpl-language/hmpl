@@ -18,6 +18,13 @@ export default defineComponent({
       }
     };
 
+    const formatNumber = (num) => {
+      if(num == null) return "...";
+      if(num>=1000) return (num/1000).toFixed(1).replace(/\.0$/,"") + "k";
+      return num.toString();
+    };
+    
+
     onMounted(() => {
       fetchStars();
     });
@@ -58,7 +65,7 @@ export default defineComponent({
               rel: "noopener noreferrer",
               "aria-label": "Stars"
             },
-            starsCount.value !== null ? starsCount.value : "..."
+            formatNumber(starsCount.value)
           )
         ]
       );
