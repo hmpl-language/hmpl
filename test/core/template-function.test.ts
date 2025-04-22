@@ -260,7 +260,7 @@ describe("template function", () => {
     `${RENDER_ERROR}: Selectors nodes not found`
   );
   eq(
-    "",
+    "renders event-bound template with memoization correctly",
     compile(
       createTestObj2(
         `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment"}}{{/r}}`
@@ -270,7 +270,7 @@ describe("template function", () => {
     '<div><button id="increment">Click</button><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "renders event-bound template with memoization and disabled repetition correctly",
     compile(
       createTestObj2(
         `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment" repeat=false}}{{/r}}`
@@ -320,7 +320,7 @@ describe("template function", () => {
     `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" value must be number`
   );
   eq(
-    "",
+    "Should render memoized request after click with global memo disabled",
     compile(
       createTestObj2(
         `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment" memo=true}}{{/r}}`
@@ -330,7 +330,7 @@ describe("template function", () => {
     '<div><button id="increment">Click</button><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "Should render memoized request after click with global memo disabled",
     compile(
       createTestObj2(
         `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment" memo=true}}{{/r}}`
@@ -340,7 +340,7 @@ describe("template function", () => {
     '<div><button id="increment">Click</button><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "Should not memoize when memo=false is set inline, even if global memo is enabled",
     compile(
       createTestObj2(
         `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment" memo=false}}{{/r}}`
@@ -350,13 +350,13 @@ describe("template function", () => {
     '<div><button id="increment">Click</button><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "Should render static request block with only a src and no after",
     compile(createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`))()
       .response?.outerHTML,
     "<div><!--hmpl0--></div>"
   );
   eq(
-    "",
+    "Should render dynamic request block after click without memo flag",
     compile(
       createTestObj2(
         `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment"}}{{/r}}`

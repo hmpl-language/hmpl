@@ -52,17 +52,17 @@ describe("compile function", () => {
     `${PARSE_ERROR}: Request object not found`
   );
   e(
-    "",
+    "Should throw parse error for unclosed block with no ending '}}'",
     () => compile("<div>{{#request src='test'</div>"),
     `${PARSE_ERROR}: Unclosed block (no ending '}}') for {{#request`
   );
   e(
-    "",
+    "Should throw parse error for missing closing {{/request}} block",
     () => compile("<div>{{#request src='test'}}Some content</div>"),
     `${PARSE_ERROR}: No closing '{{/request}}' found for {{#request`
   );
   e(
-    "",
+    "Should throw parse error for unsupported nested {{#request}} blocks",
     () =>
       compile(
         "<div>{{#request src='test'}}{{#request src='inner'}}{{/request}}{{/request}}</div>"
@@ -70,7 +70,7 @@ describe("compile function", () => {
     `${PARSE_ERROR}: Nested {{#request}} blocks are not supported`
   );
   e(
-    "",
+    "Should throw request component error when autoBody is used without after",
     () =>
       compile(
         "<div>{{#request src='test', autoBody=true, }}</div>{{/request}}"
@@ -78,7 +78,7 @@ describe("compile function", () => {
     `${REQUEST_COMPONENT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
   );
   e(
-    "",
+    "Should throw parse error when request object with specified id is not found",
     () => compile(`<div>{{#r src="123"}}{{/r}}<!--hmpl1--></div>`),
     `${PARSE_ERROR}: Request object with id "1" not found`
   );
@@ -183,7 +183,7 @@ describe("compile function", () => {
     `${REQUEST_COMPONENT_ERROR}: The value of the property "${SOURCE}" must be a string`
   );
   e(
-    "",
+    "Should throw request component error when the 'src' property is not a string",
     () => compile(createTestObj1({ [SOURCE]: [] })),
     `${REQUEST_COMPONENT_ERROR}: The value of the property "${SOURCE}" must be a string`
   );
