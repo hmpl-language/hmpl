@@ -1,33 +1,41 @@
-<div>
+<h1 align="center">
     <a href="https://www.npmjs.com/package/hmpl-js">
-        <img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/banner_new.png" alt="hmpl">
+        <img width="460" src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/new_banner.png" alt="hmpl">
     </a>
+</h1>
+
+<h2 align="center">
+  Server-oriented customizable templating for JavaScript
+</h2>
+
+<div align="center">
+
+[![npm-version](https://img.shields.io/npm/v/hmpl-js?logo=npm&color=0183ff)](https://www.npmjs.com/package/hmpl-js)
+[![minzipped size](https://img.shields.io/bundlephobia/minzip/hmpl-js?logo=npm&color=0183ff)](https://bundlephobia.com/package/hmpl-js)
+[![codecov](https://img.shields.io/codecov/c/github/hmpl-language/hmpl?logo=codecov&logoColor=ffffff&label=CODECOV&color=0183ff)](https://codecov.io/github/hmpl-language/hmpl)
+[![issues](https://img.shields.io/github/issues/hmpl-language/hmpl?logo=github&color=0183ff)](https://github.com/hmpl-language/hmpl/issues)
+[![x.com](https://img.shields.io/badge/Twitter-000?logo=x&logoColor=fff)](https://x.com/hmpljs)
+[![discord](https://img.shields.io/badge/Discord-7289DA?logo=discord&logoColor=fff)](https://discord.gg/KFunMep36n)
+
+</div>
+
+<div align="center">
+<a href="https://hmpl-lang.dev">Website</a> • <a href="https://spec.hmpl-lang.dev">Specification</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples.html">Examples</a>
 </div>
 
 <br/>
-<div>
-
-[![npm-version](https://img.shields.io/npm/v/hmpl-js?logo=npm&color=0183ff&style=for-the-badge)](https://www.npmjs.com/package/hmpl-js)
-[![minzipped size](https://img.shields.io/bundlephobia/minzip/hmpl-js?logo=npm&color=0183ff&style=for-the-badge)](https://bundlephobia.com/package/hmpl-js)
-[![codecov](https://img.shields.io/codecov/c/github/hmpl-language/hmpl?style=for-the-badge&logo=codecov&logoColor=ffffff&label=CODECOV&color=0183ff)](https://codecov.io/github/hmpl-language/hmpl)
-[![issues](https://img.shields.io/github/issues/hmpl-language/hmpl?logo=github&color=0183ff&style=for-the-badge)](https://github.com/hmpl-language/hmpl/issues)
-
-[![x.com](https://img.shields.io/badge/Twitter-000?style=for-the-badge&logo=x&logoColor=fff)](https://x.com/hmpljs)
-[![discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=fff)](https://discord.gg/KFunMep36n)
-
-</div>
-
-<a href="https://hmpl-lang.dev">Website</a> • <a href="https://spec.hmpl-lang.dev">Specification</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples.html">Examples</a>
-
-hmpl is a small template language for displaying UI from server to client. It is based on <em>customizable</em> requests sent to the server via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> and processed into ready-made HTML. The language is syntactically component-based and integrated with <a href="https://www.npmjs.com/package/json5">JSON5</a> and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>. Reduce the size of your javascript files and display the same UI as if it was written in a modern framework and apply Server-Side Rendering, Static Site Generation, Incremental Static Generation (SSR, SSG, ISG) without robot indexing on any sites without Next.js, Remix, Nuxt.js!
-
-☆ If you find HMPL useful, please consider giving us a star on GitHub! Your support helps us continue to innovate and deliver exciting features.
 
 <div align="center">
   <a href="https://devhunt.org/tool/hmpljs">
     <img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhunt.svg" />
   </a>
 </div>
+
+## Introduction
+
+hmpl is a small template language for displaying UI from server to client. It is based on <em>customizable</em> requests sent to the server via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> and processed into ready-made HTML. The language is syntactically component-based and integrated with <a href="https://www.npmjs.com/package/json5">JSON5</a> and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>. Reduce the size of your javascript files and display the same UI as if it was written in a modern framework and apply Server-Side Rendering, Static Site Generation, Incremental Static Generation (SSR, SSG, ISG) without robot indexing on any sites without Next.js, Remix, Nuxt.js!
+
+☆ If you find HMPL useful, please consider giving us a star on GitHub! Your support helps us continue to innovate and deliver exciting features.
 
 ## Example
 
