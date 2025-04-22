@@ -66,7 +66,7 @@ document.querySelector("#app").append(clicker);
 ```
 
 <details>
-<summary>Clarify this!</summary>
+<summary>Explain this!</summary>
 
 ```js
 import hmpl from "hmpl-js"; // Import the HMPL library
