@@ -492,7 +492,7 @@
             class="article_preview_link fade-in-effect"
             target="_blank"
             ><img
-              src="/images/preview_1.png"
+              src="/images/preview1_V3.png"
               class="article_preview"
               alt="Differences between HMPL and HTMX"
           /></a>
