@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.1 (2025-04-27)
+
+- Updating README.md
+
 ## 3.0.0 (2025-04-20)
 
 - Changed syntax to `{{#request}}`
