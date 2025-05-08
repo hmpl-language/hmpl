@@ -12,10 +12,10 @@
 
 [![npm-version](https://img.shields.io/npm/v/hmpl-js?logo=npm&color=0183ff)](https://www.npmjs.com/package/hmpl-js)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/hmpl-js?logo=npm&color=0183ff)](https://bundlephobia.com/package/hmpl-js)
-[![codecov](https://img.shields.io/codecov/c/github/hmpl-language/hmpl?logo=codecov&logoColor=ffffff&label=CODECOV&color=0183ff)](https://codecov.io/github/hmpl-language/hmpl)
-[![issues](https://img.shields.io/github/issues/hmpl-language/hmpl?logo=github&color=0183ff)](https://github.com/hmpl-language/hmpl/issues)
-[![x.com](https://img.shields.io/badge/Twitter-000?logo=x&logoColor=fff)](https://x.com/hmpljs)
-[![discord](https://img.shields.io/badge/Discord-7289DA?logo=discord&logoColor=fff)](https://discord.gg/KFunMep36n)
+[![codecov](https://img.shields.io/codecov/c/github/hmpl-language/hmpl?logo=codecov&logoColor=ffffff&label=codecov&color=0183ff)](https://codecov.io/github/hmpl-language/hmpl)
+[![stars](https://img.shields.io/github/stars/hmpl-language/hmpl?logo=github&color=0183ff&style=flat)](https://github.com/hmpl-language/hmpl/stargazers)
+[![discord](https://dcbadge.limes.pink/api/server/https://discord.gg/KFunMep36n?style=flat)](https://discord.gg/KFunMep36n)
+[![x.com](https://img.shields.io/badge/twitter-000?logo=x&logoColor=fff)](https://x.com/hmpljs)
 
 </div>
 
