@@ -13,7 +13,7 @@
   "dependencies": {
     "@vuepress/plugin-back-to-top": "^2.0.0-rc.52",
     "@vuepress/plugin-git": "^2.0.0-rc.52",
-    "hmpl-js": "^2.1.4",
+    "hmpl-js": "^3.0.1",
     "vuepress": "^2.0.0-rc.18"
   },
   "devDependencies": {
