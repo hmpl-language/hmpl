@@ -1,0 +1,50 @@
+<div>
+    {{#request
+        src="/api/test"
+        method="get"
+        after="click:.target"
+        repeat=true
+        interval=1000
+        indicators=[
+            {
+                trigger: "pending"
+                content: "&lt;p&gt;Loading...&lt;/p&gt;"
+            },
+            {
+                trigger: "rejected"
+                content: "&lt;p&gt;Error&lt;/p&gt;&lt;button&gt;reload&lt;/button&gt;"
+            }
+        ]
+        autoBody={
+            formData: true
+        }
+        memo=true
+        initId="id1"
+        allowedContentTypes=["text/html"]
+        disallowedTags=["script" "style" "iframe"]
+        sanitize=false
+    }}{{/request}}
+    {{r src="/api/test2"}}{{/r}}
+    {{#request
+      src="/api/register"
+      after="submit:#form"
+      repeat=false
+      indicators=[
+        {
+          trigger: "pending",
+          content: "<p>Loading...</p>"
+        }
+      ]
+    }}
+    {{/request}}
+</div>
+
+<style>
+    * {
+        font-size: 18px;
+    }
+</style>
+
+<script>
+console.log("this is hmpl example")
+</script>

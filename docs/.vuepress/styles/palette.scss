@@ -1,0 +1,121 @@
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf") format("truetype");
+}
+
+a::after,
+a::before {
+  display: none !important;
+}
+
+* {
+  scrollbar-color: var(--vp-c-text-mute) !important;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--vp-c-text-mute) !important;
+}
+
+#navbar a:hover {
+  transition: 0.1s all ease-in-out;
+  -webkit-transition: 0.1s all ease-in-out;
+  -moz-transition: 0.1s all ease-in-out;
+  -ms-transition: 0.1s all ease-in-out;
+  -o-transition: 0.1s all ease-in-out;
+}
+
+#navbar a:hover {
+  color: var(--vp-c-accent) !important;
+}
+
+.vp-site-name {
+  display: none;
+}
+
+.vp-back-to-top-button {
+  @media (max-width: 600px) {
+    bottom: 2rem;
+  }
+}
+
+.vp-project-home div,
+.vp-project-home h1,
+.vp-project-home p,
+.vp-hero-info * {
+  opacity: 1 !important;
+  transform: unset !important;
+}
+
+.vp-project-home .vp-hero-actions a {
+  transition: 0.25s all ease-in-out !important;
+  -webkit-transition: 0.25s all ease-in-out !important;
+  -moz-transition: 0.25s all ease-in-out !important;
+  -ms-transition: 0.25s all ease-in-out !important;
+  -o-transition: 0.25s all ease-in-out !important;
+}
+
+.vp-project-home .vp-hero-title {
+  margin-top: 1em !important;
+}
+
+.vp-back-to-top-button .back-to-top-icon {
+  width: 25px;
+  height: 14.67px;
+  margin-top: -2px;
+}
+
+.edit-link svg {
+  display: none !important;
+}
+
+.vp-brand {
+  display: flex;
+}
+
+.vp-nav-logo {
+  max-height: 30px !important;
+}
+
+.vp-nav-logo {
+  @media (max-width: 600px) {
+    max-height: 24px !important;
+  }
+}
+
+.star {
+  width: 20px;
+  height: 20px;
+}
+
+.github-stars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  padding: 6px 2px;
+  gap: 4px;
+  margin: 0 10px 0 4px !important;
+
+  @media (max-width: 768px) {
+    margin: 0 0 0 2px !important;
+  }
+}
+
+.number-of-stars {
+  color: #3c3c43c7;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1px;
+  height: 100%;
+}
+
+.github-stars:hover {
+  .number-of-stars {
+    color: var(--vp-c-accent) !important;
+  }
+  .star path {
+    fill: var(--vp-c-accent) !important;
+  }
+}
