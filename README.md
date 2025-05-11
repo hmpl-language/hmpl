@@ -198,9 +198,9 @@ If, for some reason, you do not need the minified file, then you can download th
 The non-minified file is larger in size, but it is there as it is with all the formatting.
 
 ## Ecosystem
-
-<a href="https://www.npmjs.com/package/hmpl-loader"><img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/Webpack.svg" alt="hmpl-loader" height="40"/></a>
 <a href="https://marketplace.visualstudio.com/items?itemName=hmpljs.hmpl"><img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/VS%20Code.svg" height="40" alt="vs-code extension"/></a>
+<a href="https://www.npmjs.com/package/vite-plugin-hmpl"><img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/vite.png" height="40" alt="vite-plugin-hmpl"/></a>
+<a href="https://www.npmjs.com/package/hmpl-loader"><img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/Webpack.svg" alt="hmpl-loader" height="40"/></a>
 
 ## Community support
 
