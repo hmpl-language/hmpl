@@ -394,7 +394,7 @@
               <a
                 class="item-link"
                 href="https://bundlephobia.com/package/hmpl-js"
-                >~22 kilobytes</a
+                >~24 kilobytes</a
               >
             </p>
           </div>
@@ -409,11 +409,11 @@
           <div class="metrics-container flex-container">
             <div class="metrics-column">
               <div class="metric-large">
-                ~1.7x
+                ~1.67x
                 <span class="metric-subtitle">smaller than Vanilla</span>
               </div>
               <div class="metric-medium">
-                ~1.19x
+                ~1.14x
                 <span class="metric-subtitle">smaller than Alpine</span>
               </div>
             </div>
@@ -429,8 +429,8 @@
                 <div class="progress-bar-wrapper">
                   <div
                     class="progress-bar"
-                    data-width="39.15"
-                    data-value="194"
+                    data-width="40"
+                    data-value="198"
                   ></div>
                 </div>
                 <div class="progress-bar-wrapper">
@@ -466,8 +466,8 @@
           </div>
           <div class="metrics-text-container">
             <p>
-              The results are based on a comparison of the sizes of applications
-              presented in
+              The results are based on a comparison of the sizes of small
+              applications presented in
               <a
                 href="https://github.com/hmpl-language/app-size-comparison"
                 rel="nooferer noopener"
@@ -476,6 +476,10 @@
                 >this</a
               >
               repository.
+            </p>
+            <p>
+              (When the project is closer to reality, the difference increases
+              many times over)
             </p>
           </div>
         </div>
@@ -702,6 +706,15 @@
                   rel="nooferer noopener"
                   target="_blank"
                   >Gallery App</a
+                >
+              </li>
+              <li class="footer_item">
+                <a
+                  class="footer_item_link"
+                  href="https://github.com/hmpl-language/examples/tree/main/landing"
+                  rel="nooferer noopener"
+                  target="_blank"
+                  >Landing Page</a
                 >
               </li>
             </ul>
@@ -1712,7 +1725,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  flex-direction: column;
   color: rgba(255, 255, 255, 0.7);
 }
 
@@ -2158,6 +2171,8 @@ footer {
 
 .fade-in-effect.animated {
   animation: slideIn 0.6s ease-out forwards;
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
 }
 
 /* Responsive adjustments */

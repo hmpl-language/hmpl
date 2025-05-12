@@ -89,7 +89,7 @@
   location: https://spec.hmpl-lang.dev
   copyright: false
   contributors: Anthony Max
-  date: 2025-04-20
+  date: 2025-05-12
 </pre>
 <link
   rel="icon"
@@ -1071,7 +1071,7 @@ const elementObj = templateFn([
           memo=true
           initId="id1"
           allowedContentTypes=["text/html"]
-          disallowedTags=["script" "style" "iframe"]
+          disallowedTags=["script", "style", "iframe"]
           sanitize=false
         }}{{/request}}        
           </code></pre>
@@ -1117,6 +1117,8 @@ const elementObj = templateFn([
         <li><code>PUT</code></li>
         <li><code>PATCH</code></li>
         <li><code>DELETE</code></li>
+        <li><code>OPTIONS</code></li>
+        <li><code>CONNECT</code></li>
       </ul>
     </emu-clause>
 

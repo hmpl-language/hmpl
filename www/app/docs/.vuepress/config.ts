@@ -90,6 +90,10 @@ export default defineUserConfig({
           link: "vs-code-extension.md"
         },
         {
+          text: "Vite Plugin",
+          link: "vite-plugin.md"
+        },
+        {
           text: "Examples",
           link: "examples.md"
         },
@@ -118,7 +122,7 @@ export default defineUserConfig({
             {
               text: "Migration from v2 to v3 version",
               link: "migration-from-v2-to-v3-version.md"
-            },
+            }
           ]
         },
         {

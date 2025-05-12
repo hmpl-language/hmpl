@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.2 (2025-05-12)
+
+- Updating README.md
+- Adding support for HTTP methods `OPTIONS` and `CONNECT`
+
 ## 3.0.1 (2025-04-27)
 
 - Updating README.md
