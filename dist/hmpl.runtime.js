@@ -32,36 +32,6 @@ __export(main_exports, {
 module.exports = __toCommonJS(main_exports);
 var import_json5 = __toESM(require("json5"));
 var import_dompurify = __toESM(require("dompurify"));
-var checkObject = (val) => {
-  return typeof val === "object" && !Array.isArray(val) && val !== null;
-};
-var checkIsStringArray = (arr, currentError) => {
-  if (!Array.isArray(arr)) return false;
-  let isArrString = true;
-  for (let i = 0; i < arr.length; i++) {
-    const arrItem = arr[i];
-    if (typeof arrItem !== "string") {
-      createError(
-        `${currentError}: In the array, the element with index ${i} is not a string`
-      );
-      isArrString = false;
-      break;
-    }
-  }
-  return isArrString;
-};
-var checkFunction = (val) => {
-  return Object.prototype.toString.call(val) === "[object Function]";
-};
-var createError = (text) => {
-  throw new Error(text);
-};
-var createWarning = (text) => {
-  console.warn(text);
-};
-var getIsMethodValid = (method) => {
-  return method !== "get" && method !== "post" && method !== "put" && method !== "delete" && method !== "patch";
-};
 var SOURCE = `src`;
 var METHOD = `method`;
 var ID = `initId`;
@@ -103,6 +73,15 @@ var REQUEST_OPTIONS = [
   DISALLOWED_TAGS,
   SANITIZE,
   INTERVAL
+];
+var VALID_METHODS = [
+  "get",
+  "post",
+  "put",
+  "delete",
+  "patch",
+  "trace",
+  "options"
 ];
 var CODES = [
   100,
@@ -163,6 +142,36 @@ var DISALLOWED_TAGS_VALUES = ["script", "style", "iframe"];
 var DEFAULT_SANITIZE = false;
 var DEFAULT_ALLOWED_CONTENT_TYPES = ["text/html"];
 var DEFAULT_DISALLOWED_TAGS = [];
+var checkObject = (val) => {
+  return typeof val === "object" && !Array.isArray(val) && val !== null;
+};
+var checkIsStringArray = (arr, currentError) => {
+  if (!Array.isArray(arr)) return false;
+  let isArrString = true;
+  for (let i = 0; i < arr.length; i++) {
+    const arrItem = arr[i];
+    if (typeof arrItem !== "string") {
+      createError(
+        `${currentError}: In the array, the element with index ${i} is not a string`
+      );
+      isArrString = false;
+      break;
+    }
+  }
+  return isArrString;
+};
+var checkFunction = (val) => {
+  return Object.prototype.toString.call(val) === "[object Function]";
+};
+var createError = (text) => {
+  throw new Error(text);
+};
+var createWarning = (text) => {
+  console.warn(text);
+};
+var getIsMethodValid = (method) => {
+  return VALID_METHODS.includes(method.toLowerCase());
+};
 var getTemplateWrapper = (str, sanitize = false) => {
   let sanitizedStr = str;
   if (sanitize) {
@@ -581,9 +590,9 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
     const source = req[SOURCE];
     if (source) {
       const method = (req[METHOD] || "GET").toLowerCase();
-      if (getIsMethodValid(method)) {
+      if (!getIsMethodValid(method)) {
         createError(
-          `${REQUEST_COMPONENT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH or DELETE values`
+          `${REQUEST_COMPONENT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH, TRACE, OPTIONS or DELETE values`
         );
       } else {
         const after = req[AFTER];
