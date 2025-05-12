@@ -2143,36 +2143,22 @@ footer {
 }
 
 @keyframes slideIn {
-  0% {
+  from {
     opacity: 0;
-    transform: translateY(50px) scale(0.8);
-    -webkit-transform: translateY(50px) scale(0.8);
-    -moz-transform: translateY(50px) scale(0.8);
-    -ms-transform: translateY(50px) scale(0.8);
-    -o-transform: translateY(50px) scale(0.8);
+    transform: translate3d(0, 20px, 0) scale(0.98);
   }
-  50% {
-    opacity: 0.7;
-    transform: translateY(-10px) scale(1.1);
-    -webkit-transform: translateY(-10px) scale(1.1);
-    -moz-transform: translateY(-10px) scale(1.1);
-    -ms-transform: translateY(-10px) scale(1.1);
-    -o-transform: translateY(-10px) scale(1.1);
-  }
-  100% {
+  to {
     opacity: 1;
-    transform: translateY(0) scale(1);
-    -webkit-transform: translateY(0) scale(1);
-    -moz-transform: translateY(0) scale(1);
-    -ms-transform: translateY(0) scale(1);
-    -o-transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
 .fade-in-effect.animated {
-  animation: slideIn 0.6s ease-out forwards;
+  animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
   will-change: transform, opacity;
-  -webkit-backface-visibility: hidden;
 }
 
 /* Responsive adjustments */
