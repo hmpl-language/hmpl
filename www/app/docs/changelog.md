@@ -3,7 +3,7 @@
 ## 3.0.2 (2025-05-12)
 
 - Updating README.md
-- Adding support for HTTP methods `OPTIONS` and `CONNECT`
+- Adding support for HTTP methods `OPTIONS` and `TRACE`
 
 ## 3.0.1 (2025-04-27)
 

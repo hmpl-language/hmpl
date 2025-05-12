@@ -32,6 +32,100 @@ import {
 } from "./types";
 
 /**
+ * Constants representing various property names and error messages.
+ */
+const SOURCE = `src`;
+const METHOD = `method`;
+const ID = `initId`;
+const AFTER = `after`;
+const REPEAT = `repeat`;
+const MEMO = `memo`;
+const INDICATORS = `indicators`;
+const AUTO_BODY = `autoBody`;
+const COMMENT = `hmpl`;
+const FORM_DATA = `formData`;
+const DISALLOWED_TAGS = `disallowedTags`;
+const SANITIZE = `sanitize`;
+const ALLOWED_CONTENT_TYPES = "allowedContentTypes";
+const REQUEST_INIT_GET = `get`;
+const INTERVAL = `interval`;
+const RESPONSE_ERROR = `BadResponseError`;
+const REQUEST_INIT_ERROR = `RequestInitError`;
+const RENDER_ERROR = `RenderError`;
+const REQUEST_COMPONENT_ERROR = `RequestComponentError`;
+const COMPILE_OPTIONS_ERROR = `CompileOptionsError`;
+const PARSE_ERROR = `ParseError`;
+const COMPILE_ERROR = `CompileError`;
+const DEFAULT_AUTO_BODY = {
+  formData: true
+};
+const DEFAULT_FALSE_AUTO_BODY = {
+  formData: false
+};
+
+/**
+ * List of request options that are allowed.
+ */
+const REQUEST_OPTIONS = [
+  SOURCE,
+  METHOD,
+  ID,
+  AFTER,
+  REPEAT,
+  INDICATORS,
+  MEMO,
+  AUTO_BODY,
+  ALLOWED_CONTENT_TYPES,
+  DISALLOWED_TAGS,
+  SANITIZE,
+  INTERVAL
+];
+
+/**
+ * List of valid HTTP methods
+ */
+const VALID_METHODS = [
+  "get",
+  "post",
+  "put",
+  "delete",
+  "patch",
+  "trace",
+  "options"
+];
+
+/**
+ * HTTP status codes without successful responses.
+ * See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status for more details.
+ */
+const CODES = [
+  100, 101, 102, 103, 300, 301, 302, 303, 304, 305, 306, 307, 308, 400, 401,
+  402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416,
+  417, 418, 421, 422, 423, 424, 425, 426, 428, 429, 431, 451, 500, 501, 502,
+  503, 504, 505, 506, 507, 508, 510, 511
+];
+
+/**
+ * Tags available for deletion from response
+ */
+const DISALLOWED_TAGS_VALUES = ["script", "style", "iframe"];
+
+/**
+ * Default value for sanitize response settings. Plans to add config for DOMPurify
+ */
+const DEFAULT_SANITIZE = false;
+
+/**
+ * Default value for the processed response content type
+ */
+const DEFAULT_ALLOWED_CONTENT_TYPES: HMPLContentTypes = ["text/html"];
+
+/**
+ * Default value for tags to remove from response
+ */
+const DEFAULT_DISALLOWED_TAGS: HMPLDisallowedTags = [];
+
+/**
  * Checks if the provided value is an object (excluding arrays and null).
  * @param val - The value to check.
  * @returns True if val is an object, false otherwise.
@@ -94,95 +188,8 @@ export const createWarning = (text: string) => {
  * @returns False if the method is valid, true otherwise.
  */
 const getIsMethodValid = (method: string) => {
-  return (
-    method !== "get" &&
-    method !== "post" &&
-    method !== "put" &&
-    method !== "delete" &&
-    method !== "patch"
-  );
+  return VALID_METHODS.includes(method.toLowerCase());
 };
-
-/**
- * Constants representing various property names and error messages.
- */
-const SOURCE = `src`;
-const METHOD = `method`;
-const ID = `initId`;
-const AFTER = `after`;
-const REPEAT = `repeat`;
-const MEMO = `memo`;
-const INDICATORS = `indicators`;
-const AUTO_BODY = `autoBody`;
-const COMMENT = `hmpl`;
-const FORM_DATA = `formData`;
-const DISALLOWED_TAGS = `disallowedTags`;
-const SANITIZE = `sanitize`;
-const ALLOWED_CONTENT_TYPES = "allowedContentTypes";
-const REQUEST_INIT_GET = `get`;
-const INTERVAL = `interval`;
-const RESPONSE_ERROR = `BadResponseError`;
-const REQUEST_INIT_ERROR = `RequestInitError`;
-const RENDER_ERROR = `RenderError`;
-const REQUEST_COMPONENT_ERROR = `RequestComponentError`;
-const COMPILE_OPTIONS_ERROR = `CompileOptionsError`;
-const PARSE_ERROR = `ParseError`;
-const COMPILE_ERROR = `CompileError`;
-const DEFAULT_AUTO_BODY = {
-  formData: true
-};
-const DEFAULT_FALSE_AUTO_BODY = {
-  formData: false
-};
-
-/**
- * List of request options that are allowed.
- */
-const REQUEST_OPTIONS = [
-  SOURCE,
-  METHOD,
-  ID,
-  AFTER,
-  REPEAT,
-  INDICATORS,
-  MEMO,
-  AUTO_BODY,
-  ALLOWED_CONTENT_TYPES,
-  DISALLOWED_TAGS,
-  SANITIZE,
-  INTERVAL
-];
-
-/**
- * HTTP status codes without successful responses.
- * See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status for more details.
- */
-const CODES = [
-  100, 101, 102, 103, 300, 301, 302, 303, 304, 305, 306, 307, 308, 400, 401,
-  402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416,
-  417, 418, 421, 422, 423, 424, 425, 426, 428, 429, 431, 451, 500, 501, 502,
-  503, 504, 505, 506, 507, 508, 510, 511
-];
-
-/**
- * Tags available for deletion from response
- */
-const DISALLOWED_TAGS_VALUES = ["script", "style", "iframe"];
-
-/**
- * Default value for sanitize response settings. Plans to add config for DOMPurify
- */
-const DEFAULT_SANITIZE = false;
-
-/**
- * Default value for the processed response content type
- */
-const DEFAULT_ALLOWED_CONTENT_TYPES: HMPLContentTypes = ["text/html"];
-
-/**
- * Default value for tags to remove from response
- */
-const DEFAULT_DISALLOWED_TAGS: HMPLDisallowedTags = [];
 
 /**
  * Parses a string into a HTML template element.
@@ -779,9 +786,9 @@ const renderTemplate = (
     const source = req[SOURCE];
     if (source) {
       const method = (req[METHOD] || "GET").toLowerCase();
-      if (getIsMethodValid(method)) {
+      if (!getIsMethodValid(method)) {
         createError(
-          `${REQUEST_COMPONENT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH or DELETE values`
+          `${REQUEST_COMPONENT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH, TRACE, OPTIONS or DELETE values`
         );
       } else {
         const after = req[AFTER];
