@@ -2161,6 +2161,28 @@ footer {
   will-change: transform, opacity;
 }
 
+@media (max-width: 767px) {
+  @keyframes slideInMobile {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-effect.animated {
+    animation: slideInMobile 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    will-change: transform, opacity;
+    transform: none;
+    backface-visibility: visible;
+    transform-style: flat;
+    perspective: none;
+  }
+}
+
 /* Responsive adjustments */
 
 @media (max-width: 1870px) {
