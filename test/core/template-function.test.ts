@@ -162,14 +162,14 @@ const contentType1 = "application/octet-stream";
 
 describe("template function", () => {
   e(
-    `only accepts the '${METHOD}' property in the REQUEST COMPONENT as GET, POST, PUT, PATCH or DELETE`,
+    `only accepts the '${METHOD}' property in the REQUEST COMPONENT as GET, POST, PUT, PATCH, TRACE, OPTIONS or DELETE`,
     () =>
       compile(
         createTestObj2(
           `<button>Click</button>{{#r src="/api/test" method="test" after="click:#increment"}}{{/r}}`
         )
       )(),
-    `${REQUEST_COMPONENT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH or DELETE values`
+    `${REQUEST_COMPONENT_ERROR}: The "${METHOD}" property has only GET, POST, PUT, PATCH, TRACE, OPTIONS or DELETE values`
   );
   e(
     "throws an error if the EVENT TARGET doesn't exist",
