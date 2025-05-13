@@ -199,7 +199,9 @@
   
         const templateFn = hmpl.compile(
           `&lt;div&gt;
-              &lt;button data-action="increment" id="btn"&gt;Click!&lt;/button&gt;
+              &lt;button data-action="increment" id="btn"&gt;
+                Click!
+              &lt;/button&gt;
               &lt;div&gt;Clicks: {{#request
                 src="/api/clicks"
                 after="click:#btn"
@@ -208,7 +210,9 @@
         );
         
         const clicker = templateFn(({ request: { event } }) => ({
-          body: JSON.stringify({ action: event.target.getAttribute("data-action") })
+          body: JSON.stringify({ 
+            action: event.target.getAttribute("data-action") 
+          })
         })).response;
         
         document.querySelector("#app").append(clicker);
@@ -345,14 +349,18 @@
         <emu-example>
           <pre><code class="html">
       &lt;div&gt;
-        &lt;button data-action="increment" id="btn"&gt;Click!&lt;/button&gt;
+        &lt;button data-action="increment" id="btn"&gt;
+          Click!
+        &lt;/button&gt;
         &lt;div&gt;
           Clicks:
-          {{#request src="/api/clicks" after="click:#btn"}}{{/request}}
+          {{#request src="/api/clicks" after="click:#btn"}}
+          {{/request}}
         &lt;/div&gt;
         &lt;div&gt;
           Count:
-          {{#r src="/api/count" after="click:#btn"}}{{/r}}
+          {{#r src="/api/count" after="click:#btn"}}
+          {{/r}}
         &lt;/div&gt;
       &lt;/div&gt;
     </code></pre>
@@ -930,10 +938,11 @@ const elementObj = templateFn([
 
     <emu-example>
       <pre><code class="html">
-  &lt;div&gt;
-    &lt;button id="getHTML"&gt;Get HTML!&lt;/button&gt;
-    {{#request src="/api/getHTML" method="POST" after="click:#getHTML"}}{{/request}}
-  &lt;/div&gt;
+        &lt;div&gt;
+          &lt;button id="getHTML"&gt;Get HTML!&lt;/button&gt;
+          {{#request src="/api/getHTML" method="POST" after="click:#getHTML"}}
+          {{/request}}
+        &lt;/div&gt;
       </code></pre>
     </emu-example>
 
@@ -1355,10 +1364,17 @@ const elementObj = templateFn([
       <emu-example>
         <pre><code class="html">
     &lt;div&gt;
-      &lt;form onsubmit=&quot;function prevent(e){e.preventDefault();};return prevent(event);&quot; id=&quot;form&quot;&gt;
+      &lt;form onsubmit=&quot;
+        function prevent(e){
+          e.preventDefault();
+        };
+        return prevent(event);
+      &quot; id=&quot;form&quot;&gt;
         &lt;div class=&quot;form-example&quot;&gt;
           &lt;label for=&quot;name&quot;&gt;Enter your email:&lt;/label&gt;
-          &lt;input type=&quot;text&quot; name=&quot;email&quot; id=&quot;email&quot; required /&gt;
+          &lt;input type=&quot;text&quot; 
+          name=&quot;email&quot; 
+          id=&quot;email&quot; required /&gt;
         &lt;/div&gt;
         &lt;div class=&quot;form-example&quot;&gt;
           &lt;input type=&quot;submit&quot; value=&quot;Subscribe!&quot; /&gt;
@@ -2007,10 +2023,6 @@ const elementObj = templateFn([
   *:target {
     background-color: lightgray !important;
     transition: background-color 0.3s ease;
-  }
-
-  emu-example {
-    margin: 0 !important;
   }
 
   .title {
