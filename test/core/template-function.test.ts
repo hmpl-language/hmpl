@@ -364,6 +364,21 @@ describe("template function", () => {
     )().response?.outerHTML,
     '<div><button id="increment">Click</button><!--hmpl0--></div>'
   );
+  eq(
+    "",
+    compile(
+      createTestObj2(
+        `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment"}}
+    {{#indicator trigger="pending"}}
+      <p>Loading...</p>
+    {{/indicator}}
+    {{#indicator trigger="rejected"}}
+      <p>Error</p><button>Retry</button>
+    {{/indicator}}{{/r}}`
+      )
+    )().response?.outerHTML,
+    '<div><button id="increment">Click</button><!--hmpl0--></div>'
+  );
   eaeq(
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${RESPONSE_ERROR}: Expected ${DEFAULT_ALLOWED_CONTENT_TYPES.map(

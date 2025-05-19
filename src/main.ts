@@ -1623,7 +1623,7 @@ export const compile: HMPLCompile = (
       const blockEnd = str.indexOf(nextOpen.close, attrEnd);
       if (blockEnd === -1) {
         createError(
-          `${PARSE_ERROR}: No closing '${nextOpen.close}' found for ${nextOpen.open}`
+          `${PARSE_ERROR}: No closing '${nextOpen.close}' found for ${nextOpen.open}}}`
         );
       }
 
@@ -1635,8 +1635,46 @@ export const compile: HMPLCompile = (
       }
 
       const transformedAttrs = safeReplaceEquals(rawAttrs);
+      if (
+        nextOpen.open.startsWith(openTags[0].open) ||
+        nextOpen.open.startsWith(openTags[1].open)
+      ) {
+        const indicators: string[] = [];
+        const indicatorRegex =
+          /{{#indicator\s+([^}]*)}}([\s\S]*?){{\/indicator}}/g;
+        let match: RegExpExecArray | null;
 
-      parts.push(`{${transformedAttrs}}`);
+        while ((match = indicatorRegex.exec(innerContent)) !== null) {
+          const attrs = match[1].trim();
+          let contentRaw = match[2].trim();
+          const indicatorString = "{{#indicator";
+
+          if (contentRaw.includes(indicatorString)) {
+            createError(
+              `${PARSE_ERROR}: Nested ${indicatorString}}} blocks are not supported`
+            );
+          }
+
+          const parsedAttrs = safeReplaceEquals(attrs);
+          contentRaw = contentRaw
+            .replace(/\n/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+          const content = contentRaw
+            .replace(/\\/g, "\\\\")
+            .replace(/`/g, "\\`")
+            .replace(/\$/g, "\\$");
+
+          indicators.push(`{${parsedAttrs}, content:'${content}'}`);
+        }
+
+        const indicatorsPart =
+          indicators.length > 0 ? `,indicators:[${indicators.join(",")}]` : "";
+
+        parts.push(`{${transformedAttrs}${indicatorsPart}}`);
+      }
+
       requestsIndexes.push(parts.length - 1);
       pos = blockEnd + nextOpen.close.length;
     }
@@ -1650,7 +1688,7 @@ export const compile: HMPLCompile = (
     const regex =
       /\s*([a-zA-Z0-9_-]+)\s*=\s*(("[^"]*"|'[^']*'|`[^`]*`|\[[^\]]*\]|\{[^}]*\}|true|false|\d+)(?=\s|,|$))\s*/g;
 
-    let match;
+    let match: RegExpExecArray | null;
     while ((match = regex.exec(input)) !== null) {
       const key = match[1].trim();
       const value = match[2].trim();

@@ -59,7 +59,20 @@ describe("compile function", () => {
   e(
     "Should throw parse error for missing closing {{/request}} block",
     () => compile("<div>{{#request src='test'}}Some content</div>"),
-    `${PARSE_ERROR}: No closing '{{/request}}' found for {{#request`
+    `${PARSE_ERROR}: No closing '{{/request}}' found for {{#request}}`
+  );
+  e(
+    "",
+    () =>
+      compile(`<div><button id="increment">Click</button>{{#r src="/api/test" after="click:#increment"}}
+    {{#indicator trigger="pending"}}
+      <p>Loading...</p>
+      {{#indicator trigger="error"}}
+        Error
+      {{/indicator}}
+    {{/indicator}}
+    {{/r}}</div>`),
+    `${PARSE_ERROR}: Nested {{#indicator}} blocks are not supported`
   );
   e(
     "Should throw parse error for unsupported nested {{#request}} blocks",

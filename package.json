@@ -1,6 +1,6 @@
 {
   "name": "hmpl-js",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "🐜 Server-oriented customizable templating for JavaScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
