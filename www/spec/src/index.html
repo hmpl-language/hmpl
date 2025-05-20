@@ -89,7 +89,7 @@
   location: https://spec.hmpl-lang.dev
   copyright: false
   contributors: Anthony Max
-  date: 2025-05-12
+  date: 2025-05-21
 </pre>
 <link
   rel="icon"
@@ -1259,11 +1259,35 @@ const elementObj = templateFn([
       </p>
 
       <p>
-        The value of the <code>content</code> property is a string containing
+        The <code>content</code> property must be a plain string containing
         static HTML markup. This markup is not interpreted or extended by the
         HMPL module, and therefore does not support HMPL-specific syntax or
-        dynamic bindings.
+        dynamic bindings. Additionally, the value must be a single-line string —
+        line breaks (e.g., <code>\n</code>) or other control characters are not
+        allowed.
       </p>
+
+      <emu-example>
+        <pre><code class="html">
+        {{#request
+          src="/api/test"
+          indicators=[
+            {
+              trigger: "pending",
+              content: "&lt;p&gt;Loading...&lt;/p&gt;"
+            },
+            {
+              trigger: "rejected",
+              content: "&lt;p&gt;Error&lt;/p&gt;&lt;button&gt;reload&lt;/button&gt;"
+            },
+            {
+              trigger: "403",
+              content: "&lt;p&gt;Access error.&lt;/p&gt;"
+            }
+          ]
+        }}{{/request}}        
+          </code></pre>
+      </emu-example>
 
       <p>
         The <code>trigger</code> property specifies the status condition under
@@ -1644,6 +1668,79 @@ const elementObj = templateFn([
         <li>Preserves safe HTML markup</li>
         <li>Executes before disallowed tag removal</li>
       </ul>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="request-nested-blocks">
+    <h1>Request Nested Blocks</h1>
+    <p>
+      In addition to using configuration properties, the
+      <code>{{#request}}</code> block may include nested blocks that define
+      behavior or content directly within the template markup. These nested
+      blocks offer a more readable and expressive alternative to structured JSON
+      properties, and are typically used for specifying state-driven UI or
+      request-related logic in a declarative way.
+    </p>
+
+    <emu-clause id="indicator-block">
+      <h1>indicator</h1>
+      <p>
+        The <code>{{#indicator}}</code> block is a template-level equivalent to
+        an
+        <a href="#sec-indicators-property"><code>HMPLIndicator</code></a> object
+        within the <code>indicators</code> array. It enables authors to define
+        the <code>trigger</code> and the corresponding
+        <code>content</code> inline in the HTML template.
+      </p>
+
+      <p>
+        This block must be placed directly within a
+        <code>{{#request}}</code> block. Multiple indicator blocks can be used
+        to represent different request states.
+      </p>
+
+      <p>
+        The <code>trigger</code> attribute is required and supports the same
+        values as described in the
+        <a href="#sec-indicators-property">indicators section</a>.
+      </p>
+
+      <emu-note>
+        Internally, the HMPL parser transforms each
+        <code>{{#indicator}}</code> block into a corresponding
+        <code>HMPLIndicator</code> object in the <code>indicators</code> array.
+        This means the two approaches are equivalent in behavior, and authors
+        may choose the one that best suits their use case or style.
+      </emu-note>
+
+      <p>
+        The content inside an <code>{{#indicator}}</code> block is treated as
+        static HTML and rendered when the specified trigger condition is met.
+        HMPL syntax and nested <code>{{#request}}</code> or
+        <code>{{#indicator}}</code> blocks are not allowed inside indicator
+        content.
+      </p>
+
+      <emu-example>
+        <pre><code class="html">
+        {{#request src="/api/data"}}
+          {{#indicator trigger="pending"}}
+            &lt;p&gt;Loading...&lt;/p&gt;
+          {{/indicator}}
+          {{#indicator trigger="rejected"}}
+            &lt;p&gt;An error occurred.&lt;/p&gt;
+          {{/indicator}}
+        {{/request}}
+      </code></pre>
+      </emu-example>
+
+      <emu-note>
+        If both the <code>indicators</code> property and one or more
+        <code>{{#indicator}}</code> blocks are present in a single
+        <code>{{#request}}</code> block, the inline
+        <code>{{#indicator}}</code> blocks will take precedence and override the
+        <code>indicators</code> property.
+      </emu-note>
     </emu-clause>
   </emu-clause>
 

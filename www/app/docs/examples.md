@@ -23,13 +23,10 @@ const templateFn = compile(
       src="/api/test"
       after="click:.getHTML"
       repeat=false
-      indicators=[
-        {
-          trigger: "pending",
-          content: "<p>Loading...</p>"
-        }
-      ]
     }}
+      { {#indicator trigger="pending"}}
+        <p>Loading...</p>
+      {{/indicator}}
     {{/request}}
   </div>`
 );
