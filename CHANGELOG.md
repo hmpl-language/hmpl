@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.3 (2025-05-20)
+
+- Adding `{{#indicators}}` block
+- Changing the error text
+
 ## 3.0.2 (2025-05-12)
 
 - Updating README.md
