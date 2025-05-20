@@ -41,7 +41,7 @@ hmpl is a small template language for displaying UI from server to client. It is
 
 ```html
 <div>
-  {{#request src="/api/my-component"}}
+  {{#request src="/api/my-component.html"}}
     {{#indicator trigger="pending"}}
       Loading...
     {{/indicator}}
