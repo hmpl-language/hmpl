@@ -62,7 +62,7 @@ describe("compile function", () => {
     `${PARSE_ERROR}: No closing '{{/request}}' found for {{#request}}`
   );
   e(
-    "",
+    "Should throw parse error when indicator blocks are nested inside each other",
     () =>
       compile(`<div><button id="increment">Click</button>{{#r src="/api/test" after="click:#increment"}}
     {{#indicator trigger="pending"}}
@@ -167,7 +167,7 @@ describe("compile function", () => {
     `${COMPILE_OPTIONS_ERROR}: In the array, the element with index 0 is not a string`
   );
   e(
-    ``,
+    `throws an error if the 'disallowedTags' property in the COMPILE OPTIONS is not an array`,
     () =>
       compile(createTestObj2(`{{#r src="/api/test"}}{{/r}}`), {
         disallowedTags: true as any
@@ -175,7 +175,7 @@ describe("compile function", () => {
     `${COMPILE_OPTIONS_ERROR}: The value of the property "${DISALLOWED_TAGS}" must be an array`
   );
   e(
-    ``,
+    `throws an error if the 'disallowedTags' array contains an unprocessable value`,
     () =>
       compile(createTestObj2(`{{#r src="/api/test"}}{{/r}}`), {
         disallowedTags: ["div" as any]
@@ -183,7 +183,7 @@ describe("compile function", () => {
     `${COMPILE_OPTIONS_ERROR}: The value "div" is not processed`
   );
   e(
-    ``,
+    `throws an error if the 'sanitize' property in the COMPILE OPTIONS is not a boolean`,
     () =>
       compile(createTestObj2(`{{#r src="/api/test"}}{{/r}}`), {
         sanitize: ["div"] as any
@@ -274,7 +274,7 @@ describe("compile function", () => {
     `${REQUEST_COMPONENT_ERROR}: The "${MODE}" property doesn't work without "${AFTER}" property`
   );
   e(
-    ``,
+    `throws an error if the 'disallowedTags' property in the REQUEST COMPONENT is not an array`,
     () =>
       compile(
         createTestObj2(`{{#r src="/api/test" disallowedTags=true}}{{/r}}`)
@@ -282,7 +282,7 @@ describe("compile function", () => {
     `${REQUEST_COMPONENT_ERROR}: The value of the property "${DISALLOWED_TAGS}" must be an array`
   );
   e(
-    ``,
+    `throws an error if the 'disallowedTags' property in the REQUEST COMPONENT contains an unprocessable value`,
     () =>
       compile(
         createTestObj2(`{{#r src="/api/test" disallowedTags=["div"]}}{{/r}}`)
@@ -290,7 +290,7 @@ describe("compile function", () => {
     `${REQUEST_COMPONENT_ERROR}: The value "div" is not processed`
   );
   e(
-    ``,
+    `throws an error if the 'sanitize' property in the REQUEST COMPONENT is not a boolean`,
     () =>
       compile(createTestObj2(`{{#r src="/api/test" sanitize=["div"]}}{{/r}}`)),
     `${REQUEST_COMPONENT_ERROR}: The value of the property "${SANITIZE}" must be a boolean`
@@ -301,7 +301,7 @@ describe("compile function", () => {
     true
   );
   eq(
-    "",
+    "should override global autoBody = true when inline autoBody = false",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody=false}}{{/r}}`
@@ -313,7 +313,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should override global autoBody = false when inline autoBody = true",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody=true}}{{/r}}`
@@ -325,7 +325,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should apply global autoBody = false when inline autoBody is not specified",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form"}}{{/r}}`
@@ -337,7 +337,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should apply global autoBody = true when inline autoBody is not specified",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form"}}{{/r}}`
@@ -349,7 +349,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should apply global autoBody.formData = false when inline autoBody is not specified",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form"}}{{/r}}`
@@ -363,7 +363,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should apply global autoBody.formData = true when inline autoBody is not specified",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form"}}{{/r}}`
@@ -377,7 +377,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should override global autoBody = false with inline autoBody = { formData:true }",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:true } }}{{/r}}`
@@ -389,7 +389,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should override global autoBody = true with inline autoBody = { formData:true }",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:true } }}{{/r}}`
@@ -401,7 +401,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should apply inline autoBody = { formData:true } when no global autoBody is specified",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:true } }}{{/r}}`
@@ -410,7 +410,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should apply inline autoBody = { formData:false } when no global autoBody is specified",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:false } }}{{/r}}`
@@ -419,7 +419,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should apply inline autoBody = { formData:false } with functional RequestInit",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:false } }}{{/r}}`
@@ -428,7 +428,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should apply inline autoBody = { formData:false } and initID-based RequestInit",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:false } initId="1" }}{{/r}}`
@@ -442,7 +442,7 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "should render multiple request blocks using distinct initID-based RequestInit configurations",
     compile(
       createTestObj2(
         `<form id="form"></form>{{#r src="/api/test" after="submit:#form" initId="1" }}{{/r}} {{#r src="/api/test" after="submit:#form" initId="2" }}{{/r}}`
