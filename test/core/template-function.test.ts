@@ -204,7 +204,7 @@ describe("template function", () => {
     `${REQUEST_INIT_ERROR}: ID with value "1" already exists`
   );
   e(
-    "",
+    "throws an error if passed duplicate numeric IDs for the RequestInit objects",
     () =>
       compile(createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`))([
         { id: 1, value: {} },
@@ -300,7 +300,7 @@ describe("template function", () => {
     `${REQUEST_COMPONENT_ERROR}: Failed to activate or detect the indicator`
   );
   e(
-    "",
+    "throws an error if interval is used with memoized request",
     () =>
       compile(
         createTestObj2(
@@ -310,7 +310,7 @@ describe("template function", () => {
     `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" property does not work with repetiton mode yet`
   );
   e(
-    "",
+    "throws an error if interval is passed as a string instead of a number",
     () =>
       compile(
         createTestObj2(
@@ -365,7 +365,7 @@ describe("template function", () => {
     '<div><button id="increment">Click</button><!--hmpl0--></div>'
   );
   eq(
-    "",
+    "Should render request block with indicators and placeholder on initial load",
     compile(
       createTestObj2(
         `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment"}}
