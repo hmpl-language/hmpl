@@ -85,15 +85,16 @@ a::before {
 .star {
   width: 20px;
   height: 20px;
+  
 }
 
 .github-stars {
   display: flex;
-  justify-content: center;
+  justify-content:center;
   align-items: center;
   height: 32px;
   padding: 6px 2px;
-  gap: 4px;
+  gap: 8px;
   margin: 0 10px 0 4px !important;
 
   @media (max-width: 768px) {
@@ -105,11 +106,12 @@ a::before {
   color: #3c3c43c7;
   font-size: 18px;
   display: flex;
-  min-width: 30px;
+  min-width:40px;
   align-items: center;
   justify-content: start;
   padding-top: 1px;
   height: 100%;
+
 }
 
 .github-stars:hover {
