@@ -1,50 +1,63 @@
 <div>
-    {{#request
-        src="/api/test"
-        method="get"
-        after="click:.target"
-        repeat=true
-        interval=1000
-        indicators=[
-            {
-                trigger: "pending"
-                content: "&lt;p&gt;Loading...&lt;/p&gt;"
-            },
-            {
-                trigger: "rejected"
-                content: "&lt;p&gt;Error&lt;/p&gt;&lt;button&gt;reload&lt;/button&gt;"
-            }
-        ]
-        autoBody={
-            formData: true
-        }
-        memo=true
-        initId="id1"
-        allowedContentTypes=["text/html"]
-        disallowedTags=["script" "style" "iframe"]
-        sanitize=false
-    }}{{/request}}
-    {{r src="/api/test2"}}{{/r}}
-    {{#request
-      src="/api/register"
-      after="submit:#form"
-      repeat=false
-      indicators=[
-        {
-          trigger: "pending",
-          content: "<p>Loading...</p>"
-        }
-      ]
-    }}
-    {{/request}}
+  {{#request
+    src="/api/test"
+    method="get"
+    after="click:.target"
+    repeat=true
+    interval=1000
+    indicators=[
+      {
+        trigger: "pending",
+        // Use a wrapper with fixed width to prevent layout shift
+        content: "<p><span class='loading-wrap'>Loading...</span></p>"
+      },
+      {
+        trigger: "rejected",
+        // Same wrapper used here to maintain equal width
+        content: "<p><span class='loading-wrap'>Error</span></p><button>reload</button>"
+      }
+    ]
+    autoBody={
+      formData: true
+    }
+    memo=true
+    initId="id1"
+    allowedContentTypes=["text/html"]
+    disallowedTags=["script" "style" "iframe"]
+    sanitize=false
+  }}{{/request}}
+
+  {{r src="/api/test2"}}{{/r}}
+
+  {{#request
+    src="/api/register"
+    after="submit:#form"
+    repeat=false
+    indicators=[
+      {
+        trigger: "pending",
+        // Again, wrap to ensure no layout jump on change
+        content: "<p><span class='loading-wrap'>Loading...</span></p>"
+      }
+    ]
+  }}
+  {{/request}}
 </div>
 
 <style>
-    * {
-        font-size: 18px;
-    }
+  * {
+    font-size: 18px;
+  }
+
+  /* 👇 Fixed width wrapper to prevent flickering or shifting */
+  .loading-wrap {
+    display: inline-block;
+    min-width: 90px; /* Adjust this value as needed */
+    text-align: center;
+  }
 </style>
 
 <script>
-console.log("this is hmpl example")
+  // Just logging for demo
+  console.log("this is hmpl example");
 </script>
