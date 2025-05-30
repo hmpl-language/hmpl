@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (query.trim() === "") {
           resultsList.style.display = "none";
+          resultsList.innerHTML = ""; // Clear previous results
         } else {
           resultsList.style.display = "block";
           const results = data.filter((post) => {
@@ -17,15 +18,18 @@ document.addEventListener("DOMContentLoaded", function () {
             return title.includes(query);
           });
 
-          // Display the filtered results
-          resultsList.innerHTML = results
-            .map(
-              (post) => `
-              <li>
-                <a href="${post.url}">${post.title}</a>
-              </li>`
-            )
-            .join("");
+          if (results.length === 0) {
+            resultsList.innerHTML = `<li>Nothing found for the request</li>`;
+          } else {
+            resultsList.innerHTML = results
+              .map(
+                (post) => `
+                <li>
+                  <a href="${post.url}">${post.title}</a>
+                </li>`
+              )
+              .join("");
+          }
         }
       });
     })
