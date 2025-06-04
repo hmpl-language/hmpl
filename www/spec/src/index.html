@@ -1,5 +1,25 @@
 <!doctype html>
 <style>
+
+  /* Default (Light) Theme */
+body {
+  background-color: white;
+  color: black;
+}
+
+/* Dark Mode */
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+a {
+  color: blue;
+}
+body.dark-mode a {
+  color: #7300ff;
+}
+
   *:target {
     background-color: lightgray !important;
     transition: background-color 0.3s ease;
@@ -99,6 +119,7 @@
 <emu-spec>
   <emu-intro id="description">
     <h1>Overview</h1>
+<button id="darkModeToggle">Dark Mode</button>
     <p>
       The <a href="https://github.com/hmpl-language/hmpl"><dfn>HMPL</dfn></a> is
       a declarative template language designed for server-side UI rendering with
@@ -2198,3 +2219,5 @@ const elementObj = templateFn([
     background-color: #ffeef0 !important;
   }
 </style>
+<script src="darkmode.js"></script>
+
