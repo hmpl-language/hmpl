@@ -15,7 +15,7 @@ export default defineUserConfig({
   theme: hopeTheme(
     {
       logo: "/images/logo.svg",
-      darkmode: "disable",
+     darkmode: "toggle",
       repo: "hmpl-language/hmpl",
       repoLabel: "GitHub",
       repoDisplay: true,
