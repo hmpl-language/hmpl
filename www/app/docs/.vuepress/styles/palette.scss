@@ -82,15 +82,22 @@ a::before {
   }
 }
 
+.vp-color-mode {
+  @media (max-width: 600px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 .star {
   width: 20px;
   height: 20px;
-  
 }
 
 .github-stars {
   display: flex;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   height: 32px;
   padding: 6px 2px;
@@ -100,18 +107,21 @@ a::before {
   @media (max-width: 768px) {
     margin: 0 0 0 2px !important;
   }
+
+  path {
+    fill: var(--vp-c-text-mute) !important;
+  }
 }
 
 .number-of-stars {
-  color: #3c3c43c7;
+  color: var(--vp-c-text-mute);
   font-size: 18px;
   display: flex;
-  min-width:40px;
+  min-width: 40px;
   align-items: center;
   justify-content: start;
   padding-top: 1px;
   height: 100%;
-
 }
 
 .github-stars:hover {

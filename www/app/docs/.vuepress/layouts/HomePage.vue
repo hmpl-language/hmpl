@@ -247,12 +247,16 @@
             >Demo Sandbox</a
           >
         </div>
-        <div class="badge fade-in-effect">
+        <a
+          href="https://devhunt.org/tool/hmpljs"
+          target="_blank"
+          class="badge fade-in-effect"
+        >
           <img
             class="badge-img"
             src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhunt.svg"
           />
-        </div>
+        </a>
       </div>
     </div>
   </div>
@@ -605,7 +609,7 @@
   <footer>
     <div class="wrapper">
       <div class="container footer_container">
-        <div class="footer_logo_and_social_links">
+        <div class="footer_first_section">
           <a href="/" class="footer_logo_header">
             <img
               src="/images/antWhite.png"
@@ -694,6 +698,17 @@
               </svg>
             </a>
           </div>
+          <a
+            href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js"
+            target="_blank"
+            class="producthunt"
+            ><img
+              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=dark&t=1748847658573"
+              alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt"
+              style="width: 250px; height: 54px"
+              width="250"
+              height="54"
+          /></a>
         </div>
         <div class="footer_sections">
           <div class="footer_section">
@@ -794,18 +809,6 @@
           <p>MIT Licensed | © 2024-2025 HMPL.js</p>
         </div>
       </div>
-    </div>
-    <div class="producthunt">
-      <a
-        href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js"
-        target="_blank"
-        ><img
-          src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=dark&t=1748847658573"
-          alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt"
-          style="width: 250px; height: 54px"
-          width="250"
-          height="54"
-      /></a>
     </div>
   </footer>
 </template>
@@ -1008,27 +1011,9 @@ a {
   color: #fff;
 }
 
-.producthunt {
-  position: fixed;
-  left: 10px;
-  bottom: 4rem;
-  inset-inline-start: 1rem;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  line-height: 125%;
-}
-
-@media (max-width: 600px) {
-  .producthunt {
-    bottom: 1.8rem;
-  }
-}
-
 .badge {
-  margin-top: 45px;
+  display: block;
+  margin-top: 40px;
 }
 
 .star_us:hover {
@@ -2010,7 +1995,12 @@ footer {
   width: fit-content;
 }
 
-.footer_logo_and_social_links .footer_ant_logo {
+.producthunt {
+  margin-top: 20px;
+  display: block;
+}
+
+.footer_first_section .footer_ant_logo {
   width: 80px;
   height: 70px;
   margin-bottom: 10px;
@@ -2023,7 +2013,7 @@ footer {
   color: #fff;
 }
 
-.footer_logo_and_social_links p {
+.footer_first_section p {
   font-size: 16px;
   font-weight: 300;
   letter-spacing: 1px;
@@ -2036,18 +2026,12 @@ footer {
 }
 
 .footer_logo_subtitle {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .footer_social-links {
   display: flex;
   gap: 16px;
-}
-
-@media (max-width: 600px) {
-  .footer_social-links {
-    margin-bottom: 40px;
-  }
 }
 
 .footer_social-link {
