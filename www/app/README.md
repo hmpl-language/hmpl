@@ -1,6 +1,6 @@
-# HMPL Documentation
+# HMPL App Documentation
 
-This is the official documentation for the **HMPL** project, built using [VuePress 2](https://v2.vuepress.vuejs.org/).
+This is the official documentation for the **HMPL** app project, built using [VuePress 2](https://v2.vuepress.vuejs.org/).
 
 ## Installation
 
