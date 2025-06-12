@@ -8,7 +8,7 @@ Make sure you have **Node.js** installed.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/hmpl-language/spec.git
+   git clone https://github.com/hmpl-language/hmpl.git
    cd spec
    ```
 
