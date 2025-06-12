@@ -11,11 +11,10 @@
     "update-package": "npx vp-update"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.5.2",
     "@vuepress/plugin-back-to-top": "^2.0.0-rc.52",
     "@vuepress/plugin-git": "^2.0.0-rc.52",
     "hmpl-js": "^3.0.1",
-    "vuepress": "^2.0.0-rc.23"
+    "vuepress": "^2.0.0-rc.18"
   },
   "devDependencies": {
     "@vuepress/bundler-vite": "^2.0.0-rc.7",
