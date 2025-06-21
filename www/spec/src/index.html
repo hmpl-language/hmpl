@@ -130,6 +130,8 @@
   href="https://hmpl-lang.dev/images/favicon.ico"
   type="image/x-icon"
 />
+<meta property="og:image" content="https://hmpl-lang.dev/images/spec-og-image.png" />
+<meta property="og:image:type" content="image/png" />
 <emu-spec>
   <emu-intro id="description">
     <h1>Overview</h1>
@@ -230,7 +232,7 @@
       <h1>Example</h1>
       <pre><code class="javascript">
         import hmpl from "hmpl-js";
-  
+
         const templateFn = hmpl.compile(
           `&lt;div&gt;
               &lt;button data-action="increment" id="btn"&gt;
@@ -242,13 +244,13 @@
               }}{{/request}}&lt;/div&gt;
           &lt;/div&gt;`
         );
-        
+
         const clicker = templateFn(({ request: { event } }) => ({
-          body: JSON.stringify({ 
-            action: event.target.getAttribute("data-action") 
+          body: JSON.stringify({
+            action: event.target.getAttribute("data-action")
           })
         })).response;
-        
+
         document.querySelector("#app").append(clicker);
       </code></pre>
     </emu-clause>
@@ -330,7 +332,7 @@
         <pre><code class="javascript">
           const templateFn = hmpl.compile(
             `{{#request
-              src="/api/test" 
+              src="/api/test"
             }}{{/request}}`,
             {
               memo: true,
@@ -815,7 +817,7 @@ const elementObj = templateFn([
             <pre><code class="javascript">
       const templateFn = hmpl.compile(
         `{{#request
-          src="/api/test" 
+          src="/api/test"
          }}{{/request}}`
       );
       const elementObj = templateFn();
@@ -1116,7 +1118,7 @@ const elementObj = templateFn([
           allowedContentTypes=["text/html"]
           disallowedTags=["script", "style", "iframe"]
           sanitize=false
-        }}{{/request}}        
+        }}{{/request}}
           </code></pre>
     </emu-example>
 
@@ -1319,7 +1321,7 @@ const elementObj = templateFn([
               content: "&lt;p&gt;Access error.&lt;/p&gt;"
             }
           ]
-        }}{{/request}}        
+        }}{{/request}}
           </code></pre>
       </emu-example>
 
@@ -1430,8 +1432,8 @@ const elementObj = templateFn([
       &quot; id=&quot;form&quot;&gt;
         &lt;div class=&quot;form-example&quot;&gt;
           &lt;label for=&quot;name&quot;&gt;Enter your email:&lt;/label&gt;
-          &lt;input type=&quot;text&quot; 
-          name=&quot;email&quot; 
+          &lt;input type=&quot;text&quot;
+          name=&quot;email&quot;
           id=&quot;email&quot; required /&gt;
         &lt;/div&gt;
         &lt;div class=&quot;form-example&quot;&gt;
