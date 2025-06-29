@@ -99,7 +99,7 @@ In this example, we create a dynamic clicker component in which, when a `button`
 
 </details>
 
-## Using with DOM
+## Usage with DOM
 
 If you need an option without using js, then by connecting the additional [hmpl-dom](https://www.npmjs.com/package/hmpl-dom) module you can do this.
 
