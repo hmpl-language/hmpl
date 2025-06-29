@@ -82,6 +82,10 @@ export default defineUserConfig({
           link: "https://spec.hmpl-lang.dev/"
         },
         {
+          text: "Working with the real DOM",
+          link: "dom.md"
+        },
+        {
           text: "Webpack Loader",
           link: "webpack.md"
         },
