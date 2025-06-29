@@ -99,6 +99,40 @@ In this example, we create a dynamic clicker component in which, when a `button`
 
 </details>
 
+## Using with DOM
+
+If you need an option without using js, then by connecting the additional [hmpl-dom](https://www.npmjs.com/package/hmpl-dom) module you can do this.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Example</title>
+  </head>
+  <body>
+    <main>
+      <template configId="my-component-config" hmpl>
+        <div>
+          {{#request src="/api/my-component.html"}}
+            {{#indicator trigger="pending"}}
+              Loading...
+            {{/indicator}}
+          {{/request}}
+        </div>
+      </template>
+    </main>
+    <script src="https://unpkg.com/json5/dist/index.min.js"></script>
+    <script src="https://unpkg.com/dompurify/dist/purify.min.js"></script>
+    <script src="https://unpkg.com/hmpl-js/dist/hmpl.min.js"></script>
+    <script src="https://unpkg.com/hmpl-dom/dist/hmpl-dom.min.js"></script>
+  </body>
+</html>
+```
+
+This way, components from the server are monitored in the DOM without having to add them manually. This is great when you want to replace Alpine.js or HTMX in a project.
+
 ## Request Configuration
 
 Request configuration blocks specify the parameters for server requests that the client will perform when certain events occur. 
