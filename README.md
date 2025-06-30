@@ -117,7 +117,7 @@ If you need an option without using js, then by connecting the additional [hmpl-
         <div>
           {{#request src="/api/my-component.html"}}
             {{#indicator trigger="pending"}}
-              Loading...
+              <p>Loading...</p>
             {{/indicator}}
           {{/request}}
         </div>
