@@ -113,7 +113,7 @@ If you need an option without using js, then by connecting the additional [hmpl-
   </head>
   <body>
     <main>
-      <template configId="my-component-config" hmpl>
+      <template hmpl>
         <div>
           {{#request src="/api/my-component.html"}}
             {{#indicator trigger="pending"}}
