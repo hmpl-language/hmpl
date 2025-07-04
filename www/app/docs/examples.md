@@ -12,19 +12,19 @@
 </div>
 
 ### Source
-
-```javascript
+```js v-pre
 import { compile } from "hmpl-js";
 
 const templateFn = compile(
-  `<div>
+  `
+  <div>
     <button class="getHTML">Get HTML!</button>
-    { {#request
+    {{#request
       src="/api/test"
       after="click:.getHTML"
       repeat=false
     }}
-      { {#indicator trigger="pending"}}
+      {{#indicator trigger="pending"}}
         <p>Loading...</p>
       {{/indicator}}
     {{/request}}
@@ -37,7 +37,6 @@ const elementObj = templateFn();
 
 wrapper.appendChild(elementObj.response);
 ```
-
 ## Registration form
 
 <div id="wrapper">
@@ -61,7 +60,8 @@ wrapper.appendChild(elementObj.response);
 
 ### Source
 
-```javascript
+```js v-pre
+
 import { compile } from "hmpl-js";
 
 const templateFn = compile(
@@ -78,7 +78,7 @@ const templateFn = compile(
     </div>
   </form>
   <p>
-    { {#request
+    {{#request
       src="/api/register"
       after="submit:#form"
       repeat=false
@@ -144,7 +144,7 @@ wrapper.appendChild(obj.response);
 
 ## Source
 
-```javascript
+```js v-pre
 import { compile } from "hmpl-js";
 
 const templateFn = compile(
@@ -168,7 +168,7 @@ const templateFn = compile(
         <td>Lays</td>
         <td>4</td>
       </tr>
-      { {#request
+      {{#request
         src="/api/products"
         after="submit:#form"
         autoBody=true
