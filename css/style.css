@@ -1,0 +1,176 @@
+.footer-wrapper {
+  text-align: center !important;
+}
+
+.social-media-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+/* Refine the styles */
+.trigger {
+  margin-top: 15px;
+}
+
+.site-nav {
+  line-height: normal;
+}
+
+.search-container {
+  position: relative;
+  display: inline-block;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#search-box {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+#results {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  position: absolute;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: none;
+  overflow-y: auto;
+}
+
+#results li {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  text-align: left;
+}
+
+#results li:last-child {
+  border-bottom: none;
+}
+
+#results li:hover {
+  background-color: #f7f7f7;
+}
+
+.discord-platform {
+  vertical-align: middle;
+}
+
+.footer-col-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-col {
+  margin-bottom: 0;
+}
+
+.social-media-list li+li {
+  padding-top: 0;
+}
+
+.social-media-list li:hover svg {
+  fill: #1f2328;
+}
+
+@media screen and (max-width: 600px) {
+  .site-nav .page-link {
+    margin-left: 0;
+  }
+}
+
+#breadcrumbs {
+  margin-bottom: 1.5rem;
+}
+
+.copy-btn {
+  --copy-icon: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22 xml:space=%22preserve%22%3E%3Cpath fill=%22gray%22 d=%22M179.2 51.2H128c-42.4 0-76.8 34.4-76.8 76.8v307.2c0 42.4 34.4 76.8 76.8 76.8h256c42.4 0 76.8-34.4 76.8-76.8V128c0-42.4-34.4-76.8-76.8-76.8h-51.2c-14.1 0-25.6 11.5-25.6 25.6s11.5 25.6 25.6 25.6H384c14.1 0 25.6 11.5 25.6 25.6v307.2c0 14.1-11.5 25.6-25.6 25.6H128c-14.1 0-25.6-11.5-25.6-25.6V128c0-14.1 11.5-25.6 25.6-25.6h51.2c14.1 0 25.6-11.5 25.6-25.6s-11.5-25.6-25.6-25.6%22/%3E%3Cpath fill=%22gray%22 d=%22M230.4 25.6v25.6h51.2c14.1 0 25.6 11.5 25.6 25.6s-11.5 25.6-25.6 25.6h-51.2c-14.1 0-25.6-11.5-25.6-25.6s11.5-25.6 25.6-25.6zV0c-42.4 0-76.8 34.4-76.8 76.8s34.4 76.8 76.8 76.8h51.2c42.4 0 76.8-34.4 76.8-76.8S324 0 281.6 0h-51.2z%22/%3E%3C/svg%3E");
+  --copied-icon: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" xml:space="preserve"%3E%3Cpath fill="gray" d="M179.2 51.2H128c-42.4 0-76.8 34.4-76.8 76.8v307.2c0 42.4 34.4 76.8 76.8 76.8h256c42.4 0 76.8-34.4 76.8-76.8V128c0-42.4-34.4-76.8-76.8-76.8h-51.2c-14.1 0-25.6 11.5-25.6 25.6s11.5 25.6 25.6 25.6H384c14.1 0 25.6 11.5 25.6 25.6v307.2c0 14.1-11.5 25.6-25.6 25.6H128c-14.1 0-25.6-11.5-25.6-25.6V128c0-14.1 11.5-25.6 25.6-25.6h51.2c14.1 0 25.6-11.5 25.6-25.6s-11.5-25.6-25.6-25.6"%3E%3C/path%3E%3Cpath fill="gray" d="M230.4 25.6v25.6h51.2c14.1 0 25.6 11.5 25.6 25.6s-11.5 25.6-25.6 25.6h-51.2c-14.1 0-25.6-11.5-25.6-25.6s11.5-25.6 25.6-25.6zV0c-42.4 0-76.8 34.4-76.8 76.8s34.4 76.8 76.8 76.8h51.2c42.4 0 76.8-34.4 76.8-76.8S324 0 281.6 0h-51.2zm-69.3 299.7 51.2 51.2c4.8 4.8 11.4 7.5 18.1 7.5s13.3-2.7 18.1-7.5l102.4-102.4c10-10 10-26.2 0-36.2s-26.2-10-36.2 0l-84.3 84.3-33.1-33.1c-10-10-26.2-10-36.2 0s-10 26.2 0 36.2"%3E%3C/path%3E%3C/svg%3E');
+
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 5px;
+
+  height: 30px;
+  width: 30px;
+  background-image: var(--copy-icon);
+  background-size: 60%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #0000;
+  color: #383a42;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.copy-btn:hover {
+  background-color: #cce6f9;
+}
+
+.copy-btn.copied {
+  opacity: 1;
+  background-image: var(--copied-icon);
+}
+
+pre {
+  position: relative;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+pre:hover .copy-btn {
+  opacity: 1;
+}
+
+.post-navigation .button {
+  width: max-content;
+}
+
+.post-navigation .button:hover {
+  text-decoration: none;
+}
+
+.post-navigation .button span:first-child {
+  font-size: 0.8rem;
+  color: #a2a2a4;
+}
+
+.post-navigation__next {
+  text-align: right;
+}
+
+.post-navigation {
+  display: flex;
+  flex-direction: row;
+}
+
+.post-navigation__next {
+  margin-left: auto;
+}
+
+.post-navigation__next,
+.post-navigation__prev {
+  max-width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
