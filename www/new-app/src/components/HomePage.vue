@@ -235,7 +235,7 @@
           fetch and processed into ready-made HTML.
         </p>
         <div class="buttons">
-          <a href="/getting-started.html" class="fade-in-effect hover_effect"
+          <a href="/getting-started" class="fade-in-effect hover_effect"
             >Get Started</a
           >
           <a
@@ -587,7 +587,7 @@
           </div>
           <div class="sample_buttons">
             <a
-              href="/getting-started.html"
+              href="/getting-started"
               class="sample_button sample_button_primary hover_effect fade-in-effect"
               >Get Started</a
             >
@@ -778,9 +778,7 @@
                 >
               </li>
               <li class="footer_item">
-                <a class="footer_item_link" href="/introduction.html"
-                  >Overview</a
-                >
+                <a class="footer_item_link" href="/introduction">Overview</a>
               </li>
               <li class="footer_item">
                 <a
@@ -792,10 +790,10 @@
                 >
               </li>
               <li class="footer_item">
-                <a class="footer_item_link" href="/examples.html">Examples</a>
+                <a class="footer_item_link" href="/examples">Examples</a>
               </li>
               <li class="footer_item">
-                <a class="footer_item_link" href="/changelog.html">Changelog</a>
+                <a class="footer_item_link" href="/changelog">Changelog</a>
               </li>
             </ul>
           </div>
@@ -995,16 +993,23 @@ export default {
 </script>
 
 <style scoped>
+@font-face {
+  font-family: "Roboto";
+  src: url("/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf") format("truetype");
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Roboto", serif;
+  font-family: "Roboto";
 }
+
 h2 {
   padding: 0 !important;
   border-bottom: 0 !important;
 }
+
 a {
   text-decoration: none;
   color: #fff;
@@ -2079,6 +2084,7 @@ footer {
   margin: 0 0 10px 0;
   font-size: 16px;
   font-weight: 600;
+  color: #fff !important;
 }
 
 .footer_list {
@@ -2271,6 +2277,10 @@ footer {
 .contributor-avatar img {
   opacity: 1;
   filter: brightness(0) invert(1);
+}
+
+.contributon-block {
+  text-decoration: none !important;
 }
 
 .contributon-block {

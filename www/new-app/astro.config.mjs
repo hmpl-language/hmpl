@@ -2,6 +2,8 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import vue from "@astrojs/vue";
+import starlightThemeNova from "starlight-theme-nova";
+import astroExpressiveCode from "astro-expressive-code";
 
 export default defineConfig({
   integrations: [
@@ -9,7 +11,25 @@ export default defineConfig({
     starlight({
       title: "HMPL Documentation",
       description: "Documentation for HMPL - HTML Markup Programming Language",
+      customCss: ["./src/styles/main.css"],
+      logo: {
+        src: "./src/assets/logo.svg"
+      },
+      expressiveCode: {
+        themes: ["min-light", "min-light"]
+      },
+      favicon: "favicon.ico",
       social: [
+        {
+          icon: "x.com",
+          label: "Twitter",
+          href: "https://x.com/hmpljs"
+        },
+        {
+          icon: "discord",
+          label: "Discord",
+          href: "https://discord.com/invite/KFunMep36n"
+        },
         {
           icon: "github",
           label: "GitHub",
@@ -65,6 +85,28 @@ export default defineConfig({
           label: "Reference",
           items: [{ label: "Changelog", link: "/changelog" }]
         }
+      ],
+      plugins: [
+        starlightThemeNova({
+          nav: [
+            {
+              label: "Home",
+              href: "/"
+            },
+            {
+              label: "Docs",
+              href: "/introduction"
+            },
+            {
+              label: "Examples",
+              href: "/examples"
+            },
+            {
+              label: "Blog",
+              href: "https://blog.hmpl-lang.dev"
+            }
+          ]
+        })
       ]
     })
   ]
