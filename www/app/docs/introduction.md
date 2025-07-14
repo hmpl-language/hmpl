@@ -130,3 +130,34 @@ wrapper.appendChild(obj.response);
     }
   }
 </script>
+
+## Example 3
+
+```html
+<template data-hmpl data-config-id="clicker-config">
+  <div>
+    <button data-action="increment" id="btn">Click!</button>
+    <div>
+      Clicks: {{#request src="/api/clicks" after="click:#btn"}}{{/request}}
+    </div>
+  </div>
+</template>
+```
+
+```javascript
+import { init } from "hmpl-dom";
+
+init([
+  {
+    id: "clicker-config",
+    value: {
+      compile: { memo: true },
+      templateFunction: ({ request: { event } }) => ({
+        body: JSON.stringify({
+          action: event.target.getAttribute("data-action")
+        })
+      })
+    }
+  }
+]);
+```
