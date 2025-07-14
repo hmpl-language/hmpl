@@ -1,3 +1,7 @@
 .site-title span {
   display: none !important;
 }
+
+.nova-site-title img {
+  max-height: 30px !important;
+}

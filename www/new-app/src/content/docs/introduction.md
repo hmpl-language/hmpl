@@ -1,58 +1,106 @@
 ---
 title: Introduction
-description: Learn about HMPL - HTML Markup Programming Language
+description: Learn about HMPL
 ---
 
-# Introduction
+🌐 HMPL (/ˈhæmpəl/ portmanteau of the words Cample and HTML) is a small template language for displaying UI from server to client. It is based on <em>customizable</em> requests sent to the server via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> and processed into ready-made HTML. The language is syntactically object-based and integrated with <a href="https://www.npmjs.com/package/json5">JSON5</a> and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>. Reduce the size of your javascript files and display the same UI as if it was written in a modern framework!
 
-🌐 hmpl is a small template language for displaying UI from server to client. It is based on <em>customizable</em> requests sent to the server via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> and processed into ready-made HTML. The language is syntactically object-based and integrated with <a href="https://www.npmjs.com/package/json5">JSON5</a> and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>. Reduce the size of your javascript files and display the same UI as if it was written in a modern framework!
+<div style="margin:2rem 0; height:400px;">
+  <iframe
+    width="1920"
+    height="1080"
+    src="https://www.youtube.com/embed/2Md6S9Cb1Q0"
+    style="height:100%;width:100%;"
+    title="HMPL Promo"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen
+  ></iframe>
+</div>
 
-## Example 1
+## How it works?
 
-### HTML before
+The HTML you use on your site is enhanced by adding special blocks that resemble components in syntax, but are more like "helper blocks" like in Handlebars.
+
+In these blocks you describe the request that will be sent to the server to get the finished components from there. This includes HTTP methods, request frequency and many other things that are [used](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) when talking about fetch.
+
+To describe it more briefly, it is something in between HTMX and EJS 👀.
+
+## Why HMPL?
+
+Unlike other similar modules, the template language provides more complete customization due to a well-thought-out balance between HTML and JS. HMPL supports modern EcmaScript standards - thanks to its well-thought-out functionality, you will not depend on versions.
+
+Also, the template language format itself allows you to work with `.hmpl` extension files if you use [Vite](/vite-plugin) or [WebPack](/webpack).
+
+## Most Frequently Asked Questions
+
+You may have questions about the template language, here is a short list of those that were asked throughout the development cycle:
+
+<details>
+<summary>Is it necessary to use JavaScript?</summary>
+
+No, you don't have to use it with the [hmpl-dom](/dom) module, but the template language itself is fully configured for this.
+
+</details>
+
+<details>
+<summary>Is it safe?</summary>
+
+Yes, the template language is completely safe, as it only accepts `text/html` by default. If you are working with an uncontrolled API, the module also provides protection against XSS attacks. More information about security can be found [here](/about/security).
+
+</details>
+
+<details>
+<summary>What is the difference between HTMX and Alpine.js?</summary>
+
+We have written several articles on this topic, specifically about the differences from [HTMX](https://blog.hmpl-lang.dev/blog/2024/08/10/differences-between-hmpl-and-htmx.html) and [Alpine.js](https://blog.hmpl-lang.dev/blog/2025/05/03/best-alpinejs-alternative.html)
+
+</details>
+
+<details>
+<summary>Can I use HMPL with modern frameworks?</summary>
+
+Yes! HMPL is designed to work alongside modern frameworks. It's something in between HTMX and EJS, providing a lightweight alternative for server-client communication without the overhead of full framework implementations.
+
+</details>
+
+## Usage Examples
+
+### Example 1
+
+#### HTML before
 
 ```html
-<div id="wrapper"></div>
+<template data-hmpl data-config-id="clicker-config">
+  <div>
+    <button data-action="increment" id="btn">Click!</button>
+    <div>
+      Clicks: {{#request src="/api/clicks" after="click:#btn"}}{{/request}}
+    </div>
+  </div>
+</template>
 <script src="https://unpkg.com/json5/dist/index.min.js"></script>
 <script src="https://unpkg.com/dompurify/dist/purify.min.js"></script>
 <script src="https://unpkg.com/hmpl-js/dist/hmpl.min.js"></script>
-<script>
-  const templateFn = hmpl.compile(
-    `<div>
-      {{#request src="http://localhost:8000/api/test"}}{{/request}}
-    </div>`
-  );
-
-  const wrapper = document.getElementById("wrapper");
-
-  const obj = templateFn();
-
-  /**
-   * obj = {
-   *  response: div,
-   *  status: 200
-   * }
-   */
-
-  wrapper.appendChild(obj.response);
-</script>
+<script src="https://unpkg.com/hmpl-dom/dist/hmpl-dom.min.js"></script>
 ```
 
-### API route - /api/test
+##### API route - /api/clicks
 
-```html
-<span>123</span>
+```php
+<span class="counts"><?php $clicks ?></span>
 ```
 
-### HTML after
+##### HTML after
 
 ```html
-<div id="wrapper">
-  <div><span>123</span></div>
+<div>
+  <button data-action="increment" id="btn">Click!</button>
+  <div>Clicks: <span class="counts">0</span></div>
 </div>
 ```
 
-## Example 2
+### Example 2
 
 ```javascript
 import { compile } from "hmpl-js";
@@ -69,7 +117,7 @@ const templateFn = compile(
     </div>
   </form>
   <p>
-    { {#request         
+    {{#request         
       src="/api/register"
       after="submit:#form"
       repeat=false
@@ -97,7 +145,7 @@ const wrapper = document.getElementById("wrapper");
 wrapper.appendChild(obj.response);
 ```
 
-### Result
+#### Result
 
 <div id="wrapper">
   <div>

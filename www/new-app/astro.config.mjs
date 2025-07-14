@@ -3,14 +3,15 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import vue from "@astrojs/vue";
 import starlightThemeNova from "starlight-theme-nova";
-import astroExpressiveCode from "astro-expressive-code";
 
 export default defineConfig({
+  site: "https://hmpl-lang.dev",
   integrations: [
     vue(),
     starlight({
       title: "HMPL Documentation",
-      description: "Documentation for HMPL - HTML Markup Programming Language",
+      description:
+        "Server-oriented customizable templating for JavaScript. Alternative to HTMX and Alpine.js.",
       customCss: ["./src/styles/main.css"],
       logo: {
         src: "./src/assets/logo.svg"
@@ -38,11 +39,11 @@ export default defineConfig({
       ],
       sidebar: [
         {
-          label: "Getting Started",
+          label: "Start Here",
           items: [
             { label: "Introduction", link: "/introduction" },
-            { label: "Installation", link: "/installation" },
-            { label: "Getting Started", link: "/getting-started" }
+            { label: "Getting Started", link: "/getting-started" },
+            { label: "Installation", link: "/installation" }
           ]
         },
         {
