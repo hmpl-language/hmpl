@@ -3,30 +3,58 @@ title: Getting Started
 description: Quick start guide for HMPL
 ---
 
-# Getting started
+HMPL is a fully documented module 📚 with a wide range of usage methods. This guide will help you quickly start working on a new project or connect it to an existing one.
 
-This guide will help you quickly set up and start using HMPL to dynamically render UI components from the server. You can install HMPL either manually via the methods described in the [Installation](/installation.md) section or via the starter project template.
+## Working with a document directly
 
-- [Local Setup](#local-setup)
-- [Rendering Your First Component](#rendering-your-first-component)
-- [Rendering Dynamic Components](#rendering-dynamic-components)
+You can start using it in your project right away without any JavaScript initializations. Just add 4 `script` tags.
 
-## Local Setup
-
-To setup a local HMPL project, run the following commands:
-
-```sh
-npx degit hmpl-language/hello-hmpl-starter hello-hmpl
-cd hello-hmpl
-npm install
-npm run dev
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Example</title>
+  </head>
+  <body>
+    <template hmpl>{{#request src="/api/my-component"}}{{/request}}</template>
+    <script src="https://unpkg.com/json5/dist/index.min.js"></script>
+    <script src="https://unpkg.com/dompurify/dist/purify.min.js"></script>
+    <script src="https://unpkg.com/hmpl-js/dist/hmpl.min.js"></script>
+    <script src="https://unpkg.com/hmpl-dom/dist/hmpl-dom.min.js"></script>
+  </body>
+</html>
 ```
 
-This will:
+When loading the page, your component will be installed immediately as soon as it comes from the server. You can also try the module in [Sanbox](https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg?file=%2Findex.html) online.
 
-- Download a starter template for HMPL.
-- Install the necessary dependencies.
-- Start the Vite dev server.
+## Creating a project via a template
+
+You can also use the Vite project template. It is cloned from the [GitHub repository](https://github.com/hmpl-language/hello-hmpl-starter) using `npx degit`.
+
+import { Steps } from "@astrojs/starlight/components";
+
+<Steps>
+
+1. Clone the template:
+
+   ```sh
+   npx degit hmpl-language/hello-hmpl-starter hello-hmpl
+   ```
+
+2. Go to the project directory:
+
+   ```sh
+   cd hello-hmpl
+   ```
+
+3. Install dependencies and run the project:
+
+   ```sh
+   npm install
+   npm run dev
+   ```
+
+</Steps>
 
 Once server is running, open your browser at Vite's server URL (printed in the terminal).
 Now let's create our first component.
@@ -40,7 +68,7 @@ Create a file named `HelloWorld.hmpl` inside `/src/hmpl` and add the following c
 ```hmpl
 <div>
   <div>
-    { {#request
+    {{#request
       src="/api/hello"
       after="submit:#form"
       repeat=false
@@ -96,7 +124,7 @@ Create a new file `Form.hmpl` inside the `hmpl` directory and add the following 
     <input type="submit" value="Submit" />
   </form>
 
-  { {#request
+  {{#request
     src="/api/hello"
     after="submit:#form"
     repeat=false

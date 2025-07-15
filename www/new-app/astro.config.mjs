@@ -17,7 +17,12 @@ export default defineConfig({
         src: "./src/assets/logo.svg"
       },
       expressiveCode: {
-        themes: ["min-light", "min-light"]
+        themes: ["min-light", "min-light"],
+        shiki: {
+          langAlias: {
+            hmpl: "html"
+          }
+        }
       },
       favicon: "favicon.ico",
       social: [
