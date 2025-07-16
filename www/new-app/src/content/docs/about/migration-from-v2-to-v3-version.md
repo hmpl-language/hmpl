@@ -3,8 +3,6 @@ title: Migration from v2 to v3
 description: Upgrade guide from HMPL v2 to v3
 ---
 
-# Migrating from HMPL v2 to v3
-
 HMPL v3 introduces a **simpler, safer, and more flexible request configuration syntax**.  
 This guide explains the key differences and how to update your existing templates.
 

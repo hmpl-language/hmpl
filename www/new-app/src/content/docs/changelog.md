@@ -3,8 +3,6 @@ title: Changelog
 description: Version history and updates for HMPL
 ---
 
-# Changelog
-
 ## 3.0.3 (2025-05-20)
 
 - Adding `{{#indicators}}` block

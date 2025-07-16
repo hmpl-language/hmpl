@@ -3,8 +3,6 @@ title: Vite Plugin
 description: Use HMPL with Vite build tool
 ---
 
-# Vite Plugin
-
 This Vite plugin is designed for compiling files with the `.hmpl` extension using the [hmpl-js](https://www.npmjs.com/package/hmpl-js) package. It allows you to use HMPL templates directly in your Vite-powered projects.
 
 > The plugin works with `hmpl-js` version 1.0.4 or higher.

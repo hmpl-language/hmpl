@@ -3,8 +3,6 @@ title: Discussion and Development
 description: Discussion and development of an open source project
 ---
 
-# Discussion and development of an open-source project
-
 There are several official social media channels for discussing the project, where you can ask your question, suggest improvements, and much more.
 
 The first such platform, of course, is [GitHub discussions](https://github.com/hmpl-language/hmpl/discussions), where you can raise a discussion on a particular topic related to the project.

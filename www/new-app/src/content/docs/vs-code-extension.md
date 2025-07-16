@@ -3,8 +3,6 @@ title: VS Code Extension
 description: Enhanced development experience with VS Code extension
 ---
 
-# VS Code Extension
-
 [The HMPL extension](https://marketplace.visualstudio.com/items?itemName=hmpljs.hmpl) for Visual Studio Code provides seamless syntax highlighting and file handling for `.hmpl` files. Starting from version `0.0.3`, it introduces new features that enhance the editing experience for developers working with the HMPL template language.
 
 ## Features

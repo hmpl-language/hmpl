@@ -1,11 +1,7 @@
 ---
-title: DOM
+title: Working with the real DOM
 description: Working with the Document Object Model in HMPL
 ---
-
-# Working with the real DOM
-
-[![npm-version](https://img.shields.io/npm/v/hmpl-dom?logo=npm&color=fff)](https://www.npmjs.com/package/hmpl-dom)
 
 `hmpl-dom` is a library for integrating HMPL templates directly into the DOM. It allows you to use templates written with [hmpl-js](https://www.npmjs.com/package/hmpl-js) right in your HTML documents using the `<template>` tag, and automatically mounts them into the DOM.
 

@@ -3,8 +3,6 @@ title: Examples
 description: Real-world examples and use cases for HMPL
 ---
 
-# Examples
-
 <!--List of test examples of work without request to api. Will also work by itself.-->
 
 ## Main example

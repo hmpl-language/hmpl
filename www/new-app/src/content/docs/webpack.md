@@ -3,8 +3,6 @@ title: Webpack
 description: Integrate HMPL with Webpack
 ---
 
-# Webpack
-
 Module has its own loader for files with the `.hmpl` extension. You can include [hmpl-loader](https://www.npmjs.com/package/hmpl-loader) and use the template language syntax in separate files:
 
 ## main.hmpl

@@ -24,6 +24,9 @@ export default defineConfig({
           }
         }
       },
+      editLink: {
+        baseUrl: "https://github.com/hmpl-language/hmpl/edit/main/www/app"
+      },
       favicon: "favicon.ico",
       social: [
         {
@@ -70,6 +73,7 @@ export default defineConfig({
           items: [
             {
               label: "Migration from v2 to v3",
+              badge: { text: "new", variant: "note" },
               link: "/about/migration-from-v2-to-v3-version"
             },
             { label: "Security", link: "/about/security" },
@@ -89,7 +93,16 @@ export default defineConfig({
         },
         {
           label: "Reference",
-          items: [{ label: "Changelog", link: "/changelog" }]
+          items: [
+            {
+              label: "Blog",
+              link: "https://blog.hmpl-lang.dev"
+            },
+            {
+              label: "Changelog",
+              link: "/changelog"
+            }
+          ]
         }
       ],
       plugins: [
