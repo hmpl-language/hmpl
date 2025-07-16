@@ -57,15 +57,42 @@ import { Steps } from "@astrojs/starlight/components";
 </Steps>
 
 Once server is running, open your browser at Vite's server URL (printed in the terminal).
-Now let's create our first component.
+Now, let's create our first web application 🌱!
 
-## Rendering Your First Component
+## Project structure
 
-### 1. Create an HMPL template
+The template consists of several files and a couple of folders. Made for the fastest and most flexible start, since using other templates, you constantly have to delete a bunch of unnecessary components.
 
-Create a file named `HelloWorld.hmpl` inside `/src/hmpl` and add the following code:
+import { FileTree } from "@astrojs/starlight/components";
+
+<FileTree>
+
+- mock
+  - api.js
+- public
+  - hmpl.png
+- src
+  - hmpl
+    - HelloWorld.hmpl
+  - main.js
+- .gitignore
+- README.md
+- index.html
+- package.json
+- vite.config.mjs
+
+</FileTree>
+
+Here, everything is modest, but practical.
+
+## First component
+
+### 1. Creating a file
+
+To get started, let's say we have a file called `HelloWorld.hmpl` in the `/src/hmpl` directory, it will store the first component of your future application.
 
 ```hmpl
+// HelloWorld.hmpl
 <div>
   <div>
     {{#request
@@ -88,16 +115,16 @@ Create a file named `HelloWorld.hmpl` inside `/src/hmpl` and add the following c
 </div>
 ```
 
-- `src`: Specifies the API endpoint (`/api/hello`), From where the component will be fetched.
-- `indicators`: Defines UI elements for different request states:
-  - `"pending"` → Shows the **Loading** component while waiting for a response.
-  - `"rejected"`: → Show the **Error** component if the request fails.
+We added indicators here, since we are working with a server. They will be just text, but we could have added a gif with a loader.
 
-### 2. Load the component into DOM
+### 2. Mounting a component into the DOM
 
-Open `main.js` inside the `src` folder and import the component:
+Now, you need to make your component appear on the server. To compile the syntax of the template language into computer-readable js code, we use [hmpl-vite-plugin](/vite-plugin), which allows you to work with files of this extension. There is the same for [Webpack](/webpack).
+
+But, this is connected in the project config, now let's go to `main.js`:
 
 ```javascript
+// main.js
 import helloWorld from "./hmpl/HelloWorld.hmpl";
 
 const { response } = helloWorld();
@@ -109,13 +136,15 @@ We import `HelloWorld` as a [HMPL template function](https://spec.hmpl-lang.dev/
 
 Saving the files will render the component received from the server.
 
-> The responses are served by a mock server located in the `/mock` directory. You can modify these mock API responses to test different scenarios.
+:::note
+The responses are served by a mock server located in the `/mock` directory. You can modify these mock API responses to test different scenarios.
+:::
 
-## Rendering Dynamic Components
+## Working with dynamic components
 
 ### 1. Create a Form Component
 
-Create a new file `Form.hmpl` inside the `hmpl` directory and add the following code:
+Similar to HelloWorld, let's create a simple registration form component where we only have a name. Let's call the file `Form.hmpl`.
 
 ```hmpl
 <div>
@@ -128,6 +157,9 @@ Create a new file `Form.hmpl` inside the `hmpl` directory and add the following 
     src="/api/hello"
     after="submit:#form"
     repeat=false
+    autoBody={
+      formData: true
+    }
     indicators=[
       {
         trigger: "pending",
@@ -143,15 +175,13 @@ Create a new file `Form.hmpl` inside the `hmpl` directory and add the following 
 </div>
 ```
 
-- `method`: → Sets the request method (POST).
-- `after: "submit:#form"` → Schedules requests on the form submit event.
-- `autoBody: true` → Automatically converts form data into JSON before sending.
+Here, we will send `FormData` with our string to the server.
 
 ### 2. Load the Form Component to DOM
 
-Edit `main.js` to include the form component:
+And also, you need to import this file into your `main.js`.
 
-```javascript
+```javascript ins={2} ins={5} ins={8}
 import helloWorldTemplate from './hmpl/HelloWorld.hmpl';
 import formTemplate from './hmpl/Form.hmpl';
 
@@ -164,30 +194,36 @@ document.body.appendChild(formEl);
 
 ### 3. Submit the form
 
-- Fill your name and click **Submit**.
-- You should see the response greeting appear.
+Now you can run the application and try to enter the name value. On the server, you can make a suggestion like `"${name} successfully registered!"` and do something similar if such a name already exists in the database.
 
-## Common use
+## Or use as npm module
 
-If you already have a project, then after connecting HMPL you can use the `hmpl` object, which will be available in your script.
+If you also, for example, use a framework and the connection methods are not very convenient, then you can connect it as a regular npm module and use it purely in javascript.
 
 ```javascript
+import hmpl from "hmpl-js";
+
 const templateFn = hmpl.compile(
   `<div>
-    {{#request src="/hello-world"}}{{/request}}
+      <button data-action="increment" id="btn">Click!</button>
+      <div>Clicks: {{#request src="/api/clicks" after="click:#btn"}}{{/request}}</div>
   </div>`
 );
+
+const clicker = templateFn(({ request: { event } }) => ({
+  body: JSON.stringify({ action: event.target.getAttribute("data-action") })
+})).response;
+
+document.querySelector("#app").append(clicker);
 ```
 
-## Resources
-
-[Starter Project Template Repository](https://github.com/hmpl-language/hello-hmpl-starter)
+It is worth noting that the assembly does not include `hmpl-dom`, it must be installed together with `hmpl-js`.
 
 ## Next Steps
 
 Now that you’ve set up your first components, here’s what you can explore next:
 
-- 📖 [Learn more about HMPL](https://spec.hmpl-lang.dev/#hmpl) – Understand how HMPL works under the hood.
-- 🛠️ [Explore other examples](/examples.md) – See other use cases and patterns.
+- 📚 [Learn more about HMPL](https://spec.hmpl-lang.dev/#hmpl) – Understand how HMPL works under the hood.
+- 🔍 [Explore other examples](/examples.md) – See other use cases and patterns.
 - 📰 [Read our blog](https://blog.hmpl-lang.dev) – Stay updated with the latest HMPL features and best practices.
 - 🌱 [Contribute to HMPL](https://github.com/hmpl-language/hmpl) – Help improve HMPL by reporting issues, suggesting features, or contributing code!
