@@ -5,3 +5,7 @@
 .nova-site-title img {
   max-height: 30px !important;
 }
+
+.docs-inline {
+  display: inline;
+}

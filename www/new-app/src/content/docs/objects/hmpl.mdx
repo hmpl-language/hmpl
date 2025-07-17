@@ -1,0 +1,15 @@
+---
+title: HMPL
+description: About HMPL object
+---
+
+The global hmpl object serves as the primary interface for template compilation and request serialization. This object is automatically available in the global scope without requiring explicit import (if connected via `script`).
+
+| Methods   | Type                              | Description                                                    |
+| --------- | --------------------------------- | -------------------------------------------------------------- |
+| compile   | HMPLCompile                       | Transforms template strings into executable template functions |
+| stringify | (info: HMPLRequestInfo) => string | Serializes request configuration objects to component string   |
+
+## compile
+
+## stringify

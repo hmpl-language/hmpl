@@ -55,6 +55,24 @@ export default defineConfig({
           ]
         },
         {
+          label: "Syntax",
+          items: [
+            { label: "Block helper", link: "/syntax/block-helper" },
+            { label: "Attribute", link: "/syntax/attribute" }
+          ]
+        },
+        {
+          label: "Objects",
+          items: [{ label: "hmpl", link: "/objects/hmpl" }]
+        },
+        {
+          label: "Block helpers",
+          items: [
+            { label: "request (r)", link: "/block-helpers/request" },
+            { label: "indicator", link: "/block-helpers/indicator" }
+          ]
+        },
+        {
           label: "Essentials",
           items: [
             { label: "DOM", link: "/dom" },
