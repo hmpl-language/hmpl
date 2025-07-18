@@ -1,0 +1,112 @@
+---
+title: Template Function
+description: About Template Function
+---
+
+The template function instantiates template executions, managing server requests and DOM updates. Each invocation creates a unique HMPLInstance.
+
+| Parameter | Type                                                                          | Description                                            | Required |
+| --------- | ----------------------------------------------------------------------------- | ------------------------------------------------------ | -------- |
+| options   | HMPLIdentificationRequestInit[] \| HMPLRequestInit \| HMPLRequestInitFunction | Configuration for request initialization and execution | No       |
+
+```javascript
+const instance1 = templateFn();
+// Returns: { response: null, status: 403 }
+const instance2 = templateFn({
+  credentials: "omit"
+});
+// Returns: { response: div, status: 200 }
+```
+
+## options
+
+The value of this argument is of three types:
+
+### RequestInit
+
+This type describes the configuration for the `fetch` sent with each request in the template. The HMPLRequestInit interface extends the standard [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/RequestInit) with HMPL-specific properties.
+
+| Property       | Type                | Description                                               |
+| -------------- | ------------------- | --------------------------------------------------------- |
+| mode           | RequestMode         | The mode of the request (cors, no-cors, same-origin)      |
+| cache          | RequestCache        | The cache mode for the request                            |
+| redirect       | RequestRedirect     | How to handle redirects (follow, error, manual)           |
+| referrerPolicy | ReferrerPolicy      | Policy for the referrer header                            |
+| integrity      | string              | Subresource integrity value for the request               |
+| referrer       | string              | The referrer URL for the request                          |
+| get            | HMPLRequestGet      | Optional function to retrieve properties from the request |
+| body           | BodyInit \| null    | The body of the request (can be a string, FormData, etc.) |
+| signal         | AbortSignal \| null | An AbortSignal to abort the request if needed             |
+| window         | any                 | Reference to the window object (if applicable)            |
+| credentials    | RequestCredentials  | Credentials mode for the request                          |
+| headers        | HMPLHeadersInit     | Custom headers for the request                            |
+| timeout        | number              | Optional timeout duration for the request in ms           |
+
+```js
+const elementObj = templateFn({
+  mode: "cors",
+  cache: "no-cache",
+  credentials: "same-origin",
+  headers: {
+    "Content-Type": "text/html"
+  },
+  redirect: "follow",
+  get: (prop, value) => {},
+  referrerPolicy: "no-referrer",
+  body: JSON.stringify(data),
+  signal: new AbortController().signal,
+  integrity: "...",
+  window: null,
+  referrer: "about:client"
+});
+```
+
+#### get
+
+The get property specifies a callback function that executes on property updates within the HMPLInstance.
+
+| Argument | Type               | Description                                                    |
+| -------- | ------------------ | -------------------------------------------------------------- |
+| prop     | string             | The name of the updated property                               |
+| value    | any                | The new property value                                         |
+| redirect | HMPLRequestContext | The context of the current request sent to the HMPLInstance    |
+| request  | HMPLRequest        | The associated request component (for multi-request templates) |
+
+```js
+const elementObj = templateFn({
+  get: (prop, value, context, request) => {
+    switch (prop) {
+      case "response":
+        if (!request) console.log(request);
+        console.log("Response:");
+        console.log(value);
+        break;
+      case "status":
+        console.log("Status:");
+        console.log(value);
+        break;
+    }
+  }
+});
+```
+
+:::note
+The `get` callback does not trigger for changes to individual array elements within the `requests` property. This design prevents excessive callbacks during batch updates.
+:::
+
+Also, this function is great for implementing with `Promise` in JavaScript:
+
+```js
+const val = await new Promise((res, rej) => {
+  templateFn({
+    get: (prop, value, context, request) => {
+      switch (prop) {
+        case "response":
+          if (!value) return;
+          res(value);
+          break;
+      }
+    }
+  });
+});
+```

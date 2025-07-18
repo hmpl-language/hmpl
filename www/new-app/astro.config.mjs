@@ -63,7 +63,24 @@ export default defineConfig({
         },
         {
           label: "Objects",
-          items: [{ label: "hmpl", link: "/objects/hmpl" }]
+          items: [
+            {
+              label: "hmpl",
+              items: [
+                { label: "compile", link: "/objects/hmpl#compile" },
+                { label: "stringify", link: "/objects/hmpl#stringify" }
+              ]
+            }
+          ]
+        },
+        {
+          label: "Functions",
+          items: [
+            {
+              label: "template",
+              link: "/functions/template"
+            }
+          ]
         },
         {
           label: "Block helpers",
@@ -72,6 +89,7 @@ export default defineConfig({
             { label: "indicator", link: "/block-helpers/indicator" }
           ]
         },
+        { label: "Types", link: "/introduction" },
         {
           label: "Essentials",
           items: [
