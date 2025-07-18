@@ -1,0 +1,121 @@
+/* SEO Enhancement Styles */
+
+/* Breadcrumb styling */
+.breadcrumb-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.breadcrumb-list li {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-separator {
+  margin: 0 0.5rem;
+}
+
+.breadcrumb-list a {
+  color: #1e6bb8;
+  text-decoration: none;
+}
+
+.breadcrumb-list a:hover {
+  text-decoration: underline;
+}
+
+/* Post tags and categories */
+.post-tags, .post-categories {
+  margin: 0.5rem 0;
+}
+
+.post-tag, .post-category {
+  display: inline-block;
+  background: #f1f3f4;
+  color: #333;
+  padding: 0.2rem 0.5rem;
+  margin: 0.2rem 0.3rem 0.2rem 0;
+  border-radius: 3px;
+  font-size: 0.8em;
+  text-decoration: none;
+}
+
+.post-tag:hover, .post-category:hover {
+  background: #e8eaed;
+}
+
+/* Post tags preview on home page */
+.post-tags-preview {
+  margin-top: 0.5rem;
+}
+
+.post-tag-preview {
+  display: inline-block;
+  background: #f8f9fa;
+  color: #5f6368;
+  padding: 0.1rem 0.4rem;
+  margin: 0.1rem 0.2rem 0.1rem 0;
+  border-radius: 2px;
+  font-size: 0.75em;
+  border: 1px solid #e8eaed;
+}
+
+/* Post excerpt styling */
+.post-excerpt {
+  margin-top: 0.5rem;
+  color: #5f6368;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+/* Reading time indicator */
+.post-meta [itemprop="timeRequired"] {
+  color: #5f6368;
+  font-style: italic;
+}
+
+/* Enhanced post list item */
+.post-list li {
+  border-bottom: 1px solid #f1f3f4;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.post-list li:last-child {
+  border-bottom: none;
+}
+
+/* Schema.org structured data (hidden) */
+[style*="display: none"] {
+  display: none !important;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 600px) {
+  .breadcrumb-list {
+    font-size: 0.8em;
+  }
+  
+  .post-tag, .post-category {
+    font-size: 0.75em;
+    padding: 0.15rem 0.4rem;
+  }
+  
+  .post-tag-preview {
+    font-size: 0.7em;
+  }
+}
+
+/* Print styles */
+@media print {
+  .breadcrumb-list,
+  .post-tags,
+  .post-categories,
+  .post-tags-preview {
+    display: none;
+  }
+}

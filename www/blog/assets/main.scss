@@ -1,0 +1,302 @@
+---
+---
+
+// Simple Blog Theme CSS (no external dependencies)
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #111;
+  background-color: #fdfdfd;
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.site-header {
+  border-bottom: 1px solid #e8e8e8;
+  padding: 20px 0;
+}
+
+.site-title {
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.site-title a {
+  color: #424242;
+  text-decoration: none;
+}
+
+.site-nav {
+  float: right;
+  line-height: 54px;
+}
+
+.page-content {
+  padding: 30px 0;
+  flex: 1;
+}
+
+.page-heading {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.post-list {
+  margin-left: 0;
+  list-style: none;
+}
+
+.post-list > li {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #f1f3f4;
+  padding-bottom: 1rem;
+}
+
+.post-list > li:last-child {
+  border-bottom: none;
+}
+
+.post-meta {
+  font-size: 14px;
+  color: #828282;
+  margin-bottom: 5px;
+}
+
+.post-link {
+  display: block;
+  font-size: 24px;
+  font-weight: 300;
+  color: #424242;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+
+.post-link:hover {
+  text-decoration: underline;
+}
+
+.post-header {
+  margin-bottom: 30px;
+}
+
+.post-title {
+  font-size: 42px;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.post-content {
+  margin-bottom: 30px;
+}
+
+.post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.post-content h2 {
+  font-size: 32px;
+}
+
+.post-content h3 {
+  font-size: 26px;
+}
+
+.post-content h4 {
+  font-size: 20px;
+}
+
+.post-content p, .post-content blockquote, .post-content ul, .post-content ol, .post-content dl, .post-content figure, .post-content .highlight {
+  margin-bottom: 15px;
+}
+
+.post-content ul, .post-content ol {
+  margin-left: 30px;
+}
+
+.post-content blockquote {
+  color: #828282;
+  border-left: 4px solid #e8e8e8;
+  padding-left: 15px;
+  font-size: 18px;
+  letter-spacing: -1px;
+  font-style: italic;
+}
+
+.post-content pre, .post-content code {
+  font-size: 15px;
+  border: 1px solid #e8e8e8;
+  border-radius: 3px;
+  background-color: #eef;
+}
+
+.post-content code {
+  padding: 1px 5px;
+}
+
+.post-content pre {
+  padding: 8px 12px;
+  overflow-x: auto;
+}
+
+.post-content pre > code {
+  border: 0;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.site-footer {
+  border-top: 1px solid #e8e8e8;
+  padding: 30px 0;
+  text-align: center;
+  color: #828282;
+  font-size: 14px;
+}
+
+// SEO Enhancement Styles
+.breadcrumb-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.breadcrumb-list li {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-separator {
+  margin: 0 0.5rem;
+}
+
+.breadcrumb-list a {
+  color: #1e6bb8;
+  text-decoration: none;
+}
+
+.breadcrumb-list a:hover {
+  text-decoration: underline;
+}
+
+.post-tags, .post-categories {
+  margin: 0.5rem 0;
+}
+
+.post-tag, .post-category {
+  display: inline-block;
+  background: #f1f3f4;
+  color: #333;
+  padding: 0.2rem 0.5rem;
+  margin: 0.2rem 0.3rem 0.2rem 0;
+  border-radius: 3px;
+  font-size: 0.8em;
+  text-decoration: none;
+}
+
+.post-tag:hover, .post-category:hover {
+  background: #e8eaed;
+}
+
+.post-tags-preview {
+  margin-top: 0.5rem;
+}
+
+.post-tag-preview {
+  display: inline-block;
+  background: #f8f9fa;
+  color: #5f6368;
+  padding: 0.1rem 0.4rem;
+  margin: 0.1rem 0.2rem 0.1rem 0;
+  border-radius: 2px;
+  font-size: 0.75em;
+  border: 1px solid #e8eaed;
+}
+
+.post-excerpt {
+  margin-top: 0.5rem;
+  color: #5f6368;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.post-meta [itemprop="timeRequired"] {
+  color: #5f6368;
+  font-style: italic;
+}
+
+// Copy button styling
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #333;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.copy-btn:hover {
+  opacity: 1;
+}
+
+.copy-btn.copied {
+  background: #28a745;
+}
+
+.copy-btn.copied::after {
+  content: " ✓";
+}
+
+// Mobile responsive
+@media (max-width: 600px) {
+  .wrapper {
+    padding: 0 15px;
+  }
+  
+  .site-nav {
+    float: none;
+    line-height: normal;
+  }
+  
+  .post-title {
+    font-size: 32px;
+  }
+  
+  .post-content h2 {
+    font-size: 28px;
+  }
+  
+  .post-content h3 {
+    font-size: 22px;
+  }
+  
+  .breadcrumb-list {
+    font-size: 0.8em;
+  }
+  
+  .post-tag, .post-category {
+    font-size: 0.75em;
+    padding: 0.15rem 0.4rem;
+  }
+  
+  .post-tag-preview {
+    font-size: 0.7em;
+  }
+}
