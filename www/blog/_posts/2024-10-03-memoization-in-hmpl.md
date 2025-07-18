@@ -73,7 +73,7 @@ The main disadvantage, of course, is the extra allocation of memory for storing 
 Since HTML is a template language for displaying the user interface from the server to the client, http requests will need to be memorized. Accordingly, the intended result will be the preservation of HTML markup. Here is an example of how HMPL works:
 
 ```javascript
-const newDiv = compile(
+const newDiv = hmpl.compile(
   `<div>
       <button>Get the square root of 256</button>
       <div>{% raw %}{{ src: "/api/getTheSquareRootOf256", after: "click:button" }}{% endraw %}</div>
@@ -88,7 +88,7 @@ So, the problem with previous versions is that a new element was constantly put 
 Specifically to optimize this process, an additional field was introduced, which is called `memo`.
 
 ```javascript
-const newDiv = compile(
+const newDiv = hmpl.compile(
   `<div>
       <button>Get the square root of 256</button>
       <div>{% raw %}{{ src: "/api/getTheSquareRootOf256", memo:true, after: "click:button" }}{% endraw %}</div>
