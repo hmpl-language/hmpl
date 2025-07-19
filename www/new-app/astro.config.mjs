@@ -70,6 +70,10 @@ export default defineConfig({
                 { label: "compile", link: "/objects/hmpl#compile" },
                 { label: "stringify", link: "/objects/hmpl#stringify" }
               ]
+            },
+            {
+              label: "instance",
+              link: "/objects/instance"
             }
           ]
         },

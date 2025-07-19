@@ -5,9 +5,9 @@ description: About Template Function
 
 The template function instantiates template executions, managing server requests and DOM updates. Each invocation creates a unique HMPLInstance.
 
-| Parameter | Type                                                                          | Description                                            | Required |
-| --------- | ----------------------------------------------------------------------------- | ------------------------------------------------------ | -------- |
-| options   | HMPLIdentificationRequestInit[] \| HMPLRequestInit \| HMPLRequestInitFunction | Configuration for request initialization and execution | No       |
+| Agument | Type                                                                          | Description                                            | Required |
+| ------- | ----------------------------------------------------------------------------- | ------------------------------------------------------ | -------- |
+| options | HMPLIdentificationRequestInit[] \| HMPLRequestInit \| HMPLRequestInitFunction | Configuration for request initialization and execution | No       |
 
 ```javascript
 const instance1 = templateFn();
@@ -65,12 +65,12 @@ const elementObj = templateFn({
 
 The get property specifies a callback function that executes on property updates within the HMPLInstance.
 
-| Argument | Type               | Description                                                    |
-| -------- | ------------------ | -------------------------------------------------------------- |
-| prop     | string             | The name of the updated property                               |
-| value    | any                | The new property value                                         |
-| redirect | HMPLRequestContext | The context of the current request sent to the HMPLInstance    |
-| request  | HMPLRequest        | The associated request component (for multi-request templates) |
+| Argument | Type               | Description                                                       |
+| -------- | ------------------ | ----------------------------------------------------------------- |
+| prop     | string             | The name of the updated property                                  |
+| value    | any                | The new property value                                            |
+| redirect | HMPLRequestContext | The context of the current request sent to the HMPLInstance       |
+| request  | HMPLRequest        | The associated request block helper (for multi-request templates) |
 
 ```js
 const elementObj = templateFn({
@@ -109,4 +109,84 @@ const val = await new Promise((res, rej) => {
     }
   });
 });
+```
+
+## RequestInit Function
+
+This type is intended for the function for dynamic generation of RequestInit. This is necessary when, for example, `event` is processed.
+
+| Argument | Type                | Description                                      |
+| -------- | ------------------- | ------------------------------------------------ |
+| context  | HMPLInstanceContext | Execution context containing request information |
+
+```javascript
+const elementObj = templateFn(({ request: { event, clearInterval } }) => {
+  clearInterval?.();
+  return {
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "text/html"
+    },
+    redirect: "follow",
+    get: (prop, value) => {},
+    referrerPolicy: "no-referrer",
+    body: new FormatData(event.target, event.submitter)
+  };
+});
+```
+
+## An array consisting of Identification RequestInit
+
+The last type is for cases where you want to specify which request RequestInit or the function that returns it applies to.
+
+```javascript
+const instance = templateFn([
+  {
+    id: "1",
+    value: {
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "text/html"
+      },
+      redirect: "follow",
+      get: (prop, value) => {},
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify(data)
+    }
+  }
+]);
+```
+
+### Identification RequestInit
+
+This object is necessary for associating RequestInit or the function that returns it with a specific request, since we specify the `id` in it. The relationship between Identification RequestInit and requests is one-to-many.
+
+| Property | Type                                       | Description                                              | Required |
+| -------- | ------------------------------------------ | -------------------------------------------------------- | -------- |
+| id       | string \| number                           | Unique identifier matching template request's initId     | Yes      |
+| value    | HMPLRequestInit \| HMPLRequestInitFunction | The initialization parameters for the referenced request | Yes      |
+
+```js
+const mySpecificInit = {
+  id: 1,
+  value: ({ request: { event } }) => {
+    return {
+      body: new FormatData(event.target, event.submitter)
+    };
+  }
+};
+```
+
+and what the request itself looks like:
+
+```hmpl ins={4}
+{{#request
+  src="/api/registration"
+  after="submit:form"
+  initId=1
+}}{{/request}}
 ```

@@ -1,0 +1,29 @@
+---
+title: Instance
+description: About HMPL Instance
+---
+
+import Preview from "../../../components/component-preview.astro";
+import { Code } from "@astrojs/starlight/components";
+
+An object returned from the [template function](/functions/template) that contains data from the responses to requests.
+
+| Property | Type                         | Description                                                                                                                                   |
+| -------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| response | undefined \| Element \| null | Compiled element from template                                                                                                                |
+| status   | HMPLRequestStatus            | The status of the response to the request. If there are several requests in the template, this property is not included in the object         |
+| requests | HMPLRequest[]                | Contains information for each request in the template. If the template contains only one request, this property is not included in the object |
+
+```javascript
+const instance = templateFn();
+console.log(instance);
+```
+
+<Preview>
+
+<div slot="preview">
+```bash
+{ status: 200, request: div }
+```
+</div>
+</Preview>
