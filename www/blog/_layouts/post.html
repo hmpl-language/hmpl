@@ -1,7 +1,33 @@
 ---
 layout: base
 ---
-<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+<article class="post h-entry" itemscope itemtype="https://schema.org/BlogPosting">
+  <!-- Hidden schema.org metadata -->
+  <meta itemprop="mainEntityOfPage" content="{{ page.url | absolute_url }}">
+  <meta itemprop="image" content="{{ page.image | default: site.logo | absolute_url }}">
+  <meta itemprop="description" content="{{ page.description | default: page.excerpt | strip_html | truncatewords: 50 }}">
+  
+  {%- assign page_keywords = "" -%}
+  {%- if page.tags and page.tags.size > 0 -%}
+    {%- assign page_keywords = page.tags | join: ", " -%}
+  {%- elsif page.categories and page.categories.size > 0 -%}
+    {%- assign page_keywords = page.categories | join: ", " -%}
+  {%- endif -%}
+  
+  {%- if page_keywords == "" -%}
+    {%- assign page_keywords = "HMPL, JavaScript, templating, web development" -%}
+  {%- endif -%}
+  
+  <meta itemprop="keywords" content="{{ page_keywords }}">
+  
+  <!-- Publisher information -->
+  <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" style="display: none;">
+    <meta itemprop="name" content="{{ site.title }}">
+    <meta itemprop="url" content="{{ site.url }}">
+    <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+      <meta itemprop="url" content="{{ site.logo | absolute_url }}">
+    </div>
+  </div>
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
@@ -16,14 +42,43 @@ layout: base
         <time class="dt-modified" datetime="{{ mdate }}" itemprop="dateModified">
           {{ mdate | date: date_format }}
         </time>
+      {%- else -%}
+        <meta itemprop="dateModified" content="{{ page.date | date_to_xmlschema }}">
       {%- endif -%}
+      
       {%- if page.author -%}
         • {% for author in page.author %}
-          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <span itemprop="author" itemscope itemtype="https://schema.org/Person">
             <span class="p-author h-card" itemprop="name">{{ author }}</span></span>
             {%- if forloop.last == false %}, {% endif -%}
         {% endfor %}
-      {%- endif -%}</p>
+      {%- else -%}
+        <span itemprop="author" itemscope itemtype="https://schema.org/Person" style="display: none;">
+          <meta itemprop="name" content="{{ site.author.name }}">
+        </span>
+      {%- endif -%}
+      
+      <!-- Reading time estimation -->
+      {%- assign words = content | number_of_words -%}
+      {%- assign reading_time = words | divided_by: 200 -%}
+      {%- if reading_time == 0 -%}{%- assign reading_time = 1 -%}{%- endif -%}
+      • <span itemprop="timeRequired" content="PT{{ reading_time }}M">{{ reading_time }} min read</span>
+    </p>
+    
+    <!-- Article tags/categories -->
+    {%- if page.tags and page.tags.size > 0 -%}
+    <div class="post-tags">
+      {%- for tag in page.tags -%}
+        <span class="post-tag" itemprop="keywords">{{ tag }}</span>
+      {%- endfor -%}
+    </div>
+    {%- elsif page.categories and page.categories.size > 0 -%}
+    <div class="post-categories">
+      {%- for category in page.categories -%}
+        <span class="post-category" itemprop="about">{{ category }}</span>
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
