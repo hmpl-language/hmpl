@@ -145,8 +145,14 @@ const wrapper = document.getElementById("wrapper");
 wrapper.appendChild(obj.response);
 ```
 
-#### Result
+import Preview from "../../components/component-preview.astro";
 
 import FormComponent from "../../components/FormComponent.vue";
 
-<FormComponent client:only="vue" />
+<Preview>
+
+<div slot="preview">
+  <FormComponent client:only="vue" />
+</div>
+
+</Preview>

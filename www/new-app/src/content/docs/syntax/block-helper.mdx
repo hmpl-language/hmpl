@@ -17,6 +17,10 @@ In HMPL, these are some components that are not actually components, but are int
 
 It also has attributes and nested elements. You can also add it anywhere in HTML.
 
+:::note
+It is worth considering that in the DOM tree, compiled helper blocks are replaced with comments of the form `<!--hmpl1-->`, `<!--hmpl2-->`, etc., when there is no explicit response from the server.
+:::
+
 ## Structure
 
 import { Steps } from "@astrojs/starlight/components";
