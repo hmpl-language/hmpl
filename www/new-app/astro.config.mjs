@@ -89,8 +89,68 @@ export default defineConfig({
         {
           label: "Block helpers",
           items: [
-            { label: "request", link: "/block-helpers/request" },
-            { label: "indicator", link: "/block-helpers/indicator" }
+            {
+              label: "request",
+              items: [
+                {
+                  label: "src",
+                  link: "/block-helpers/request#src"
+                },
+                {
+                  label: "method",
+                  link: "/block-helpers/request#method"
+                },
+                {
+                  label: "after",
+                  link: "/block-helpers/request#after"
+                },
+                {
+                  label: "repeat",
+                  link: "/block-helpers/request#repeat"
+                },
+                {
+                  label: "interval",
+                  link: "/block-helpers/request#interval"
+                },
+                {
+                  label: "indicators",
+                  link: "/block-helpers/request#indicators"
+                },
+                {
+                  label: "autoBody",
+                  link: "/block-helpers/request#autoBody"
+                },
+                {
+                  label: "memo",
+                  link: "/block-helpers/request#memo"
+                },
+                {
+                  label: "initId",
+                  link: "/block-helpers/request#initId"
+                },
+                {
+                  label: "allowedContentTypes",
+                  link: "/block-helpers/request#allowedContentTypes"
+                },
+                {
+                  label: "disallowedTags",
+                  link: "/block-helpers/request#disallowedTags"
+                },
+                {
+                  label: "sanitize",
+                  link: "/block-helpers/request#sanitize"
+                }
+              ]
+            },
+            {
+              label: "indicator",
+              items: [
+                {
+                  label: "trigger",
+                  link: "/block-helpers/indicator#trigger"
+                }
+              ]
+            }
           ]
         },
         {
