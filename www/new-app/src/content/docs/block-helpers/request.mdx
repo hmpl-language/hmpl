@@ -1,4 +1,64 @@
 ---
-title: Request
+title: request
 description: About request block helper
 ---
+
+The request helper block in the template is used as a declarative point for dynamically updating content based on requests to the server, and getting HTML from there.
+
+| Property            | Type                           | Default       | Description                                        | Required |
+| ------------------- | ------------------------------ | ------------- | -------------------------------------------------- | -------- |
+| src                 | string                         | —             | The source URL of the request                      | Yes      |
+| method              | string                         | "GET"         | The HTTP method used for the request               | No       |
+| after               | string                         | —             | Event trigger specification                        | No       |
+| repeat              | boolean                        | true          | Whether the request repeats on subsequent triggers | No       |
+| interval            | number                         | —             | Optional interval for repeated requests (in ms)    | No       |
+| indicators          | HMPLIndicator[]                | []            | Status-specific UI indicators                      | No       |
+| autoBody            | boolean \| HMPLAutoBodyOptions | false         | Configures automatic body generation               | No       |
+| memo                | boolean                        | false         | Enables response caching                           | No       |
+| initId              | string \| number               | —             | Identifier for request initialization              | No       |
+| allowedContentTypes | HMPLContentTypes               | ["text/html"] | Permitted response Content-Types                   | No       |
+| disallowedTags      | HMPLDisallowedTags             | []            | HTML elements to remove from responses             | No       |
+| sanitize            | HMPLSanitize                   | false         | Enables HTML sanitization                          | No       |
+
+```javascript
+{{#request
+  src="/api/test"
+  method="get"
+  after="click:.target"
+  repeat=true
+  interval=1000
+  indicators=[
+    {
+      trigger: "pending",
+      content: "<p>Loading...</p>"
+    },
+    {
+      trigger: "rejected",
+      content: "<p>Error</p><button>reload</button>"
+    }
+  ]
+  autoBody={
+    formData: true
+  }
+  memo=true
+  initId="id1"
+  allowedContentTypes=["text/html"]
+  disallowedTags=["script", "style", "iframe"]
+  sanitize=false
+}}{{/request}}
+```
+
+## Nesting
+
+Only [indicator](/block-helpers/indicator) block helper.
+
+```hmpl
+{{#request src="/api/test"}}
+    {{#indicator trigger="pending"}}
+        <span>Loading...</span>
+    {{/indicator}}
+    {{#indicator trigger="error"}}
+        <span>Error</span>
+    {{/indicator}}
+{{/request}}
+```

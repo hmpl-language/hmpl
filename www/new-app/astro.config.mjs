@@ -89,9 +89,13 @@ export default defineConfig({
         {
           label: "Block helpers",
           items: [
-            { label: "request (r)", link: "/block-helpers/request" },
+            { label: "request", link: "/block-helpers/request" },
             { label: "indicator", link: "/block-helpers/indicator" }
           ]
+        },
+        {
+          label: "Context",
+          items: [{ label: "request", link: "/context/request" }]
         },
         { label: "Types", link: "/introduction" },
         {
