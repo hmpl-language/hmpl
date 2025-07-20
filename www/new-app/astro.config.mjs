@@ -118,7 +118,7 @@ export default defineConfig({
                 },
                 {
                   label: "autoBody",
-                  link: "/block-helpers/request#autoBody"
+                  link: "/block-helpers/request#autobody"
                 },
                 {
                   label: "memo",
@@ -126,15 +126,15 @@ export default defineConfig({
                 },
                 {
                   label: "initId",
-                  link: "/block-helpers/request#initId"
+                  link: "/block-helpers/request#iniid"
                 },
                 {
                   label: "allowedContentTypes",
-                  link: "/block-helpers/request#allowedContentTypes"
+                  link: "/block-helpers/request#allowedcontenttypes"
                 },
                 {
                   label: "disallowedTags",
-                  link: "/block-helpers/request#disallowedTags"
+                  link: "/block-helpers/request#disallowedtags"
                 },
                 {
                   label: "sanitize",
@@ -144,6 +144,7 @@ export default defineConfig({
             },
             {
               label: "indicator",
+              badge: { text: "new", variant: "note" },
               items: [
                 {
                   label: "trigger",
@@ -157,7 +158,52 @@ export default defineConfig({
           label: "Context",
           items: [{ label: "request", link: "/context/request" }]
         },
-        { label: "Types", link: "/introduction" },
+        {
+          label: "Types",
+          collapsed: true,
+          items: [
+            { label: "HMPLRequestInit", link: "/types#hmplrequestinit" },
+            { label: "HMPLInstance", link: "/types#hmplinstance" },
+            {
+              label: "HMPLInstanceContext",
+              link: "/types#hmplinstancecontext"
+            },
+            { label: "HMPLRequest", link: "/types#hmplrequest" },
+            { label: "HMPLRequestGet", link: "/types#hmplrequestget" },
+            { label: "HMPLRequestInfo", link: "/types#hmplrequestinfo" },
+            { label: "HMPLCompile", link: "/types#hmplcompile" },
+            { label: "HMPLCompileOptions", link: "/types#hmplcompileoptions" },
+            {
+              label: "HMPLTemplateFunction",
+              link: "/types#hmpltemplatefunction"
+            },
+            { label: "HMPLClearInterval", link: "/types#hmplclearinterval" },
+            {
+              label: "HMPLAutoBodyOptions",
+              link: "/types#hmplautobodyoptions"
+            },
+            { label: "HMPLInitalStatus", link: "/types#hmplinitalstatus" },
+            {
+              label: "HMPLIndicatorTrigger",
+              link: "/types#hmplindicatortrigger"
+            },
+            { label: "HMPLRequestStatus", link: "/types#hmplrequeststatus" },
+            { label: "HMPLContentTypes", link: "/types#hmplcontenttypes" },
+            { label: "HMPLDisallowedTag", link: "/types#hmpldisallowedtag" },
+            { label: "HMPLDisallowedTags", link: "/types#hmpldisallowedtags" },
+            { label: "HMPLSanitize", link: "/types#hmplsanitize" },
+            { label: "HMPLIndicator", link: "/types#hmplindicator" },
+            { label: "HMPLHeadersInit", link: "/types#hmplheadersinit" },
+            {
+              label: "HMPLIdentificationRequestInit",
+              link: "/types#hmplidentificationrequestinit"
+            },
+            {
+              label: "HMPLRequestInitFunction",
+              link: "/types#hmplrequestinitfunction"
+            }
+          ]
+        },
         {
           label: "Essentials",
           items: [
