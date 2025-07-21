@@ -1,8 +1,13 @@
 ---
 layout: post
 title: "How to GET HTML from API and Display In DOM using HMPL.js (fetch)?"
+description: "Learn how to fetch HTML content from APIs and dynamically display it in the DOM using HMPL.js. Complete tutorial with practical examples and code snippets."
 date: 2024-07-22 2:10 PM
-categories: blog
+categories: [blog, tutorial, api]
+tags: [HMPL, JavaScript, API, fetch, DOM, HTML, tutorial, web-development]
+author: "HMPL Team"
+image: "/favicon.ico"
+keywords: "HMPL, JavaScript, API, fetch, DOM manipulation, HTML, tutorial, web development, frontend"
 ---
 
 Hello! In this post I would like to talk about how to GET HTML from API and Display In DOM using HMPL.js.
