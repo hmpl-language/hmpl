@@ -1,4 +1,4 @@
-# HMPL Astro Starlight Documentation
+# HMPL App Documentation
 
 This is the official documentation for the **HMPL** project, built using Astro Starlight.
 
