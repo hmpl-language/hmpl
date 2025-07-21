@@ -20,7 +20,7 @@
 </div>
 
 <div align="center">
-<a href="https://hmpl-lang.dev">Website</a> • <a href="https://spec.hmpl-lang.dev">Specification</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples.html">Examples</a>
+<a href="https://hmpl-lang.dev">Website</a> • <a href="https://spec.hmpl-lang.dev">Docs</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples">Examples</a>
 </div>
 
 <br/>
