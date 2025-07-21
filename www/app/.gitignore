@@ -1,13 +1,18 @@
-node_modules
+# build output
+dist/
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
 .DS_Store
-*.log
-TODOs.md
-.idea
-.temp
-.cache
-/vuepress
-packages/@vuepress/shared-utils/lib/
-packages/@vuepress/shared-utils/types/
-docs/.vuepress/.cache/
-docs/.vuepress/.temp/
-docs/.vuepress/dist/

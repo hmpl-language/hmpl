@@ -1,7 +1,0 @@
-node_modules
-.DS_Store
-*.log
-TODOs.md
-.idea
-.temp
-.cache

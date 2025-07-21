@@ -1,15 +1,16 @@
-# HMPL App Documentation
+# HMPL Astro Starlight Documentation
 
-This is the official documentation for the **HMPL** app project, built using [VuePress 2](https://v2.vuepress.vuejs.org/).
+This is the official documentation for the **HMPL** project, built using Astro Starlight.
 
 ## Installation
 
-Make sure you have **Node.js v16+** installed.
+Make sure you have **Node.js v18+** installed.
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/hmpl-language/hmpl.git
-   cd hmpl-docs
+   cd hmpl/www/app
    ```
 
 2. Install dependencies:
@@ -19,20 +20,20 @@ Make sure you have **Node.js v16+** installed.
 
 ## Available Scripts
 
-| Script                  | Description                                       |
-|------------------------|---------------------------------------------------|
-| `npm run start`        | Starts the local development server               |
-| `npm run build`        | Builds the static site for production             |
-| `npm run clean-dev`    | Clears cache and starts the dev server cleanly    |
-| `npm run update-package` | Updates VuePress-related dependencies via `vp-update` |
+| Script              | Description                           |
+| ------------------- | ------------------------------------- |
+| `npm run dev`       | Starts the local development server   |
+| `npm run build`     | Builds the static site for production |
+| `npm run preview`   | Previews the production build locally |
+| `npm run astro ...` | Runs any Astro CLI command            |
 
 ### Start Development Server
 
 ```bash
-npm run start
+npm run dev
 ```
 
-The site will be available at: [http://localhost:3000](http://localhost:3000)
+The site will be available at: [http://localhost:4321](http://localhost:4321) (default Astro port)
 
 ### Build for Production
 
@@ -40,19 +41,29 @@ The site will be available at: [http://localhost:3000](http://localhost:3000)
 npm run build
 ```
 
-The static site will be generated in the `docs/.vuepress/dist/` folder.
+The static site will be generated in the `dist/` folder.
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
 
 ## Project Structure
 
 ```
-hmpl-docs/
-├── docs/                  # All markdown documentation files
-│   ├── .vuepress/         # VuePress config and customization
-│   │   ├── config.js      # Main VuePress config
-│   │   └── ...            # Plugins, theme options, styles, etc.
-│   └── index.md           # Homepage of the docs
+new-app/
+├── public/                 # Static assets (images, fonts, etc.)
+├── src/
+│   ├── components/         # Vue & Astro components
+│   ├── content/            # Markdown documentation files
+│   ├── pages/              # Astro pages (routes)
+│   ├── styles/             # CSS files
+│   └── ...
 ├── package.json
-└── README.md              # This file
+├── astro.config.mjs        # Astro configuration
+├── tsconfig.json           # TypeScript configuration
+└── README.md               # This file
 ```
 
 ## Contributing
