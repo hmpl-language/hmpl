@@ -24,6 +24,9 @@ export default defineConfig({
           }
         }
       },
+      components: {
+        Search: "./src/components/Stars.astro"
+      },
       editLink: {
         baseUrl: "https://github.com/hmpl-language/hmpl/edit/main/www/app"
       },

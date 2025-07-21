@@ -9,3 +9,7 @@
 .docs-inline {
   display: inline;
 }
+
+.nova-header-search {
+  position: relative;
+}
