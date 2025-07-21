@@ -5,20 +5,20 @@ description: About request block helper
 
 The request helper block in the template is used as a declarative point for dynamically updating content based on requests to the server, and getting HTML from there.
 
-| Property            | Type                           | Default       | Description                                        | Required |
-| ------------------- | ------------------------------ | ------------- | -------------------------------------------------- | -------- |
-| src                 | string                         | —             | The source URL of the request                      | Yes      |
-| method              | string                         | "GET"         | The HTTP method used for the request               | No       |
-| after               | string                         | —             | Event trigger specification                        | No       |
-| repeat              | boolean                        | true          | Whether the request repeats on subsequent triggers | No       |
-| interval            | number                         | —             | Optional interval for repeated requests (in ms)    | No       |
-| indicators          | HMPLIndicator[]                | []            | Status-specific UI indicators                      | No       |
-| autoBody            | boolean \| HMPLAutoBodyOptions | false         | Configures automatic body generation               | No       |
-| memo                | boolean                        | false         | Enables response caching                           | No       |
-| initId              | string \| number               | —             | Identifier for request initialization              | No       |
-| allowedContentTypes | HMPLContentTypes               | ["text/html"] | Permitted response Content-Types                   | No       |
-| disallowedTags      | HMPLDisallowedTags             | []            | HTML elements to remove from responses             | No       |
-| sanitize            | HMPLSanitize                   | false         | Enables HTML sanitization                          | No       |
+| Property            | Type                                                         | Default       | Description                                        | Required |
+| ------------------- | ------------------------------------------------------------ | ------------- | -------------------------------------------------- | -------- |
+| src                 | string                                                       | —             | The source URL of the request                      | Yes      |
+| method              | string                                                       | "GET"         | The HTTP method used for the request               | No       |
+| after               | string                                                       | —             | Event trigger specification                        | No       |
+| repeat              | boolean                                                      | true          | Whether the request repeats on subsequent triggers | No       |
+| interval            | number                                                       | —             | Optional interval for repeated requests (in ms)    | No       |
+| indicators          | [HMPLIndicator](/types#hmplindicator)[]                      | []            | Status-specific UI indicators                      | No       |
+| autoBody            | boolean \| [HMPLAutoBodyOptions](/types#hmplautobodyoptions) | false         | Configures automatic body generation               | No       |
+| memo                | boolean                                                      | false         | Enables response caching                           | No       |
+| initId              | string \| number                                             | —             | Identifier for request initialization              | No       |
+| allowedContentTypes | [HMPLContentTypes](/types#hmplcontenttypes)                  | ["text/html"] | Permitted response Content-Types                   | No       |
+| disallowedTags      | [HMPLDisallowedTags](/types#hmpldisallowedtags)              | []            | HTML elements to remove from responses             | No       |
+| sanitize            | [HMPLSanitize](/types#hmplsanitize)                          | false         | Enables HTML sanitization                          | No       |
 
 ```javascript
 {{#request
@@ -202,7 +202,7 @@ The interval property is currently compatible either:
 
 The indicators property is intended to define the HTML content that should be rendered in response to a particular request status. This property enables authors to provide user interface feedback corresponding to specific states of a request initiated by the HMPL module.
 
-The value is an array of each indicator object.
+The value is an array of each [HMPLIndicator](/types#hmplindicator) object.
 
 ```js
 <div>
@@ -238,10 +238,10 @@ import Indicators from "../../../components/IndicatorsComponent.vue";
 
 An object describing what specific request status the HTML will be displayed on.
 
-| Property | Type                 | Description                                         | Required |
-| -------- | -------------------- | --------------------------------------------------- | -------- |
-| trigger  | HMPLIndicatorTrigger | The status that the indicator is showing            | Yes      |
-| content  | string               | The HTML that is shown when the indicator is active | Yes      |
+| Property | Type                                                | Description                                         | Required |
+| -------- | --------------------------------------------------- | --------------------------------------------------- | -------- |
+| trigger  | [HMPLIndicatorTrigger](/types#hmplindicatortrigger) | The status that the indicator is showing            | Yes      |
+| content  | string                                              | The HTML that is shown when the indicator is active | Yes      |
 
 ```hmpl
 {{#request
@@ -294,7 +294,7 @@ Additionally, the value must be a single-line string — line breaks (e.g., `\n`
 
 The autoBody property specifies automatic generation of the `body` property within a [RequestInit](/functions/template#requestinit) object.
 
-The property accepts either a Boolean value or an HMPLAutoBodyOptions object, determining how the request body should be constructed.
+The property accepts either a Boolean value or an [HMPLAutoBodyOptions](/types#hmplautobodyoptions) object, determining how the request body should be constructed.
 
 ```hmpl
 <div>
@@ -336,9 +336,9 @@ import LoginFormComponent from "../../../components/LoginFormComponent.vue";
   </div>
 </Preview>
 
-It is important to note that automatic generation will only overwrite the existing body property if the HMPLRequestInit object is not derived from a RequestInit function. In such cases, the manually specified body value takes precedence.
+It is important to note that automatic generation will only overwrite the existing body property if the [HMPLRequestInit](/types#hmplrequestinit) object is not derived from a [RequestInit function](/types#hmplrequestinitfunction). In such cases, the manually specified body value takes precedence.
 
-If the value of autoBody is true, the module automatically generates a FormData instance using the associated [SubmitEvent](https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent) target element and its submitter.
+If the value of autoBody is true, the module automatically generates a `FormData` instance using the associated [SubmitEvent](https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent) target element and its submitter.
 
 ```js
 {
@@ -347,7 +347,7 @@ If the value of autoBody is true, the module automatically generates a FormData 
 ```
 
 :::note
-As of the current specification, automatic body generation exclusively supports targets of type SubmitEvent originating from `<form>` elements. Future revisions of the HMPL module may extend this functionality to additional HTML element types, such as input, progress, and other interactive components where automatic body construction is applicable.
+As of the current specification, automatic body generation exclusively supports targets of type [SubmitEvent](https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event) originating from `<form>` elements. Future revisions of the HMPL module may extend this functionality to additional HTML element types, such as input, progress, and other interactive components where automatic body construction is applicable.
 :::
 
 ### AutoBody options
@@ -383,7 +383,7 @@ The memo property enables response caching for identical requests. When enabled:
 </div>
 ```
 
-The memoization process can be conceptually compared to disabling the no-cache directive in the [RequestCache](https://developer.mozilla.org/en-US/docs/Web/API/Request/cache#value) API, as it prevents repeated fetching of the same resource within the same runtime environment.
+The memoization process can be conceptually compared to disabling the `no-cache` directive in the [RequestCache](https://developer.mozilla.org/en-US/docs/Web/API/Request/cache#value) API, as it prevents repeated fetching of the same resource within the same runtime environment.
 
 ![memoization](/images/memo.png)
 
@@ -395,7 +395,7 @@ For additional details regarding the behavior and implementation of memoization 
 
 ## initId
 
-The initId property establishes an explicit association between a request and a predefined [initialization object](/functions/template#identification-requestinit). It references the id property of a corresponding entry in the RequestInit dictionary collection, determining the initialization parameters for the request.
+The initId property establishes an explicit association between a request and a predefined [initialization object](/functions/template#identification-requestinit). It references the id property of a corresponding entry in the [RequestInit dictionary collection](/types#hmplidentificationrequestinit), determining the initialization parameters for the request.
 
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 import InitId403Example from "../../../components/InitId403Example.vue";
@@ -481,18 +481,18 @@ templateFn([
 </TabItem>
 </Tabs>
 
-In this example, initId, if specified, passes RequestInit with credentials with the value "omit", which does not pass credentials to the server, thus access to the API will be limited. If we do not pass initId, then RequestInit will be empty, respectively, all its values will be default for `fetch`.
+In this example, initId, if specified, passes RequestInit with `credentials` with the value `"omit"`, which does not pass `credentials` to the server, thus access to the API will be limited. If we do not pass initId, then RequestInit will be empty, respectively, all its values will be default for `fetch`.
 
 ## allowedContentTypes
 
-The allowedContentTypes property defines the list of permissible Content-Type values within the headers of HTTP responses returned from server requests. This property enables content validation and type safety when processing server responses.
+The allowedContentTypes property defines the list of permissible `Content-Type` values within the headers of HTTP responses returned from server requests. This property enables content validation and type safety when processing server responses.
 
 The property value may be either:
 
-- The string literal "\*", indicating that all content types compatible with the text method are allowed.
-- An array of string values, each representing an explicitly permitted Content-Type.
+- The string literal `"\*"`, indicating that all content types compatible with the text method are allowed.
+- An array of string values, each representing an explicitly permitted `Content-Type`.
 
-If the array is empty, behavior is equivalent to using "\*" — all types supporting the text method are permitted.
+If the array is empty, behavior is equivalent to using `"\*"` — all types supporting the text method are permitted.
 
 ```hmpl
 {{#request
@@ -507,7 +507,7 @@ If the array is empty, behavior is equivalent to using "\*" — all types suppor
 For additional guidance on server-side configuration and content type handling, refer to the [Server Configuration](/server-configuration) documentation.
 
 :::note
-For security considerations, it is strongly recommended not to modify this property unless necessary. Accepting unknown or untrusted Content-Type values may lead to uncontrolled application behavior or vulnerabilities. For instance, receiving a response with Content-Type: application/octet-stream could result in the response body being delivered as raw binary data. In such a case, a simple message such as Hello, World! may arrive encoded as:
+For security considerations, it is strongly recommended not to modify this property unless necessary. Accepting unknown or untrusted `Content-Type` values may lead to uncontrolled application behavior or vulnerabilities. For instance, receiving a response with `Content-Type: application/octet-stream` could result in the response `body` being delivered as raw binary data. In such a case, a simple message such as `Hello, World!` may arrive encoded as:
 `48 65 6C 6C 6F 2C 20 77 6F 72 6C 64 21`
 :::
 

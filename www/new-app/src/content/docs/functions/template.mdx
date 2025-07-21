@@ -5,9 +5,9 @@ description: About Template Function
 
 The template function instantiates template executions, managing server requests and DOM updates. Each invocation creates a unique [instance](/objects/instance).
 
-| Agument | Type                                                                          | Description                                            | Required |
-| ------- | ----------------------------------------------------------------------------- | ------------------------------------------------------ | -------- |
-| options | HMPLIdentificationRequestInit[] \| HMPLRequestInit \| HMPLRequestInitFunction | Configuration for request initialization and execution | No       |
+| Agument | Type                                                                                                                                                                              | Description                                            | Required |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | -------- |
+| options | [HMPLIdentificationRequestInit](/types#hmplidentificationrequestinit)[] \| [HMPLRequestInit](/types#hmplrequestinit) \| [HMPLRequestInitFunction](/types#hmplrequestinitfunction) | Configuration for request initialization and execution | No       |
 
 ```javascript
 const instance1 = templateFn();
@@ -26,21 +26,21 @@ The value of this argument is of three types:
 
 This type describes the configuration for the `fetch` sent with each request in the template. The HMPLRequestInit interface extends the standard [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/RequestInit) with HMPL-specific properties.
 
-| Property       | Type                | Description                                               |
-| -------------- | ------------------- | --------------------------------------------------------- |
-| mode           | RequestMode         | The mode of the request (cors, no-cors, same-origin)      |
-| cache          | RequestCache        | The cache mode for the request                            |
-| redirect       | RequestRedirect     | How to handle redirects (follow, error, manual)           |
-| referrerPolicy | ReferrerPolicy      | Policy for the referrer header                            |
-| integrity      | string              | Subresource integrity value for the request               |
-| referrer       | string              | The referrer URL for the request                          |
-| get            | HMPLRequestGet      | Optional function to retrieve properties from the request |
-| body           | BodyInit \| null    | The body of the request (can be a string, FormData, etc.) |
-| signal         | AbortSignal \| null | An AbortSignal to abort the request if needed             |
-| window         | any                 | Reference to the window object (if applicable)            |
-| credentials    | RequestCredentials  | Credentials mode for the request                          |
-| headers        | HMPLHeadersInit     | Custom headers for the request                            |
-| timeout        | number              | Optional timeout duration for the request in ms           |
+| Property       | Type                                            | Description                                               |
+| -------------- | ----------------------------------------------- | --------------------------------------------------------- |
+| mode           | [RequestMode](/types#requestmode)               | The mode of the request (cors, no-cors, same-origin)      |
+| cache          | [RequestCache](/types#requestcache)             | The cache mode for the request                            |
+| redirect       | [RequestRedirect](/types#requestredirect)       | How to handle redirects (follow, error, manual)           |
+| referrerPolicy | [ReferrerPolicy](/types#referrerpolicy)         | Policy for the referrer header                            |
+| integrity      | string                                          | Subresource integrity value for the request               |
+| referrer       | string                                          | The referrer URL for the request                          |
+| get            | [HMPLRequestGet](/types#hmplrequestget)         | Optional function to retrieve properties from the request |
+| body           | [BodyInit](/types#bodyinit) \| null             | The body of the request (can be a string, FormData, etc.) |
+| signal         | [AbortSignal](/types#abortsignal) \| null       | An AbortSignal to abort the request if needed             |
+| window         | any                                             | Reference to the window object (if applicable)            |
+| credentials    | [RequestCredentials](/types#requestcredentials) | Credentials mode for the request                          |
+| headers        | [HMPLHeadersInit](/types#hmplheadersinit)       | Custom headers for the request                            |
+| timeout        | number                                          | Optional timeout duration for the request in ms           |
 
 ```js
 const elementObj = templateFn({
@@ -115,9 +115,9 @@ const val = await new Promise((res, rej) => {
 
 This type is intended for the function for dynamic generation of RequestInit. This is necessary when, for example, `event` is processed.
 
-| Argument | Type                | Description                                      |
-| -------- | ------------------- | ------------------------------------------------ |
-| context  | HMPLInstanceContext | Execution context containing request information |
+| Argument | Type                                              | Description                                      |
+| -------- | ------------------------------------------------- | ------------------------------------------------ |
+| context  | [HMPLInstanceContext](/types#hmplinstancecontext) | Execution context containing request information |
 
 ```javascript
 const elementObj = templateFn(({ request: { event, clearInterval } }) => {
@@ -165,10 +165,10 @@ const instance = templateFn([
 
 This object is necessary for associating RequestInit or the function that returns it with a specific request, since we specify the `id` in it. The relationship between Identification RequestInit and requests is one-to-many.
 
-| Property | Type                                       | Description                                              | Required |
-| -------- | ------------------------------------------ | -------------------------------------------------------- | -------- |
-| id       | string \| number                           | Unique identifier matching template request's initId     | Yes      |
-| value    | HMPLRequestInit \| HMPLRequestInitFunction | The initialization parameters for the referenced request | Yes      |
+| Property | Type                                                                                                   | Description                                              | Required |
+| -------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- | -------- |
+| id       | string \| number                                                                                       | Unique identifier matching template request's initId     | Yes      |
+| value    | [HMPLRequestInit](/types#hmplrequestinit) \| [HMPLRequestInitFunction](/types#hmplrequestinitfunction) | The initialization parameters for the referenced request | Yes      |
 
 ```js
 const mySpecificInit = {
