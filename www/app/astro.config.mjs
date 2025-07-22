@@ -18,6 +18,7 @@ export default defineConfig({
       },
       expressiveCode: {
         themes: ["min-light", "min-light"],
+        useStarlightDarkModeSwitch: false,
         shiki: {
           langAlias: {
             hmpl: "html"
