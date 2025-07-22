@@ -270,11 +270,11 @@ Append components dynamically using HMPL:
   const body = document.querySelector("body");
   const template = `
     <main>
-      {{#request src="http://localhost:8000/api/get-header-component"}}{{/request}}
+      {% raw %}{{#request src="http://localhost:8000/api/get-header-component"}}{{/request}}
       {{#request src="http://localhost:8000/api/get-features-component"}}{{/request}}
       {{#request src="http://localhost:8000/api/get-promo-component"}}{{/request}}
       {{#request src="http://localhost:8000/api/get-cta-component"}}{{/request}}
-      {{#request src="http://localhost:8000/api/get-footer-component"}}{{/request}}
+      {{#request src="http://localhost:8000/api/get-footer-component"}}{{/request}}{% endraw %}
     </main>
   `;
   const { response } = hmpl.compile(template)();

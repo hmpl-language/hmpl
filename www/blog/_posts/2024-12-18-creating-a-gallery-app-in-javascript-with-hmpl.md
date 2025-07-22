@@ -113,7 +113,7 @@ It is worth noting that there are two objects marked here. The first one is trig
 **Title.hmpl**
 
 ```html
-<h1 id="title">{{ src: "http://localhost:8000/api/title" }}</h1>
+<h1 id="title">{% raw %}{{ src: "http://localhost:8000/api/title" }}{% endraw %}</h1>
 ```
 
 Here, the objects will be changed to HTML from the server. Now, they should be connected. To do this, import them into main.js:
