@@ -23,12 +23,6 @@ seo:
 
 # Social and Branding
 logo: "/favicon.ico"
-social:
-  name: HMPL
-  links:
-    - "https://github.com/hmpl-language/hmpl"
-    - "https://x.com/hmpljs"
-    - "https://discord.gg/KFunMep36n"
 
 # Site Configuration
 timezone: UTC

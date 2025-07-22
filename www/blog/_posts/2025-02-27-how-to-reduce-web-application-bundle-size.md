@@ -93,7 +93,7 @@ Working with the module looks something like this:
 const templateFn = hmpl.compile(
   `<div>
       <button data-action="increment" id="btn">Click!</button>
-      <div>Clicks: {{ src: "/api/clicks", after: "click:#btn" }}</div>
+      <div>Clicks: {% raw %}{{ src: "/api/clicks", after: "click:#btn" }}{% endraw %}</div>
   </div>`
 );
 
