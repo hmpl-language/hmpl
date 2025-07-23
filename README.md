@@ -20,7 +20,7 @@
 </div>
 
 <div align="center">
-<a href="https://hmpl-lang.dev">Website</a> • <a href="https://spec.hmpl-lang.dev">Docs</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples">Examples</a>
+<a href="https://hmpl-lang.dev">Website</a> • <a href="https://hmpl-lang.dev/introduction">Docs</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples">Examples</a>
 </div>
 
 <br/>
@@ -133,30 +133,6 @@ If you need an option without using js, then by connecting the additional [hmpl-
 
 This way, components from the server are mounted into the DOM without having to add them manually. This is great when you want to replace Alpine.js or HTMX in a project.
 
-## Request Configuration
-
-Request configuration blocks specify the parameters for server requests that the client will perform when certain events occur. 
-These parameters are provided inside the opening marker
-`{{#request ...}}` or `{{#r ...}}` using **key=value** pairs.
-
-
-The following attributes are supported:
-
-| **Attribute**               | **Type**                          | **Example**                                                                                               | **Description**                              |
-|:--------------------------|:----------------------------------|:----------------------------------------------------------------------------------------------------------|:----------------------------------------------|
-| `src`                      | `string`                          | `"/api/test"`                                                                                              | The request's source URL.                     |
-| `method`                   | `string`                          | `"get"`                                                                                                     | The HTTP method for the request.               |
-| `after`                    | `string`                          | `"click:.target"`                                                                                           | Event trigger specification.                   |
-| `repeat`                   | `boolean`                         | `true`                                                                                                       | Whether to repeat the request on future triggers. |
-| `interval`                 | `number`                          | `1000`                                                                                                       | Interval in milliseconds for repeated requests. |
-| `indicators`               | `HMPLIndicator[]`                 | `[ { trigger: "pending", content: "<p>Loading...</p>" } ]` | UI indicators for different request states. <br><br> *Note: Indicators can also be defined via nested `{{#indicator}}` blocks inside `{{#request}}`.* |
-| `autoBody`                 | `boolean \| HMPLAutoBodyOptions`  | `{ formData: true }`                                                                                        | Configures automatic request body generation.   |
-| `memo`                     | `boolean`                         | `true`                                                                                                       | Enables caching of the response.                |
-| `initId`                   | `string \| number`                 | `"id1"`                                                                                                      | Identifier for request initialization.          |
-| `allowedContentTypes`      | `HMPLContentTypes`                 | `["text/html"]`                                                                                              | Allowed Content-Type values in the response.     |
-| `disallowedTags`           | `HMPLDisallowedTags`               | `["script" "style" "iframe"]`                                                                                | HTML tags to be removed from the response.       |
-| `sanitize`                 | `HMPLSanitize`                     | `false`                                                                                                      | Enables sanitization of the HTML content.        |
-
 ## Why HMPL?
 
 Using template language capabilities, you can multiply reduce the size of the application bundle. Full customization of the request based on the modern `fetch` standard, as well as support for all the functionality necessary for modern work in applications (request indicator, sending by event, automatic generation of `body` for the `form`, caching) and the syntax of the object in the markup, which requires a minimum number of characters, will help to build interaction with the server and client as efficiently as possible. App size [comparison](https://github.com/hmpl-language/app-size-comparison) (bytes):
@@ -179,7 +155,7 @@ Also, HMPL can be a great alternative to popular tools such as HTMX and Alpine.j
 - **Simple**: Get ready-made UI from the server by writing a couple of lines of familiar object syntax
 - **Protected from XSS attacks**: Enable incoming server HTML sanitization with [DOMPurify](https://www.npmjs.com/package/dompurify) and work with it safely
 - **Flexible**: Can be used in almost any project due to not only working through a script, but also working in files with the `.hmpl` extension
-- **Integrated with JSON5**: Flexible writing of objects by [specs](https://spec.json5.org) as in vanilla js, as well as the reliability of the parser used by millions of people
+- **Integrated with JSON5**: Flexible writing of objects by [docs](https://hmpl-lang.dev/introduction) as in vanilla js, as well as the reliability of the parser used by millions of people
 - **Small bundle size**: Lots of functionality in a couple of kilobytes
 
 ## Installation
@@ -194,7 +170,7 @@ This method involves downloading through npm or other package managers.
 npm i hmpl-js
 ```
 
-> [Node.js](https://nodejs.org) is required for npm.
+> Node.js [v10.12.0+](https://nodejs.org/en/download) is required.
 
 Along the path node-modules/hmpl/dist you can find two files that contain a regular js file and a minified one.
 
@@ -206,33 +182,23 @@ This method involves connecting the file through a third-party resource, which p
 <script src="https://unpkg.com/json5/dist/index.min.js"></script>
 <script src="https://unpkg.com/dompurify/dist/purify.min.js"></script>
 <script src="https://unpkg.com/hmpl-js/dist/hmpl.min.js"></script>
-<!--
-  integrity="sha384-..."
+<!--   
+  integrity="..."
   crossorigin="anonymous"
 -->
 ```
 
 This resource could be unpkg, skypack or other resources. The examples include unpkg simply because it is one of the most popular and its url by characters is not so long.
 
-### Manual download
+## Through the starter template project
 
-You can install the package by simply [downloading](https://unpkg.com/hmpl-js/dist/hmpl.min.js) it as a file and moving it to the project folder.
+There is a [starter project](https://github.com/hmpl-language/hello-hmpl-starter) on Vite.
 
-```html
-<script src="https://unpkg.com/json5/dist/index.min.js"></script>
-<script src="https://unpkg.com/dompurify/dist/purify.min.js"></script>
-<script src="./hmpl.min.js"></script>
+```sh
+npx degit hmpl-language/hello-hmpl-starter hello-hmpl
 ```
 
-If, for some reason, you do not need the minified file, then you can download the full file from this [link](https://unpkg.com/hmpl-js/dist/hmpl.js).
-
-```html
-<script src="https://unpkg.com/json5/dist/index.min.js"></script>
-<script src="https://unpkg.com/dompurify/dist/purify.min.js"></script>
-<script src="./hmpl.js"></script>
-```
-
-The non-minified file is larger in size, but it is there as it is with all the formatting.
+Based on it, you can make web applications.
 
 ## Ecosystem
 <a href="https://marketplace.visualstudio.com/items?itemName=hmpljs.hmpl"><img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/VS%20Code.svg" height="40" alt="vs-code extension"/></a>
