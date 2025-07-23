@@ -3,7 +3,7 @@ title: Changelog
 description: Version history and updates for HMPL
 ---
 
-## 3.0.3 (2025-07-23)
+## 3.0.4 (2025-07-23)
 
 - Updating README.md
 
