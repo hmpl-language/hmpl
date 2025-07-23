@@ -207,7 +207,7 @@ Based on it, you can make web applications.
 
 ## Community support
 
-The [specification](https://spec.hmpl-lang.dev) contains main information on how the HMPL template language works. If you have any questions about how HMPL works, you can use the following resources:
+The [documentation](https://hmpl-lang.dev/introduction) contains main information on how the HMPL template language works. If you have any questions about how HMPL works, you can use the following resources:
 
 - [Github](https://github.com/hmpl-language/hmpl) - In the discussion and issues sections you can ask any question you are interested in
 - [Discord](https://discord.gg/KFunMep36n) - You can ask your question in the thematic channel "support"
