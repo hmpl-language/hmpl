@@ -3,6 +3,10 @@ title: Changelog
 description: Version history and updates for HMPL
 ---
 
+## 3.0.3 (2025-07-23)
+
+- Updating README.md
+
 ## 3.0.3 (2025-05-20)
 
 - Adding `{{#indicators}}` block
