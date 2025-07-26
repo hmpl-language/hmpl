@@ -5,7 +5,7 @@
 | Version | Supported          |
 | ------- | ------------------ |
 | >= 3.x   | yes |
-| < 2.0.0   | no                |
+| < 3.0.0   | no                |
 
 ## Reporting a Vulnerability
 
