@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Reactive HTML Without JavaScript Frameworks"
-date: 2025-01-27 2:10 PM
+date: 2025-07-07 2:10 PM
 categories: blog
 ---
 
