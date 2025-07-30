@@ -1,0 +1,20 @@
+---
+layout: nil
+---
+[
+{% for post in site.posts %}
+{
+"title": "{{ post.title | escape | replace: '\u0000', '' }}",
+"url": "{{ post.url | relative_url }}",
+"datePublished": "{{ post.date | date_to_xmlschema }}",
+"dateModified": "{% if post.modified_date %}{{ post.modified_date | date_to_xmlschema }}{% else %}null{% endif %}",
+"author": [
+{% if post.author %}
+{% for author in post.author %}
+"{{ author | escape }}"{% if forloop.last == false %},{% endif %}
+{% endfor %}
+{% endif %}
+]
+}{% unless forloop.last %},{% endunless %}
+{% endfor %}
+]
