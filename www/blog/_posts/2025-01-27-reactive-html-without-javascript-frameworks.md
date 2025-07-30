@@ -147,7 +147,6 @@ function updateProfile() {
 | Framework | Bundle Size | HMPL.js |
 |-----------|-------------|---------|
 | Vue.js | ~33KB | ~5KB |
-| React | ~42KB | ~5KB |
 | Angular | ~135KB | ~5KB |
 
 ### Loading Performance
