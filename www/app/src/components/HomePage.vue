@@ -798,7 +798,14 @@
             </ul>
           </div>
         </div>
+
         <div class="footer_copyright">
+          <p>
+            HMPL.js is a templating language, along with its official modules,
+            distributed in an open source model. hmpl.js, together with its
+            official modules, is not affiliated with any company registered in
+            any country in the world.
+          </p>
           <p>
             This project has been developed with contributions from many amazing
             community 🌱 developers!
