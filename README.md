@@ -11,7 +11,6 @@
 <div align="center">
 
 [![npm-version](https://img.shields.io/npm/v/hmpl-js?logo=npm&color=0183ff)](https://www.npmjs.com/package/hmpl-js)
-[![minzipped size](https://img.shields.io/bundlephobia/minzip/hmpl-js?logo=npm&color=0183ff)](https://bundlephobia.com/package/hmpl-js)
 [![codecov](https://img.shields.io/codecov/c/github/hmpl-language/hmpl?logo=codecov&logoColor=ffffff&label=codecov&color=0183ff)](https://codecov.io/github/hmpl-language/hmpl)
 [![stars](https://img.shields.io/github/stars/hmpl-language/hmpl?logo=github&color=0183ff&style=flat)](https://github.com/hmpl-language/hmpl/stargazers)
 [![discord](https://img.shields.io/discord/1317272386353238086?style=flat&logo=discord&color=5865F2&labelColor=5865F2&logoColor=fff)](https://discord.gg/KFunMep36n)
