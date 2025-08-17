@@ -19,7 +19,7 @@
 </div>
 
 <div align="center">
-<a href="https://hmpl-lang.dev">Website</a> • <a href="https://hmpl-lang.dev/introduction">Docs</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples">Examples</a>
+<a href="https://hmpl-lang.dev">🌐 Website</a> • <a href="https://hmpl-lang.dev/introduction">📂 Docs</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">🖥️ Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples">⚙️ Examples</a>
 </div>
 
 <br/>
