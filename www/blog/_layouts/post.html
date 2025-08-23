@@ -96,9 +96,8 @@ layout: base
   {% if page.previous %}
   <div class="post-navigation__prev">
     <a href="{{ page.previous.url | relative_url }}" class="button">
-      <span>◁ Previous Blog</span>
-      <br>
-      <span>{{ page.previous.title }}</span>
+      <span class="previous-blog-button">◁ Previous Blog</span>
+      <span class="previous-blog-title">{{ page.previous.title }}</span>
     </a>
   </div>
   {% endif %}
@@ -106,9 +105,8 @@ layout: base
   {% if page.next %}
   <div class="post-navigation__next">
     <a href="{{ page.next.url | relative_url }}" class="button">
-      <span>Next Blog ▷</span>
-      <br>
-      <span>{{ page.next.title }}</span>
+      <span class="next-blog-button">Next Blog ▷</span>
+      <span class="next-blog-title">{{ page.next.title }}</span>
     </a>
   </div>
   {% endif %}
