@@ -204,7 +204,7 @@ Based on it, you can make web applications.
 <table cellpadding="10" cellspacing="0" border="0">
     <tr>
         <td>
-            <img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/VS%20Code.svg" width="100" alt="VS Code extension">
+            <img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/VS%20Code.svg" width="100" alt="vs-code-extension">
         </td>
         <td>
             <a href="https://marketplace.visualstudio.com/items?itemName=hmpljs.hmpl"><b>VS Code Extension</b></a><br>
