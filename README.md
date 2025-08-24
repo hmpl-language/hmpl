@@ -189,7 +189,7 @@ This method involves connecting the file through a third-party resource, which p
 
 This resource could be unpkg, skypack or other resources. The examples include unpkg simply because it is one of the most popular and its url by characters is not so long.
 
-## Through the starter template project
+### Through the starter template project
 
 There is a [starter project](https://github.com/hmpl-language/hello-hmpl-starter) on Vite.
 
