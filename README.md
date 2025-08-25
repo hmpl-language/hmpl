@@ -130,7 +130,7 @@ If you need an option without using js, then by connecting the additional [hmpl-
 </html>
 ```
 
-This way, components from the server are mounted into the DOM without having to add them manually. This is great when you want to replace Alpine.js or HTMX in a project.
+This way, components from the server are mounted into the DOM without having to add them manually.
 
 ## Why HMPL?
 
