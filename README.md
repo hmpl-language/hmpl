@@ -19,7 +19,7 @@
 </div>
 
 <div align="center">
-<a href="https://hmpl-lang.dev">🌐 Website</a> • <a href="https://hmpl-lang.dev/introduction">📂 Docs</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">🖥️ Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples">⚙️ Examples</a>
+<a href="https://hmpl-lang.dev">🌐 Website</a> • <a href="https://hmpl-lang.dev/introduction">📄 Docs</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">🖥️ Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples">⚙️ Examples</a>
 </div>
 
 <br/>
@@ -200,9 +200,34 @@ npx degit hmpl-language/hello-hmpl-starter hello-hmpl
 Based on it, you can make web applications.
 
 ## Ecosystem
-<a href="https://marketplace.visualstudio.com/items?itemName=hmpljs.hmpl"><img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/VS%20Code.svg" height="40" alt="vs-code extension"/></a>
-<a href="https://www.npmjs.com/package/vite-plugin-hmpl"><img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/vite.png" height="40" alt="vite-plugin-hmpl"/></a>
-<a href="https://www.npmjs.com/package/hmpl-loader"><img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/Webpack.svg" alt="hmpl-loader" height="40"/></a>
+
+<table cellpadding="10" cellspacing="0" border="0">
+    <tr>
+        <td>
+            <img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/VS%20Code.svg" width="100" alt="vs-code-extension">
+        </td>
+        <td>
+            <a href="https://marketplace.visualstudio.com/items?itemName=hmpljs.hmpl"><b>VS Code Extension</b></a><br>
+            <i>Syntax highlighting and tools for HMPL</i>
+        </td>
+        <td>
+            <img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/vite.png" width="100" alt="vite-plugin-hmpl">
+        </td>
+        <td>
+            <a href="https://www.npmjs.com/package/vite-plugin-hmpl"><b>Vite Plugin</b></a><br>
+            <i>Seamless .hmpl integration with Vite</i>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/Webpack.svg" width="100" alt="hmpl-loader">
+        </td>
+        <td>
+            <a href="https://www.npmjs.com/package/hmpl-loader"><b>Webpack Loader</b></a><br>
+            <i>Compile .hmpl files inside Webpack</i>
+        </td>
+    </tr>
+</table>
 
 ## Community support
 
@@ -224,7 +249,7 @@ Thank you to all the people who have already contributed to HMPL, or related pro
 
 The project has a [roadmap](https://github.com/orgs/hmpl-language/projects/5) where you can see the plans for future development.
 
-## Fossa status
+## License
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhmpl-language%2Fhmpl.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhmpl-language%2Fhmpl?ref=badge_large&issueType=license)
 
