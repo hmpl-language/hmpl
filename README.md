@@ -32,8 +32,6 @@
 
 hmpl is a small template language for displaying UI from server to client. It is based on <em>customizable</em> requests sent to the server via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> and processed into ready-made HTML. The language is syntactically block-based and integrated with <a href="https://www.npmjs.com/package/json5">JSON5</a> and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>. Reduce the size of your javascript files and display the same UI as if it was written in a modern framework!
 
-☆ If you find HMPL useful, please consider giving us a star on GitHub! Your support helps us continue to innovate and deliver exciting features.
-
 ## Example
 
 ```html
@@ -253,6 +251,14 @@ The project has a [roadmap](https://github.com/orgs/hmpl-language/projects/5) wh
 
 ## License
 
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fhmpl-language%2Fhmpl.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2Fhmpl-language%2Fhmpl?ref=badge_large&issueType=license)
+Released under the [MIT](https://github.com/hmpl-language/hmpl/blob/main/LICENSE)
 
-Licensed under [MIT](https://github.com/hmpl-language/hmpl/blob/main/LICENSE)
+---
+
+<div align="center">
+
+💎 **Star this repo** • 💻 **[Try HMPL.js](https://hmpl-lang.dev/getting-started)** • 💬 **[Join Discord](https://discord.gg/KFunMep36n)**
+
+<i>This project has been developed with contributions from many amazing community developers!</i>
+
+</div>
