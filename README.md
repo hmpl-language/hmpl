@@ -46,6 +46,8 @@ hmpl is a small template language for displaying UI from server to client. It is
 </div>
 ```
 
+Try HMPL online at: [hmpl-playground](https://codesandbox.io/p/sandbox/hmpl-playground-hz6k9t?file=%2Findex.html%3A13%2C44)
+
 ## Basic usage
 
 ```javascript
