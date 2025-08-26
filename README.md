@@ -22,6 +22,12 @@
 <a href="https://hmpl-lang.dev">🌐 Website</a> • <a href="https://hmpl-lang.dev/introduction">📄 Docs</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">🖥️ Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples">⚙️ Examples</a>
 </div>
 
+<br/>
+
+<div align="center">
+<a href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=neutral&t=1756166891784" alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+</div>
+
 ## Introduction
 
 hmpl is a small template language for displaying UI from server to client. It is based on <em>customizable</em> requests sent to the server via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> and processed into ready-made HTML. The language is syntactically block-based and integrated with <a href="https://www.npmjs.com/package/json5">JSON5</a> and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>. Reduce the size of your javascript files and display the same UI as if it was written in a modern framework!
