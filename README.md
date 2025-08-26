@@ -169,9 +169,7 @@ This method involves downloading through npm or other package managers.
 npm i hmpl-js
 ```
 
-> Node.js [v10.12.0+](https://nodejs.org/en/download) is required.
-
-Along the path node-modules/hmpl/dist you can find two files that contain a regular js file and a minified one.
+Along the path `node-modules/hmpl/dist` you can find two files that contain a regular js file and a minified one.
 
 ### CDN
 
