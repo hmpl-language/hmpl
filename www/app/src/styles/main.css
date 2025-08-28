@@ -13,3 +13,93 @@
 .nova-header-search {
   position: relative;
 }
+
+/* Homepage Theme Variables - Light Mode */
+:root[data-theme="light"] {
+  --homepage-bg-primary: #ffffff;
+  --homepage-bg-secondary: rgba(1, 131, 255, 0.5214460784313726);
+  --homepage-bg-fallback: rgb(1, 131, 255);
+  --homepage-bg-gradient-top: linear-gradient(180deg, rgba(1, 131, 255, 0.5214460784313726) -20%, rgba(255, 255, 255, 1) 20%);
+  --homepage-bg-gradient-bottom: linear-gradient(0deg, rgba(1, 131, 255, 0.5214460784313726) -20%, rgba(255, 255, 255, 1) 16%);
+  --homepage-bg-gradient-bottom-mobile: linear-gradient(0deg, rgba(1, 131, 255, 0.5214460784313726) -20%, rgba(255, 255, 255, 1) 14%);
+
+  /* Text Colors */
+  --homepage-text-primary: #000000;
+  --homepage-text-secondary: #4d4d4d;
+  --homepage-text-muted: #646464;
+  --homepage-text-light: #9ca3af;
+  --homepage-text-white: #ffffff;
+  --homepage-text-dark: #09090b;
+
+  /* Card & Component Colors */
+  --homepage-card-bg: linear-gradient(180deg, #ffffff 0%, #b2b9f6 100%);
+  --homepage-card-text: #4e4e4e;
+
+  /* Button & Link Colors */
+  --homepage-button-bg: #d6d6d6;
+  --homepage-button-hover-bg: #fcfcfc;
+  --homepage-link-blue: #0183ff;
+
+  /* Metric Section */
+  --homepage-metrics-bg-fallback: #7e71ba;
+  --homepage-metrics-bg: linear-gradient(0deg, #7e71ba 0%, #0183ff 100%);
+  --homepage-metrics-text: rgba(255, 255, 255, 0.7);
+
+  /* Footer */
+  --homepage-footer-bg-fallback: #7e71ba;
+  --homepage-footer-bg: linear-gradient(0deg, #7e71ba 0%, #0183ff 100%);
+  --homepage-footer-text: #c8c8c8;
+
+  /* Contributors */
+  --homepage-contributor-bg: #0066ff;
+  --homepage-contributor-text: #666;
+
+  /* Sample Section */
+  --homepage-sample-highlight: #0066ff;
+  --homepage-sample-secondary-bg: #a5b4fc;
+}
+
+/* Homepage Theme Variables - Dark Mode */
+:root[data-theme="dark"] {
+  --homepage-bg-primary: #0c0e16;
+  --homepage-bg-secondary: rgba(1, 131, 255, 0.3);
+  --homepage-bg-fallback: rgb(1, 131, 255);
+  --homepage-bg-gradient-top: linear-gradient(180deg, rgba(1, 131, 255, 0.3) -20%, rgba(12, 14, 22, 1) 20%);
+  --homepage-bg-gradient-bottom: linear-gradient(0deg, rgba(1, 131, 255, 0.3) -20%, rgba(12, 14, 22, 1) 16%);
+  --homepage-bg-gradient-bottom-mobile: linear-gradient(0deg, rgba(1, 131, 255, 0.3) -20%, rgba(12, 14, 22, 1) 14%);
+
+  /* Text Colors */
+  --homepage-text-primary: #ffffff;
+  --homepage-text-secondary: #b8b9bf;
+  --homepage-text-muted: #9ca3af;
+  --homepage-text-light: #6b7280;
+  --homepage-text-white: #ffffff;
+  --homepage-text-dark: #f3f4f6;
+
+  /* Card & Component Colors */
+  --homepage-card-bg: linear-gradient(180deg, #1a1d29 0%, #252a3a 100%);
+  --homepage-card-text: #d1d5db;
+
+  /* Button & Link Colors */
+  --homepage-button-bg: #374151;
+  --homepage-button-hover-bg: #2d3748;
+  --homepage-link-blue: #60a5fa;
+
+  /* Metric Section */
+  --homepage-metrics-bg-fallback: #4c1d95;
+  --homepage-metrics-bg: linear-gradient(0deg, #4c1d95 0%, #1e40af 100%);
+  --homepage-metrics-text: rgba(255, 255, 255, 0.8);
+
+  /* Footer */
+  --homepage-footer-bg-fallback: #4c1d95;
+  --homepage-footer-bg: linear-gradient(0deg, #4c1d95 0%, #1e40af 100%);
+  --homepage-footer-text: #9ca3af;
+
+  /* Contributors */
+  --homepage-contributor-bg: #3b82f6;
+  --homepage-contributor-text: #9ca3af;
+
+  /* Sample Section */
+  --homepage-sample-highlight: #60a5fa;
+  --homepage-sample-secondary-bg: #4f46e5;
+}
