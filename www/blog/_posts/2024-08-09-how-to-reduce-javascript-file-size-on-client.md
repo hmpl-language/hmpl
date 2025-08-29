@@ -3,6 +3,7 @@ layout: post
 title: "How to reduce javascript file size on client?"
 date: 2024-08-09 2:10 PM
 categories: blog
+tags: [HMPL, JavaScript, File-Size, optimization, performance, web-development, Vue.js, client-side]
 ---
 
 Hello everyone! In this post I would like to tell you how you can reduce the size of javascript files several times thanks to such a template language as [hmpl](https://github.com/hmpl-lang/hmpl).

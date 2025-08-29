@@ -3,6 +3,7 @@ layout: post
 title: "Creating a Gallery App in JavaScript with HMPL"
 date: 2024-12-18 2:10 PM
 categories: blog
+tags: [HMPL, JavaScript, web-development, tutorial, gallery, image-gallery, responsive-design]
 ---
 
 Hello everyone! In this article I will describe the process of creating a Gallery application. You can safely take this application and edit it as you wish (you can only change the pictures there, because there is a license). It is small in functionality, but, in my opinion, it is quite suitable for an example of work.

@@ -3,6 +3,7 @@ layout: post
 title: "Client‑Side SSR: Build a Component‑Based Landing Page in 10 Minutes"
 date: 2025-04-27 2:10 PM
 categories: blog
+tags: [HMPL, SSR, components, landing-page, tutorial, web-development, JavaScript, quick-start]
 ---
 
 

@@ -3,6 +3,7 @@ layout: post
 title: "Reactive HTML Without JavaScript Frameworks"
 date: 2025-07-07 2:10 PM
 categories: blog
+tags: [HMPL, JavaScript, reactive, frameworks, performance, web-development, HTML, lightweight]
 ---
 
 Hello everyone! In this article, I'll show you how to create reactive HTML interfaces without relying on heavy JavaScript frameworks like Vue or Angular. We'll explore how HMPL.js provides a lightweight alternative that achieves reactivity through server-side rendering while keeping your client-side code minimal.

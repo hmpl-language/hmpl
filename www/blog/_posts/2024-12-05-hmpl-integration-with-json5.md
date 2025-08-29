@@ -3,6 +3,7 @@ layout: post
 title: "HMPL integration with JSON5"
 date: 2024-12-05 01:00 AM
 categories: blog
+tags: [HMPL, JSON5, JavaScript, integration, web-development, JSON, data-format]
 ---
 
 The new version of HMPL has integration with the JSON5 module, which will qualitatively improve the work several times! In this article, I would like to describe in more detail why this was done and why it is necessary.
