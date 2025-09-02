@@ -3,6 +3,7 @@ layout: post
 title: "Memoization in HMPL"
 date: 2024-10-03 2:10 PM
 categories: blog
+tags: [HMPL, Memoization, Performance, optimization, JavaScript, web-development, caching]
 ---
 
 In version 2.1.3, among other things, new functionality was introduced to improve the performance of sites using hmpl.js.

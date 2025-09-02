@@ -3,6 +3,7 @@ layout: post
 title: "Asynchronicity: async await support when working with HMPL"
 date: 2024-11-26 2:10 PM
 categories: blog
+tags: [HMPL, JavaScript, async-await, asynchronous, Promise, web-development, tutorial]
 ---
 
 In this short article I would like to consider working with asynchrony in HMPL. By default, in order to get a response from the server after an unspecified time, you need to specify a callback function in `HMPLRequestInit`. The key will be `get`. In the code, it looks like this:

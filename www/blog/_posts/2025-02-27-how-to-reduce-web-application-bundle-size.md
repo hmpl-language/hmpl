@@ -3,6 +3,7 @@ layout: post
 title: "How to reduce web application bundle size?"
 date: 2025-02-27 2:10 PM
 categories: blog
+tags: [Performance, Optimization, Bundle-size, web-development, JavaScript, SSR, CSR]
 ---
 
 Often, when working on a project for a long time, you notice that the more functionality you add, the slower the web application becomes. Although, it would seem that there is no point in adding a `table`, a `button`, or something else that in some vacuum weighs quite a bit. As a result, you get an unacceptable initial load, which can take more than 10-30 seconds, for example.

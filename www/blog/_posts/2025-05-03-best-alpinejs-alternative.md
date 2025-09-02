@@ -3,6 +3,7 @@ layout: post
 title: "Best Alpine.js Alternative"
 date: 2025-05-03 14:10:00 +0300
 categories: blog
+tags: [HMPL, Alpine.js, JavaScript, comparison, web-development, alternatives, frontend]
 ---
 
 In this article I'll tell you about a great replacement for Alpine.js that will help you do the same (and even more) with server-side HTML.

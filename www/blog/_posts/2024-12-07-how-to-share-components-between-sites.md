@@ -3,6 +3,7 @@ layout: post
 title: "How to share components between sites"
 date: 2024-12-07 01:00 AM
 categories: blog
+tags: [HMPL, components, reusability, web-development, JavaScript, cross-site, tutorial]
 ---
 
 It is not uncommon to encounter such a task when creating a web application, when it is necessary to transfer a component between sites. Usually, these are some kind of general buttons, blocks like footer, header, and the like.

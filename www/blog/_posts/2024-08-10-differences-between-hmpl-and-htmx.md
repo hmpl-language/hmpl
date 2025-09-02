@@ -3,6 +3,7 @@ layout: post
 title: "Differences between HMPL and HTMX"
 date: 2024-08-10 2:10 PM
 categories: blog
+tags: [HMPL, HTMX, Comparison, web-development, JavaScript, template-language, HTML]
 ---
 
 Hello everyone! In this post I would like to tell you about the differences between the HMPL template language and the HTMX library. This question often arises when first getting to know the language, so I will try to describe the differences as fully as possible.
