@@ -30,7 +30,7 @@
 
 ## Introduction
 
-HMPL provides the flexibility to build server-driven templates with minimal JavaScript. With its block-based syntax, customizable <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> requests, and built-in support for forms, events, and time-based syncing you can deliver dynamic user interfaces without relying on a heavy framework. HMPL integrates with <a href="https://www.npmjs.com/package/json5">JSON5</a> for expressive object syntax and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a> for safe HTML rendering, all in just a few kilobytes.
+HMPL.js provides the flexibility to build server-driven templates with minimal JavaScript. With its block-based syntax, customizable <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> requests, and built-in support for forms, events, and time-based syncing you can deliver dynamic user interfaces without relying on a heavy framework. HMPL integrates with <a href="https://www.npmjs.com/package/json5">JSON5</a> for expressive object syntax and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a> for safe HTML rendering, all in just a few kilobytes.
 
 ## Example
 
