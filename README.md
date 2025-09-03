@@ -30,7 +30,7 @@
 
 ## Introduction
 
-hmpl is a small template language for displaying UI from server to client. It is based on <em>customizable</em> requests sent to the server via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> and processed into ready-made HTML. The language is syntactically block-based and integrated with <a href="https://www.npmjs.com/package/json5">JSON5</a> and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>. Reduce the size of your javascript files and display the same UI as if it was written in a modern framework!
+HMPL provides the flexibility to build server-driven templates with minimal JavaScript. With its block-based syntax, customizable <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> requests, and built-in support for forms, events, and time-based syncing you can deliver dynamic user interfaces without relying on a heavy framework. HMPL integrates with <a href="https://www.npmjs.com/package/json5">JSON5</a> for expressive object syntax and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a> for safe HTML rendering, all in just a few kilobytes.
 
 ## Example
 
