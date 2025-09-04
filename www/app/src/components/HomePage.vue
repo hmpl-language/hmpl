@@ -230,9 +230,8 @@
           Server-oriented customizable templating for JavaScript
         </p>
         <p class="banner_info_more">
-          hmpl is a small template language for displaying UI from server to
-          client. It is based on customizable requests sent to the server via
-          fetch and processed into ready-made HTML.
+          HMPL.js is a lightweight server-oriented template language for JavaScript.
+          Fetch HTML, render it safely, and keep apps dynamic, modern, and small.
         </p>
         <div class="buttons">
           <a href="/getting-started" class="fade-in-effect hover_effect"
