@@ -11,7 +11,7 @@ export default defineConfig({
     starlight({
       title: "HMPL Documentation",
       description:
-        "Server-oriented customizable templating for JavaScript. Alternative to HTMX and Alpine.js.",
+        "HMPL.js is a lightweight server-oriented template language for JavaScript. Fetch HTML, render it safely, and keep apps dynamic, modern, and small. Alternative to HTMX and Alpine.js.",
       customCss: ["./src/styles/main.css"],
       logo: {
         src: "./src/assets/logo.svg"
