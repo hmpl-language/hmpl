@@ -246,15 +246,16 @@
           >
         </div>
         <a
-          href="https://devhunt.org/tool/hmpljs"
-          target="_blank"
-          class="badge fade-in-effect"
-        >
-          <img
-            class="badge-img"
-            src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhunt.svg"
-          />
-        </a>
+            href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js"
+            target="_blank"
+            class="producthunt"
+            ><img
+              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=dark&t=1748847658573"
+              alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt"
+              style="width: 250px; height: 54px"
+              width="250"
+              height="54"
+          /></a>
       </div>
     </div>
   </div>
@@ -697,16 +698,15 @@
             </a>
           </div>
           <a
-            href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js"
-            target="_blank"
-            class="producthunt"
-            ><img
-              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=dark&t=1748847658573"
-              alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt"
-              style="width: 250px; height: 54px"
-              width="250"
-              height="54"
-          /></a>
+href="https://devhunt.org/tool/hmpljs"
+target="_blank"
+class="badge fade-in-effect"
+>
+<img
+class="badge-img"
+src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhunt.svg"
+/>
+</a>
         </div>
         <div class="footer_sections">
           <div class="footer_section">
