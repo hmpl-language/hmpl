@@ -257,7 +257,7 @@ Released under the [MIT](https://github.com/hmpl-language/hmpl/blob/main/LICENSE
 
 <div align="center">
 
-💎 **Star this repo** • 💻 **[Try HMPL.js](https://hmpl-lang.dev/getting-started)** • 💬 **[Join Discord](https://discord.gg/KFunMep36n)**
+💎 **[Star this repo](https://github.com/hmpl-language/hmpl)** • 💻 **[Try HMPL.js](https://hmpl-lang.dev/getting-started)** • 💬 **[Join Discord](https://discord.gg/KFunMep36n)**
 
 <i>This project has been developed with contributions from many amazing community developers!</i>
 
