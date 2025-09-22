@@ -1,6 +1,11 @@
 ---
 title: GitHub Repository with Examples
 description: GitHub repository with examples
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl examples, example projects, gallery app, landing page example, server components, hmpl repository
 ---
 
 The [repository](https://github.com/hmpl-language/examples) has a list of several example projects. There you can find examples with and without webpack, as well as a test local server.

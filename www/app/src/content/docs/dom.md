@@ -1,6 +1,11 @@
 ---
 title: Working with the real DOM
 description: Working with the Document Object Model in HMPL
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl dom, hmpl-dom, mount templates, server driven components, dynamic html, request helper
 ---
 
 `hmpl-dom` is a library for integrating HMPL templates directly into the DOM. It allows you to use templates written with [hmpl-js](https://www.npmjs.com/package/hmpl-js) right in your HTML documents using the `<template>` tag, and automatically mounts them into the DOM.

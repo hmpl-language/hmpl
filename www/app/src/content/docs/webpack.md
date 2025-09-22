@@ -1,6 +1,11 @@
 ---
 title: Webpack
 description: Integrate HMPL with Webpack
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl, hmpl webpack integration, webpack hmpl loader, hmpl template loader, webpack dynamic html, hmpl-loader examples
 ---
 
 Module has its own loader for files with the `.hmpl` extension. You can include [hmpl-loader](https://www.npmjs.com/package/hmpl-loader) and use the template language syntax in separate files:

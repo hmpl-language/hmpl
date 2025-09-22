@@ -1,6 +1,11 @@
 ---
 title: Security
 description: Security considerations for HMPL
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl security, xss protection, sanitize html, dompurify usage, disallowed tags, secure templates
 ---
 
 When loading HTML from untrusted sources, you may encounter the problem of XSS attacks. By default, any content checks are disabled in the module, since it is assumed that all HTML will be loaded with a full understanding of what is coming, but nevertheless, to protect the project from unwanted risks, you can use the following functionality.
