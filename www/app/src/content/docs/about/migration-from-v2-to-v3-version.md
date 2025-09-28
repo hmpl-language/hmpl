@@ -1,9 +1,14 @@
 ---
 title: Migration from v2 to v3
 description: Upgrade guide from HMPL v2 to v3
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl migration, upgrade guide, hmpl v3 changes, request syntax, safer templates, version upgrade
 ---
 
-HMPL v3 introduces a **simpler, safer, and more flexible request configuration syntax**.  
+HMPL v3 introduces a **simpler, safer, and more flexible request configuration syntax**.
 This guide explains the key differences and how to update your existing templates.
 
 ## What Changed

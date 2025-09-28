@@ -1,6 +1,11 @@
 ---
 title: request
 description: About request block helper
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl request helper, server request block, request attributes, dynamic content fetch, indicators, auto body
 ---
 
 The request helper block in the template is used as a declarative point for dynamically updating content based on requests to the server, and getting HTML from there.
@@ -156,11 +161,11 @@ const templateFn = compile(`
 <div>
   <button id="btn">Start timer!</button>
   <div>
-    Seconds: 
-    {{#request 
-      src="/api/timer" 
-      after="click:#btn" 
-      interval=1000 
+    Seconds:
+    {{#request
+      src="/api/timer"
+      after="click:#btn"
+      interval=1000
       repeat=false
     }}{{/request}}
   </div>

@@ -1,6 +1,11 @@
 ---
 title: Introduction
 description: Learn about HMPL
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl introduction, lightweight template language, server driven ui, hmpl vs htmx, json5 integration, dompurify support
 ---
 
 🌐 HMPL (/ˈhæmpəl/ portmanteau of the words Cample and HTML) is a small template language for displaying UI from server to client. It is based on <em>customizable</em> requests sent to the server via <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> and processed into ready-made HTML. The language is syntactically object-based and integrated with <a href="https://www.npmjs.com/package/json5">JSON5</a> and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a>. Reduce the size of your javascript files and display the same UI as if it was written in a modern framework!
@@ -117,7 +122,7 @@ const templateFn = compile(
     </div>
   </form>
   <p>
-    {{#request         
+    {{#request
       src="/api/register"
       after="submit:#form"
       repeat=false

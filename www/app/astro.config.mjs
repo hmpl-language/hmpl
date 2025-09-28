@@ -17,6 +17,15 @@ export default defineConfig({
       description:
         "HMPL.js is a lightweight server-oriented template language for JavaScript. Fetch HTML, render it safely, and keep apps dynamic, modern, and small. Alternative to HTMX and Alpine.js.",
       customCss: ["./src/styles/main.css"],
+      head: [
+        {
+          tag: 'meta',
+          attrs: {
+            name: "keywords",
+            content: "hmpl, hmpl templates, fast template engine, html templating, server side rendering, express template engine"
+          }
+        }
+      ],
       logo: {
         src: "./src/assets/logo.svg"
       },

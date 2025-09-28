@@ -1,6 +1,11 @@
 ---
 title: Server Configuration
 description: Setting up your server for HMPL
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl server configuration, content-type text/html, express setup, allowed content types, server templates
 ---
 
 Since version `2.2.2`, a very important feature has been added in working with the server, which will make working with the web application much safer. Now, for each route that outputs HTML, you need to specify the `Content-Type`, which has the value `text/html`.

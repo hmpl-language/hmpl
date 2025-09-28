@@ -1,6 +1,11 @@
 ---
 title: Discussion and Development
 description: Discussion and development of an open source project
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl community, project discussion, open source development, github discussions, discord channel, feature ideas
 ---
 
 There are several official social media channels for discussing the project, where you can ask your question, suggest improvements, and much more.

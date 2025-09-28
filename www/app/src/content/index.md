@@ -1,6 +1,11 @@
 ---
 title: HMPL Documentation
 description: HTML Markup Programming Language - Documentation
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl documentation, hmpl guide, hmpl template language, server side templates, lightweight templating engine, reactive html
 ---
 
 # Welcome to HMPL Documentation
