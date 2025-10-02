@@ -80,17 +80,32 @@ layout: base
       <div class="pager">
         <ul class="pagination">
         {%- if paginator.previous_page %}
-          <li><a href="{{ paginator.previous_page_path | relative_url }}" class="previous-page">{{ paginator.previous_page }}</a></li>
+          <li><a href="{{ paginator.previous_page_path | relative_url }}" class="previous-page">← Previous</a></li>
         {%- else %}
-          <li><div class="pager-edge">•</div></li>
+          <li><span class="pager-edge disabled">← Previous</span></li>
         {%- endif %}
-          <li><div class="current-page">{{ paginator.page }}</div></li>
+        
+        {%- for page in (1..paginator.total_pages) %}
+          {%- if page == paginator.page %}
+            <li><span class="current-page">{{ page }}</span></li>
+          {%- elsif page == 1 %}
+            <li><a href="{{ '/' | relative_url }}" class="page-link">{{ page }}</a></li>
+          {%- else %}
+            <li><a href="{{ site.paginate_path | replace: ':num', page | relative_url }}" class="page-link">{{ page }}</a></li>
+          {%- endif %}
+        {%- endfor %}
+        
         {%- if paginator.next_page %}
-          <li><a href="{{ paginator.next_page_path | relative_url }}" class="next-page">{{ paginator.next_page }}</a></li>
+          <li><a href="{{ paginator.next_page_path | relative_url }}" class="next-page">Next →</a></li>
         {%- else %}
-          <li><div class="pager-edge">•</div></li>
+          <li><span class="pager-edge disabled">Next →</span></li>
         {%- endif %}
         </ul>
+        
+        <div class="pagination-info">
+          <p>Page {{ paginator.page }} of {{ paginator.total_pages }} 
+          ({{ paginator.posts.size }} of {{ paginator.total_posts }} posts)</p>
+        </div>
       </div>
     {%- endif %}
 
