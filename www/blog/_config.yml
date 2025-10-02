@@ -29,6 +29,9 @@ timezone: UTC
 permalink: /:year/:month/:day/:title/
 excerpt_separator: <!--more-->
 
+# Pagination Configuration
+paginate: 5
+
 # Theme Configuration
 # theme: minima  # Disabled due to Sass compatibility issues
 
