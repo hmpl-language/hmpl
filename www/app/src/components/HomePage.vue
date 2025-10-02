@@ -273,45 +273,7 @@
         alt="Wave Bottom"
         class="wave-overlay-mobile"
       />
-      <div class="cards">
-        <div class="card">
-          <div class="card_name">
-            <img src="/images/mynaui_tool-solid.png" alt="Tool image" />
-            <h2 class="gradient_text_bottom">Fully customizable</h2>
-          </div>
-          <p>
-            When working with server-side HTML, unlike HTMX and similar modules,
-            you can almost completely customize requests to the server
-          </p>
-        </div>
-        <div class="card">
-          <div class="card_name">
-            <h2 class="gradient_text_bottom"><b>&lt/&gt</b> Syntax</h2>
-          </div>
-          <p>
-            The language is syntactically object-based and integrated with a
-            robust
-            <a
-              class="card_link"
-              target="_blank"
-              href="https://www.npmjs.com/package/json5"
-              rel="nooferer noopener"
-              >JSON5</a
-            >
-            parser used by millions of people
-          </p>
-        </div>
-        <div class="card">
-          <div class="card_name">
-            <img src="/images/time.png" alt="Time image" />
-            <h2 class="gradient_text_bottom">Supportability</h2>
-          </div>
-          <p>
-            The basis of the language is fetch and the new ECMAScript and Web
-            APIs features that come with it
-          </p>
-        </div>
-      </div>
+      <ComparisonTable />
     </div>
     <!-- Text Block section started -->
     <div class="text_block_wrapper wrapper">
@@ -828,9 +790,13 @@ src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhu
 import axios from "axios";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
+import ComparisonTable from "./ComparisonTable.vue";
 
 export default {
   name: "HomePage",
+  components: {
+    ComparisonTable
+  },
   methods: {
     copyText(text) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
