@@ -772,21 +772,12 @@ src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhu
                   target="_blank"
                   rel="nooferer noopener"
                   class="footer_item_link"
-                  href="https://spec.hmpl-lang.dev"
-                  >Spec</a
+                  href="https://github.com/hmpl-language/hmpl/tree/main/www/app"
+                  >Docs</a
                 >
               </li>
               <li class="footer_item">
                 <a class="footer_item_link" href="/introduction">Overview</a>
-              </li>
-              <li class="footer_item">
-                <a
-                  class="footer_item_link"
-                  rel="nooferer noopener"
-                  target="_blank"
-                  href="https://blog.hmpl-lang.dev"
-                  >Blog</a
-                >
               </li>
               <li class="footer_item">
                 <a class="footer_item_link" href="/examples">Examples</a>
