@@ -248,7 +248,7 @@
         <a
             href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js"
             target="_blank"
-            class="producthunt"
+            class="producthunt fade-in-effect"
             ><img
               src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=dark&t=1748847658573"
               alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt"
@@ -700,7 +700,7 @@
           <a
 href="https://devhunt.org/tool/hmpljs"
 target="_blank"
-class="badge fade-in-effect"
+class="badge"
 >
 <img
 class="badge-img"
@@ -1055,7 +1055,7 @@ a {
 
 .badge {
   display: block;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 .star_us:hover {
@@ -2038,7 +2038,7 @@ footer {
 }
 
 .producthunt {
-  margin-top: 20px;
+  margin-top: 40px;
   display: block;
 }
 
