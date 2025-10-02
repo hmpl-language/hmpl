@@ -46,7 +46,7 @@ document.querySelector("#app").appendChild(
   hmpl.compile(
     `<div>
         <button>Click!</button>
-        {% raw %}<div>Clicks: {{ src: "/api/clicks", after: "click:button" }}</div>{% endraw %}
+        {% raw %}<div>Clicks: {{#request src="/api/clicks" after="click:button"}}{{/request}}</div>{% endraw %}
     </div>`
   )().response
 );
