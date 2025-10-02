@@ -773,12 +773,10 @@ src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhu
                   rel="nooferer noopener"
                   class="footer_item_link"
                   href="https://spec.hmpl-lang.dev"
-                  >Spec</a
+                  >Docs</a
                 >
               </li>
-              <li class="footer_item">
-                <a class="footer_item_link" href="/introduction">Overview</a>
-              </li>
+              
               <li class="footer_item">
                 <a
                   class="footer_item_link"
