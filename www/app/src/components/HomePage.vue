@@ -814,6 +814,15 @@ src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhu
       </div>
     </div>
   </footer>
+  <div class="note">
+    This project participates in Hacktoberfest 2025. You can find the issue list     <a
+      class="note_link"
+      href="https://github.com/hmpl-language/hmpl/issues"
+      target="_blank"
+      rel="noopener noreferrer"
+      >here</a
+    >.
+  </div>
 </template>
 <script>
 import axios from "axios";
