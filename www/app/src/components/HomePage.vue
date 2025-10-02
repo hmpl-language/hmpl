@@ -934,14 +934,37 @@ export default {
     );
     observer.observe(chart);
 
-    const url = "https://api.github.com/repos/hmpl-language/hmpl/contributors";
     const contributorsGrid = document.querySelector(".contributors-grid");
 
-    axios
-      .get(url)
-      .then((response) => {
-        const contributors = response.data;
+    // Function to fetch all contributors with pagination
+    const fetchAllContributors = async () => {
+      const allContributors = [];
+      let page = 1;
+      let hasMore = true;
 
+      while (hasMore) {
+        try {
+          const url = `https://api.github.com/repos/hmpl-language/hmpl/contributors?page=${page}&per_page=100`;
+          const response = await axios.get(url);
+          
+          if (response.data.length === 0) {
+            hasMore = false;
+          } else {
+            allContributors.push(...response.data);
+            page++;
+          }
+        } catch (error) {
+          console.error(`Error fetching contributors page ${page}:`, error);
+          hasMore = false;
+        }
+      }
+
+      return allContributors;
+    };
+
+    // Fetch and display all contributors
+    fetchAllContributors()
+      .then((contributors) => {
         contributors.forEach((contributor) => {
           const contributorDiv = document.createElement("div");
           contributorDiv.className = "contributor";
@@ -981,7 +1004,7 @@ export default {
         contributorsGrid.appendChild(additionalContributor);
       })
       .catch((error) => {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching contributors:", error);
       });
 
     const buttons = document.querySelectorAll(".fade-in-effect");
