@@ -62,7 +62,7 @@ type HMPLRequestInitFunction = (
  * An object containing information about a request and optionally related DOM elements or metadata.
  */
 interface HMPLRequestsObject extends HMPLRequestInfo {
-  arrId?: number; // Needed to replace the request object with a comment
+  arrId?: number; // Needed to replace the block helper with a comment
   el?: Comment; // Optional comment node related to the request
   nodeId?: number; // Optional ID of the node associated with this request
 }
