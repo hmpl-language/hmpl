@@ -62,7 +62,7 @@ layout: base
       {%- assign words = content | number_of_words -%}
       {%- assign reading_time = words | divided_by: 200 -%}
       {%- if reading_time == 0 -%}{%- assign reading_time = 1 -%}{%- endif -%}
-      • <span itemprop="timeRequired" content="PT{{ reading_time }}M">{{ reading_time }} min read</span>
+        • <span itemprop="timeRequired" content="PT{{ reading_time }}M">{{ reading_time }} min read</span>
     </p>
     
     <!-- Article tags/categories -->
