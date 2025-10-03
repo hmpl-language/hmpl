@@ -176,7 +176,7 @@ const templateFn = hmpl.compile(`{${request}}`);
 **mail.hmpl**:
 
 ```html
-<div>{% raw %}{{ src: "/api/test" }}{% endraw %}</div>
+<div>{% raw %}{{#request src="/api/test"}}{{/request}}{% endraw %}</div>
 ```
 
 Therefore, I think that integration with JSON5 is the best way to make sites even faster and smaller in size. Now, it's generally super convenient, because you can just copy an object from JavaScript and paste it into an HTML file.

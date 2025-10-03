@@ -251,7 +251,7 @@ We use method 1, since index.html is the default on our sites.
     <script src="https://unpkg.com/hmpl-js/dist/hmpl.min.js"></script>
     <script>
       const templateFn = hmpl.compile(
-        `<div id="wrapper">{% raw %}{{ src: "https://.../api/getButton" }}{% endraw %}</div>`
+        `<div id="wrapper">{% raw %}{{#request src="https://.../api/getButton"}}{{/request}}{% endraw %}</div>`
       );
       const btnWrapper = templateFn().response;
       document.body.append(btnWrapper);
