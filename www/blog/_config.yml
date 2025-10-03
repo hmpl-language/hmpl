@@ -42,6 +42,11 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
+  - jekyll-paginate
+
+# Pagination Configuration
+paginate: 5
+paginate_path: "/page:num/"
 
 # Feed Configuration
 feed:
