@@ -772,7 +772,7 @@ src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhu
                   target="_blank"
                   rel="nooferer noopener"
                   class="footer_item_link"
-                  href="https://github.com/hmpl-language/hmpl/tree/main/www/app"
+                  href="https://hmpl-lang.dev/introduction"
                   >Docs</a
                 >
               </li>
