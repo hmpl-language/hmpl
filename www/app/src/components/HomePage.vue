@@ -823,6 +823,15 @@ src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhu
       >here</a
     >.
   </div>
+  <!-- Scroll to top button -->
+  <button
+    class="scroll-to-top"
+    v-show="showScroll"
+    @click="scrollToTop"
+    aria-label="Scroll to top"
+  >
+    <i class="fas fa-arrow-up" aria-hidden="true"></i>
+  </button>
 </template>
 <script>
 import axios from "axios";
@@ -831,6 +840,11 @@ import "toastr/build/toastr.min.css";
 
 export default {
   name: "HomePage",
+  data() {
+    return {
+      showScroll: false
+    };
+  },
   methods: {
     copyText(text) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -873,6 +887,14 @@ export default {
         console.error("Fallback copying error", err);
       } finally {
         document.body.removeChild(textArea);
+      }
+    }
+    ,
+    scrollToTop() {
+      try {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch (e) {
+        window.scrollTo(0, 0);
       }
     }
   },
@@ -1003,6 +1025,20 @@ export default {
     buttons.forEach((button) => {
       observer1.observe(button);
     });
+
+    // Scroll-to-top visibility handler
+    this._handleScroll = () => {
+      this.showScroll = window.pageYOffset > 300;
+    };
+    this._handleScroll();
+    window.addEventListener("scroll", this._handleScroll);
+  }
+  ,
+  beforeDestroy() {
+    window.removeEventListener("scroll", this._handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener("scroll", this._handleScroll);
   }
 };
 </script>
@@ -2210,6 +2246,41 @@ footer {
   }
   .banner_info_h1 {
     font-size: 50px;
+  }
+}
+
+/* Scroll to top button styles */
+.scroll-to-top {
+  position: fixed;
+  right: 20px;
+  bottom: 35px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #0183ff; /* project blue */
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(1, 131, 255, 0.22);
+  cursor: pointer;
+  z-index: 1200;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+.scroll-to-top:hover {
+  transform: translateY(-4px);
+}
+.scroll-to-top i {
+  font-size: 18px;
+}
+
+@media (max-width: 600px) {
+  .scroll-to-top {
+    right: 14px;
+    bottom: 20px;
+    width: 44px;
+    height: 44px;
   }
 }
 </style>
