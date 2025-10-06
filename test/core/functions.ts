@@ -18,6 +18,7 @@ const e = (text: string, block: () => unknown, message: string) => {
 };
 
 const eaeq = (
+  text: string,
   template: string,
   message: string,
   get: (...args: any[]) => void,
@@ -25,7 +26,7 @@ const eaeq = (
   scopeOptions: ScopeOptions = {},
   compileOptions: any = {}
 ) => {
-  it("", async () => {
+  it(text, async () => {
     const scope = createScope({ ...scopeOptions });
     const createErrorStub = sinon.stub(MainModule, "createError");
     const compile = MainModule.compile;
@@ -50,6 +51,7 @@ const eaeq = (
 };
 
 const waeq = (
+  text: string,
   template: string,
   warningMessage: string,
   get: (...args: any[]) => void,
@@ -57,7 +59,7 @@ const waeq = (
   scopeOptions: ScopeOptions = {},
   compileOptions: any = {}
 ) => {
-  it("", async () => {
+  it(text, async () => {
     const scope = createScope({ ...scopeOptions });
     const createWarningStub = sinon.stub(MainModule, "createWarning");
     const compile = MainModule.compile;
@@ -88,6 +90,7 @@ const eq = (text: string, block: unknown, equality: any) => {
 };
 
 const aeq = (
+  text: string,
   template: string,
   get: (...args: any[]) => void,
   options: any = {},
@@ -95,7 +98,7 @@ const aeq = (
   compileOptions: any = {},
   isDeepEqual = false
 ) => {
-  it("", async () => {
+  it(text, async () => {
     const scope = createScope({ ...scopeOptions });
     const req = await new Promise((res) => {
       const currentOptions = checkFunction(options)
@@ -147,6 +150,7 @@ const defaultGetEl: (el: Element | null | undefined) => Element | undefined = (
 
 // async equal event
 const aeqe = (
+  text: string,
   template: string,
   get: (...args: any[]) => void,
   compileOptions: any = {},
@@ -161,7 +165,7 @@ const aeqe = (
     cancelable: true
   }
 ) => {
-  it("", async () => {
+  it(text, async () => {
     const scope = createScope({ ...scopeOptions });
     const req = await new Promise((res) => {
       const currentOptions = checkFunction(options)
