@@ -37,6 +37,38 @@ Unlike other similar modules, the template language provides more complete custo
 
 Also, the template language format itself allows you to work with `.hmpl` extension files if you use [Vite](/vite-plugin) or [WebPack](/webpack).
 
+## Official Tools 
+HMPL provides a set of tools to streamline development and integration with popular editors and build systems. These tools are designed to simplify working with .hmpl files, enabling developers to write, compile, and manage HMPL projects efficiently and consistently.
+<br></br>
+The official HMPL tools include support for VSCode, Vite, and Webpack, offering features such as syntax highlighting, autocompletion, hot module replacement, and seamless compilation. Together, they ensure a smooth development experience and help maintain high-quality code across projects.
+
+<div style="display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+
+  <div style="flex:1; display:flex; align-items:flex-start; gap:1rem; min-width:100px;margin-top:16px;">
+    <img src="/images/vscode.png" alt="VSCode Logo" width="100" />
+    <div style="display:flex; flex-direction:column;">
+      <a href="https://marketplace.visualstudio.com/items?itemName=hmpljs.hmpl" style="color:#0066cc; text-decoration:underline; font-weight:600;">VSCode Extension</a>
+      <span style="color:#000; font-style:italic; font-size:0.9rem;">Syntax highlighting and tools for HMPL.</span>
+    </div>
+  </div>
+
+  <div style="flex:1; display:flex; align-items:flex-start; gap:1rem; min-width:100px;">
+    <img src="/images/vite_plugin.png" alt="Vite Logo" width="100" />
+    <div style="display:flex; flex-direction:column;">
+      <a href="https://www.npmjs.com/package/vite-plugin-hmpl" style="color:#0066cc; text-decoration:underline; font-weight:600;">Vite Plugin</a>
+      <span style="color:#000; font-style:italic; font-size:0.9rem;">Seamless .hmpl integration with Vite.</span>
+    </div>
+  </div>
+
+  <div style="flex:1; display:flex; align-items:flex-start; gap:1rem; min-width:100px;">
+    <img src="/images/webpack.png" alt="Webpack Logo" width="100" />
+    <div style="display:flex; flex-direction:column;">
+      <a href="https://www.npmjs.com/package/hmpl-loader" style="color:#0066cc; text-decoration:underline; font-weight:600;">Webpack Loader</a>
+      <span style="color:#000; font-style:italic; font-size:0.9rem;">Compile .hmpl files inside Webpack.</span>
+    </div>
+  </div>
+</div>  
+
 ## Most Frequently Asked Questions
 
 You may have questions about the template language, here is a short list of those that were asked throughout the development cycle:
@@ -149,15 +181,3 @@ const obj = templateFn(initFn);
 const wrapper = document.getElementById("wrapper");
 wrapper.appendChild(obj.response);
 ```
-
-import Preview from "../../components/component-preview.astro";
-
-import FormComponent from "../../components/FormComponent.vue";
-
-<Preview>
-
-<div slot="preview">
-  <FormComponent client:only="vue" />
-</div>
-
-</Preview>
