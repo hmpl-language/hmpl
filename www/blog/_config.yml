@@ -3,8 +3,8 @@ author:
   name: "HMPL Team"
   email: "contact@hmpl-lang.dev"
 description: >
-  HMPL Blog - Learn about server-oriented customizable templating for JavaScript. 
-  Tutorials, guides, and best practices for building modern web applications with HMPL.
+  HMPL Blog - HMPL.js is a lightweight server-oriented template language for JavaScript. 
+       Fetch HTML, render it safely, and keep apps dynamic, modern, and small.
 tagline: "Server-oriented customizable templating for JavaScript"
 url: "https://blog.hmpl-lang.dev"
 lang: en_US
