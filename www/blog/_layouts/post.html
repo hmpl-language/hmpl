@@ -122,17 +122,17 @@ layout: base
 <nav class="post-navigation">
   {% if page.previous %}
   <div class="post-navigation__prev">
-    <a href="{{ page.previous.url | relative_url }}" class="button">
-      <span class="previous-blog-button">◁ Previous Blog</span>
-      <span class="previous-blog-title">{{ page.previous.title }}</span>
+    <a href="{{ page.previous.url | relative_url }}" class="nav-link">
+      <div class="nav-label">◁ Previous</div>
     </a>
+    <div class="nav-title">“{{ page.previous.title }}”</div>
   </div>
   {% endif %} {% if page.next %}
   <div class="post-navigation__next">
-    <a href="{{ page.next.url | relative_url }}" class="button">
-      <span class="next-blog-button">Next Blog ▷</span>
-      <span class="next-blog-title">{{ page.next.title }}</span>
+    <a href="{{ page.next.url | relative_url }}" class="nav-link">
+      <div class="nav-label">Next ▷</div>
     </a>
+    <div class="nav-title">“{{ page.next.title }}”</div>
   </div>
   {% endif %}
 </nav>
