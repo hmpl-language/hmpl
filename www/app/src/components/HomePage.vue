@@ -230,8 +230,9 @@
           Server-oriented customizable templating for JavaScript
         </p>
         <p class="banner_info_more">
-          HMPL.js is a lightweight server-oriented template language for JavaScript.
-          Fetch HTML, render it safely, and keep apps dynamic, modern, and small.
+          HMPL.js is a lightweight server-oriented template language for
+          JavaScript. Fetch HTML, render it safely, and keep apps dynamic,
+          modern, and small.
         </p>
         <div class="buttons">
           <a href="/getting-started" class="fade-in-effect hover_effect"
@@ -246,16 +247,16 @@
           >
         </div>
         <a
-            href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js"
-            target="_blank"
-            class="producthunt"
-            ><img
-              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=dark&t=1748847658573"
-              alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt"
-              style="width: 250px; height: 54px"
-              width="250"
-              height="54"
-          /></a>
+          href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js"
+          target="_blank"
+          class="producthunt"
+          ><img
+            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=dark&t=1748847658573"
+            alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt"
+            style="width: 250px; height: 54px"
+            width="250"
+            height="54"
+        /></a>
       </div>
     </div>
   </div>
@@ -698,15 +699,15 @@
             </a>
           </div>
           <a
-href="https://devhunt.org/tool/hmpljs"
-target="_blank"
-class="badge fade-in-effect"
->
-<img
-class="badge-img"
-src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhunt.svg"
-/>
-</a>
+            href="https://devhunt.org/tool/hmpljs"
+            target="_blank"
+            class="badge fade-in-effect"
+          >
+            <img
+              class="badge-img"
+              src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhunt.svg"
+            />
+          </a>
         </div>
         <div class="footer_sections">
           <div class="footer_section">
@@ -806,7 +807,8 @@ src="https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/devhu
     </div>
   </footer>
   <div class="note">
-    This project participates in Hacktoberfest 2025. You can find the issue list     <a
+    This project participates in Hacktoberfest 2025. You can find the issue list
+    <a
       class="note_link"
       href="https://github.com/hmpl-language/hmpl/issues"
       target="_blank"
@@ -1258,9 +1260,55 @@ a {
   display: flex;
   justify-content: center;
 }
+
 .banner_image_logo {
   width: 220px;
   height: 180px;
+  transition: transform 0.2s ease-in-out;
+  position: relative;
+  z-index: 1;
+}
+
+.banner_image_logo:hover {
+  z-index: 20;
+  animation: ant-alive 2s ease-in-out infinite; /* loops, feels alive */
+  filter: drop-shadow(0 0 8px rgba(0, 150, 255, 0.7)); /* glowing aura */
+}
+
+@keyframes ant-alive {
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg) skew(0deg, 0deg);
+  }
+  10% {
+    transform: translateY(-6px) scale(1.05) rotate(0deg) skew(2deg, 1deg); /* bounce + antenna wiggle */
+  }
+  20% {
+    transform: translateY(-3px) scale(1.1) rotate(-3deg) skew(-2deg, -1deg);
+  }
+  30% {
+    transform: translateY(0) scale(1.05) rotate(3deg);
+  }
+  40% {
+    transform: translateY(0) scale(1) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.08) rotate(2deg); /* breathing pulse */
+  }
+  60% {
+    transform: translateY(0) scale(1.02) rotate(-1deg);
+  }
+  70% {
+    transform: translateY(-4px) scale(1.1) rotate(3deg) skew(1deg, -1deg);
+  }
+  80% {
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+  90% {
+    transform: translateY(-3px) scale(1.05) rotate(-2deg);
+  }
+  100% {
+    transform: translateY(0) scale(1) rotate(0deg) skew(0deg, 0deg);
+  }
 }
 
 @media (max-width: 600px) {
@@ -2073,6 +2121,11 @@ footer {
   width: 80px;
   height: 70px;
   margin-bottom: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.footer_first_section .footer_ant_logo:hover {
+  transform: scale(1.1); /* Scale up by 10% on hover */
 }
 
 .footer_logo_header_title {
