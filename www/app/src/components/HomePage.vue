@@ -262,6 +262,7 @@
   </div>
   <section>
     <!-- Wave section started -->
+     <!-- Wave section is not changed in dark mode -->
     <div class="wave_info">
       <div class="wave-background"></div>
       <img
@@ -1079,7 +1080,7 @@ h2 {
 
 a {
   text-decoration: none;
-  color: #fff;
+  color: var(--homepage-text-white);
 }
 
 .badge {
@@ -1088,7 +1089,7 @@ a {
 }
 
 .star_us:hover {
-  background-color: #fcfcfc;
+  background-color: var(--homepage-button-hover-bg);
 }
 
 .star_us_star {
@@ -1121,7 +1122,7 @@ a {
   width: 100%;
   height: 100%;
   gap: 6px;
-  color: #09090b;
+  color: var(--homepage-text-dark);
   font-weight: 500;
   align-items: center;
   justify-content: center;
@@ -1238,13 +1239,9 @@ a {
 /* Header */
 
 .banner {
-  background: rgb(1, 131, 255);
+  background: var(--homepage-bg-fallback);
+  background: var(--homepage-bg-gradient-top);
   z-index: 9;
-  background: linear-gradient(
-    180deg,
-    rgba(1, 131, 255, 0.5214460784313726) -20%,
-    rgba(255, 255, 255, 1) 20%
-  );
   position: relative;
   padding-top: 100px;
 }
@@ -1347,7 +1344,7 @@ a {
 .banner_info_more {
   max-width: 800px;
   font-size: 25px;
-  color: #4d4d4d;
+  color: var(--homepage-text-secondary);
   font-weight: 300;
 }
 
@@ -1373,8 +1370,8 @@ a {
 
 .buttons a {
   width: 220px;
-  background-color: #d6d6d6;
-  color: #fff;
+  background-color: var(--homepage-button-bg);
+  color: var(--homepage-text-white);
   height: 63px;
   border: none;
   display: flex;
@@ -1404,21 +1401,14 @@ a {
 /* Section */
 
 section {
-  background: rgb(1, 131, 255);
-  background: linear-gradient(
-    0deg,
-    rgba(1, 131, 255, 0.5214460784313726) -20%,
-    rgba(255, 255, 255, 1) 16%
-  );
+  background: var(--homepage-bg-fallback);
+  background: var(--homepage-bg-gradient-bottom);
 }
 
 @media (max-width: 600px) {
   section {
-    background: linear-gradient(
-      0deg,
-      rgba(1, 131, 255, 0.5214460784313726) -20%,
-      rgba(255, 255, 255, 1) 14%
-    );
+    background: var(--homepage-bg-fallback);
+    background: var(--homepage-bg-gradient-bottom-mobile);
   }
 }
 
@@ -1505,7 +1495,7 @@ section {
 .card {
   width: 300px;
   height: 150px;
-  background: linear-gradient(180deg, #ffffff 0%, #b2b9f6 100%);
+  background: var(--homepage-card-bg);
   border-radius: 50px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
@@ -1545,7 +1535,7 @@ section {
   margin-top: 10px;
   font-size: 15px;
   font-weight: 400;
-  color: #4e4e4e;
+  color: var(--homepage-card-text);
 }
 
 @media (max-width: 600px) {
@@ -1568,7 +1558,7 @@ section {
 }
 
 .card a {
-  color: #0183ff;
+  color: var(--homepage-link-blue);
   text-decoration: underline;
 }
 
@@ -1618,7 +1608,7 @@ section {
 .left_article p,
 .right_article p {
   margin-top: 20px;
-  color: #646464;
+  color: var(--homepage-text-muted);
 }
 
 @media (max-width: 600px) {
@@ -1636,7 +1626,8 @@ section {
 /* Progess Bar */
 
 .metrics-wrapper {
-  background: linear-gradient(0deg, #7e71ba 0%, #0183ff 100%);
+  background: var(--homepage-metrics-bg-fallback);
+  background: var(--homepage-metrics-bg);
   padding: 1.3rem 1.5rem;
   color: white;
   margin-top: 100px;
@@ -1804,7 +1795,7 @@ section {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--homepage-metrics-text);
 }
 
 .metrics-link {
@@ -1823,7 +1814,7 @@ section {
 
 .metrics-p {
   display: flex;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--homepage-metrics-text);
 }
 
 /* Text block 1 */
@@ -1873,7 +1864,7 @@ section {
 
 .text_block_1_subtitle {
   font-size: 1.5rem;
-  color: #9ca3af;
+  color: var(--homepage-text-light);
   font-weight: 600;
 }
 
@@ -1903,7 +1894,7 @@ section {
 
 .text_block_1_description {
   font-size: 1.25rem;
-  color: #aeaeae;
+  color: var(--homepage-text-light);
   max-width: 600px;
   margin-bottom: 4rem;
   line-height: 1.7;
@@ -1977,7 +1968,7 @@ section {
 }
 
 .item-description {
-  color: #9ca3af;
+  color: var(--homepage-text-light);
   font-size: 0.875rem;
   line-height: 1.7;
 }
@@ -1989,7 +1980,7 @@ section {
 }
 
 .item-link {
-  color: #9ca3af;
+  color: var(--homepage-text-light);
   text-decoration: underline;
 }
 
@@ -2016,13 +2007,13 @@ section {
 
 .sample_content h1 {
   font-size: 3.5rem;
-  color: #4e4e4e;
+  color: var(--homepage-card-text);
   font-weight: 600;
 }
 
 .sample_content .sample_highlight {
   display: block;
-  color: #0066ff;
+  color: var(--homepage-sample-highlight);
   font-size: 3.2rem;
 }
 
@@ -2074,7 +2065,7 @@ section {
 }
 
 .sample_button_secondary {
-  background-color: #a5b4fc;
+  background-color: var(--homepage-sample-secondary-bg);
   color: white;
 }
 
@@ -2090,7 +2081,8 @@ section {
 /* Footer */
 
 footer {
-  background: linear-gradient(0deg, #7e71ba 0%, #0183ff 100%);
+  background: var(--homepage-footer-bg-fallback);
+  background: var(--homepage-footer-bg);
   color: white;
   padding: 50px 0 0 0;
 }
@@ -2217,11 +2209,11 @@ footer {
   flex: 1 1 100%;
   margin: 70px 0 25px 0;
   font-size: 0.9em;
-  color: #c8c8c8;
+  color: var(--homepage-footer-text);
   text-align: center;
 }
 .footer_copyright a {
-  color: #c8c8c8;
+  color: var(--homepage-footer-text);
   text-decoration: underline;
 }
 
@@ -2368,7 +2360,7 @@ footer {
 }
 
 .contributors-title {
-  color: #0066ff;
+  color: var(--homepage-sample-highlight);
   font-size: 2.5rem;
   margin-bottom: 80px;
 }
@@ -2421,7 +2413,7 @@ footer {
 }
 
 .contributor-avatar {
-  background-color: #0066ff;
+  background-color: var(--homepage-contributor-bg);
   box-shadow: 0 0 0 8px rgba(0, 102, 255, 0.1);
   cursor: pointer;
   margin-bottom: 20px;
@@ -2444,12 +2436,12 @@ footer {
 }
 
 .contributon-block:hover .contributor-name {
-  color: #0066ff;
+  color: var(--homepage-sample-highlight);
 }
 
 .contributor-name {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--homepage-contributor-text);
   text-align: center;
 }
 
