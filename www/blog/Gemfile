@@ -4,6 +4,7 @@ gem "minima", "~> 2.5.2"
 gem "csv"
 gem "logger"
 gem "base64"
+gem "erb"
 group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.12"
   gem "jekyll-seo-tag"
