@@ -380,6 +380,7 @@ describe("template function", () => {
     '<div><button id="increment">Click</button><!--hmpl0--></div>'
   );
   eaeq(
+    "throws an error if content type is not allowed",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${RESPONSE_ERROR}: Expected ${DEFAULT_ALLOWED_CONTENT_TYPES.map(
       (type) => `"${type}"`
@@ -394,6 +395,7 @@ describe("template function", () => {
     }
   );
   eaeq(
+    "throws an error if content type is empty",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${RESPONSE_ERROR}: Expected ${DEFAULT_ALLOWED_CONTENT_TYPES.map(
       (type) => `"${type}"`
@@ -408,6 +410,7 @@ describe("template function", () => {
     }
   );
   eaeq(
+    "throws an error if a header value is not a string",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${REQUEST_INIT_ERROR}: Expected type string, but received type object`,
     () => ({}) as any,
@@ -419,6 +422,7 @@ describe("template function", () => {
     {}
   );
   eaeq(
+    "throws an error if initialization options are not an object",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${REQUEST_INIT_ERROR}: Expected an object with initialization options`,
     () => ({}) as any,
@@ -426,6 +430,7 @@ describe("template function", () => {
     {}
   );
   eaeq(
+    "throws an error if initialization options are not an object",
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test"}}{{/r}}{{#r src="${BASE_URL}/api/test"}}{{/r}}`
     ),
@@ -435,6 +440,7 @@ describe("template function", () => {
     {}
   );
   eaeq(
+    "throws an error if 'headers' property is not a value object",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${REQUEST_INIT_ERROR}: The "headers" property must contain a value object`,
     () => ({}) as any,
@@ -444,6 +450,7 @@ describe("template function", () => {
     {}
   );
   eaeq(
+    "throws an error if referenced request ID is not found",
     createTestObj2(`${eaeq1}`),
     `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`,
     () => ({}) as any,
@@ -456,6 +463,7 @@ describe("template function", () => {
     {}
   );
   eaeq(
+    "throws an error if referenced request ID is not found",
     createTestObj2(`${eaeq1}`),
     `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`,
     () => ({}) as any,
@@ -468,6 +476,7 @@ describe("template function", () => {
     {}
   );
   eaeq(
+    "throws an error if initialization data is not an array and request ID is not found",
     createTestObj2(`${eaeq1}`),
     `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`,
     () => ({}) as any,
@@ -475,6 +484,7 @@ describe("template function", () => {
     {}
   );
   aeq(
+    "throws an error if the referenced request ID is empty or not found",
     createTestObj2(`{{#r src="${BASE_URL}/api/test" initId=""}}{{/r}}`),
     () => ({}),
     (res: any) => [
@@ -488,6 +498,7 @@ describe("template function", () => {
     true
   );
   aeq(
+    "renders template content inside a template element",
     `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
     (res, prop, value) => {
       switch (prop) {
@@ -503,6 +514,7 @@ describe("template function", () => {
     {}
   );
   aeq(
+    "renders template content inside a template element and clear interval",
     `{{#r src="${BASE_URL}/api/test" interval=100}}{{/r}}`,
     (res, prop, value, context) => {
       context.request.clearInterval();
@@ -519,6 +531,7 @@ describe("template function", () => {
     {}
   );
   aeq(
+    "renders error template when request is rejected",
     createTestObj2(`${aeq5}`),
     (res, prop, value) => {
       switch (prop) {
@@ -537,6 +550,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "returns the status as 'rejected' when request is rejected",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
@@ -553,6 +567,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "returns status 'rejected' when request is rejected",
     createTestObj2(`${aeq7}`),
     (res, prop, value) => {
       switch (prop) {
@@ -569,6 +584,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "returns status 100 when indicators array is empty",
     createTestObj2(`{{#r src="${BASE_URL}/api/test" indicators=[]}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
@@ -585,6 +601,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "renders 'Rejected' indicator when rejection is triggered",
     createTestObj2(`${aeq6}`),
     (res, prop, value) => {
       switch (prop) {
@@ -603,6 +620,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "renders the '100' indicator when response status is 100",
     createTestObj2(`${aeq7}`),
     (res, prop, value) => {
       switch (prop) {
@@ -621,7 +639,8 @@ describe("template function", () => {
     }
   );
   waeq(
-    `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
+    "throws REQUEST_INIT_ERROR when 'signal' overrides AbortSignal from 'timeout'",
+  `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
     `${REQUEST_INIT_ERROR}: The "signal" property overwrote the AbortSignal from "timeout"`,
     () => ({}) as any,
     {
@@ -631,6 +650,7 @@ describe("template function", () => {
     {}
   );
   waeq(
+    "throws REQUEST_INIT_ERROR when 'keepalive' property is used but not supported",
     `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
     `${REQUEST_INIT_ERROR}: The "keepalive" property is not yet supported`,
     () => ({}) as any,
@@ -640,6 +660,7 @@ describe("template function", () => {
     {}
   );
   aeq(
+    "renders correctly when 'script' tag is disallowed and stripped",
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" disallowedTags=["script"]}}{{/r}}`
     ),
@@ -660,6 +681,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "renders correctly when 'script' tag is stripped despite 'style' being disallowed in config",
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" disallowedTags=["script"]}}{{/r}}`
     ),
@@ -684,6 +706,7 @@ describe("template function", () => {
   );
 
   aeq(
+    "renders correctly and clears interval when 'script' tag is disallowed",
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" disallowedTags=["script"] interval=100}}{{/r}}`
     ),
@@ -709,6 +732,7 @@ describe("template function", () => {
   );
 
   aeq(
+    "renders correctly when 'sanitize' is enabled and 'script' tag is stripped",
     createTestObj2(`{{#r src="${BASE_URL}/api/test" sanitize=true}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
@@ -728,6 +752,7 @@ describe("template function", () => {
     {}
   );
   aeq(
+    "renders correctly  when template sanitization is enabled but runtime config disables it",
     createTestObj2(`{{#r src="${BASE_URL}/api/test" sanitize=true}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
@@ -749,6 +774,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "renders correctly when memoization is enabled",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
@@ -768,6 +794,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "renders correctly with default configuration",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
@@ -782,6 +809,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "renders '<p>Loading...</p>' when 'pending' indicator is triggered",
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" indicators=[{trigger:"pending", content:"<p>Loading...</p>"}]}}{{/r}}`
     ),
@@ -798,6 +826,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "renders correctly with Buffer template and single allowed content type",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
@@ -823,6 +852,7 @@ describe("template function", () => {
   );
 
   aeq(
+    "renders correctly with Buffer template when content type is included in allowed list",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
@@ -848,6 +878,7 @@ describe("template function", () => {
   );
 
   aeq(
+    "renders correctly when content type is 'application/octet-stream' and no types are allowed",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
@@ -873,6 +904,7 @@ describe("template function", () => {
   );
 
   aeq(
+    "renders correctly when multiple identical templates are composed",
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test"}}{{/r}}{{#r src="${BASE_URL}/api/test"}}{{/r}}`
     ),
@@ -889,6 +921,7 @@ describe("template function", () => {
   );
 
   aeq(
+    "renders correctly when content type is 'application/octet-stream' and all types are allowed",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     (res, prop, value) => {
       switch (prop) {
@@ -914,6 +947,7 @@ describe("template function", () => {
   );
 
   aeq(
+    "renders correctly when template config matches but runtime config mismatches",
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" allowedContentTypes=["application/octet-stream"]}}{{/r}}`
     ),
@@ -941,6 +975,7 @@ describe("template function", () => {
   );
 
   aeq(
+    "renders correctly with Buffer template under timeout constraint",
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" allowedContentTypes=["application/octet-stream"]}}{{/r}}`
     ),
@@ -965,7 +1000,9 @@ describe("template function", () => {
       }
     }
   );
-  aeq(createTestObj2(`${aeq0}`), (res, prop, value) => {
+  aeq(
+    "renders '<p>Loading...</p>' when 'pending' indicator is triggered",
+    createTestObj2(`${aeq0}`), (res, prop, value) => {
     switch (prop) {
       case "response":
         if (value?.outerHTML === `<div><p>Loading...</p></div>`) {
@@ -976,7 +1013,9 @@ describe("template function", () => {
         break;
     }
   });
-  aeq(`${aeq0}`, (res, prop, value) => {
+  aeq(
+    "renders correctly when output is wrapped in a <template> tag",
+    `${aeq0}`, (res, prop, value) => {
     switch (prop) {
       case "response":
         if (value?.outerHTML === `<template><div>123</div></template>`) {
@@ -986,6 +1025,7 @@ describe("template function", () => {
     }
   });
   aeq(
+    "renders a 405 error wrapped in a <template> tag",
     `${aeq4}`,
     (res, prop, value) => {
       switch (prop) {
@@ -1002,6 +1042,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "renders the error template when response code is 405",
     `${aeq5}`,
     (res, prop, value) => {
       switch (prop) {
@@ -1018,6 +1059,7 @@ describe("template function", () => {
     }
   );
   aeq(
+    "renders '<p>Loading...</p>' with advanced fetch options",
     createTestObj2(`${aeq0}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1045,6 +1087,7 @@ describe("template function", () => {
     }
   );
   aeqe(
+    "renders '<div>123</div>' inside <pre> alongside button",
     `<pre><button id="click">click</button>${aeq1}</pre>`,
     (res, prop, value) => {
       switch (prop) {
@@ -1062,6 +1105,7 @@ describe("template function", () => {
     }
   );
   aeqe(
+    "renders '<div>123</div>' alongside button",
     createTestObj3(`${aeq1}`),
     () => ({}),
     {},
@@ -1085,6 +1129,7 @@ describe("template function", () => {
     }
   );
   aeqe(
+    "renders '<div>123</div>' using array response handler",
     createTestObj3(`${aeqe0}`),
     () => ({}),
     {},
@@ -1108,7 +1153,9 @@ describe("template function", () => {
       }
     ]
   );
-  aeqe(createTestObj3(`${aeq1}${aeq1}`), (res, prop, value) => {
+  aeqe(
+    "renders duplicated '<div>123</div>' blocks",
+    createTestObj3(`${aeq1}${aeq1}`), (res, prop, value) => {
     switch (prop) {
       case "response":
         if (
@@ -1122,6 +1169,7 @@ describe("template function", () => {
   });
   let memoItem: Element | undefined = undefined;
   aeqe(
+    "memoizes the inner '<div>123</div>' element",
     createTestObj3(`${aeq1}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1150,6 +1198,7 @@ describe("template function", () => {
   );
 
   aeqe(
+    "renders two duplicated '<div>123</div>' blocks",
     createTestObj3(`${aeq8}${aeq8}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1170,6 +1219,7 @@ describe("template function", () => {
   );
 
   aeqe(
+    "renders nested '<pre><pre>123</pre></pre>'",
     createTestObj3(`<pre>${aeq8}</pre>`),
     (res, prop, value) => {
       switch (prop) {
@@ -1193,6 +1243,7 @@ describe("template function", () => {
 
   let memoItem1: Element | undefined = undefined;
   aeqe(
+    "renders distinct nodes for repeated renders when memoization is disabled",
     createTestObj3(`${aeq1}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1220,6 +1271,7 @@ describe("template function", () => {
   );
   let memoItem2: Element | undefined = undefined;
   aeqe(
+    "memoizes the inner '<div>123</div>' element",
     createTestObj3(`${aeq2}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1244,6 +1296,7 @@ describe("template function", () => {
   );
   let count = 0;
   aeqe(
+    "renders '<div>123</div>' consistently across 3 renders",
     createTestObj3(`${aeq1}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1271,6 +1324,7 @@ describe("template function", () => {
     3
   );
   aeqe(
+    "does not memoize '<div>123</div>' across repeated renders",
     createTestObj3(`${aeq2}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1297,6 +1351,7 @@ describe("template function", () => {
   );
   // status templateObject check
   aeqe(
+    "renders '<!--hmpl0-->' placeholder after a 200 response",
     createTestObj3(`${aeq1}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1330,6 +1385,7 @@ describe("template function", () => {
     }
   );
   aeqe(
+    "fails to memoize the inner '<div>123</div>' element",
     createTestObj3(`${aeq2}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1356,6 +1412,7 @@ describe("template function", () => {
   );
 
   aeqe(
+    "fails to memoize with createTestObj4 and autoBody: true",
     createTestObj4(`${aeq3}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1387,6 +1444,7 @@ describe("template function", () => {
   );
 
   aeqe(
+    "renders undefined response when status code is 405",
     `${aeq0}`,
     (res, prop, value) => {
       switch (prop) {
@@ -1405,6 +1463,7 @@ describe("template function", () => {
   );
 
   aeqe(
+    "renders two status placeholders after a 405 response,
     createTestObj3(`${aeq0}${aeq0}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1429,6 +1488,7 @@ describe("template function", () => {
   );
 
   aeqe(
+    "renders updated content after a 200 response",
     createTestObj3(`${aeq1}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1458,6 +1518,7 @@ describe("template function", () => {
   let memoItem3: Element | undefined;
 
   aeqe(
+    "memoizes inner '<div>123</div>' element",
     createTestObj3(`${aeq2}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1489,6 +1550,7 @@ describe("template function", () => {
   );
 
   aeqe(
+    "renders status placeholder '<!--hmpl0-->' after a 405 response"
     createTestObj3(`${aeq2}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1515,6 +1577,7 @@ describe("template function", () => {
   );
 
   aeqe(
+    "renders undefined response when status code is 405",
     `${aeq0}`,
     (res, prop, value) => {
       switch (prop) {

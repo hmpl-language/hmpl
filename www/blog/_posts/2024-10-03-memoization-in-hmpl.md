@@ -77,7 +77,7 @@ Since HTML is a template language for displaying the user interface from the ser
 const newDiv = compile(
   `<div>
       <button>Get the square root of 256</button>
-      <div>{% raw %}{{ src: "/api/getTheSquareRootOf256", after: "click:button" }}{% endraw %}</div>
+      <div>{% raw %}{{#request src="/api/getTheSquareRootOf256" after="click:button"}}{{/request}}{% endraw %}</div>
   </div>`
 )().response;
 ```
@@ -92,7 +92,7 @@ Specifically to optimize this process, an additional field was introduced, which
 const newDiv = compile(
   `<div>
       <button>Get the square root of 256</button>
-      <div>{% raw %}{{ src: "/api/getTheSquareRootOf256", memo:true, after: "click:button" }}{% endraw %}</div>
+      <div>{% raw %}{{#request src="/api/getTheSquareRootOf256" memo=true after="click:button"}}{{/request}}{% endraw %}</div>
   </div>`
 )().response;
 ```

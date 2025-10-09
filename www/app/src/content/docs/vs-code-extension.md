@@ -8,7 +8,7 @@ head:
       content: hmpl vs code, hmpl extension, syntax highlighting, template language support, hmpl files, developer tooling
 ---
 
-[The HMPL extension](https://marketplace.visualstudio.com/items?itemName=hmpljs.hmpl) for Visual Studio Code provides seamless syntax highlighting and file handling for `.hmpl` files. Starting from version `0.0.3`, it introduces new features that enhance the editing experience for developers working with the HMPL template language.
+[The HMPL extension](https://marketplace.visualstudio.com/items?itemName=hmpljs.hmpl) for Visual Studio Code provides seamless syntax highlighting and file handling for `.hmpl` files. Starting from version `0.0.4`, it introduces new features that enhance the editing experience for developers working with the HMPL template language.
 
 ## Features
 
@@ -72,4 +72,4 @@ You can tweak how `.hmpl` files are handled by adding the following configuratio
 
 ## Version Compatibility
 
-To fully leverage the HMPL extension’s capabilities, ensure you are using version `0.0.3` or higher. You can check your current version or update the extension in the Extensions view in Visual Studio Code.
+To fully leverage the HMPL extension’s capabilities, ensure you are using version `0.0.4` or higher. You can check your current version or update the extension in the Extensions view in Visual Studio Code.

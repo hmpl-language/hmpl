@@ -272,7 +272,7 @@ const getIsNotAllowedContentType = (
  * @param allowedContentTypes - Allowed Content-Types for response processing.
  * @param disallowedTags - A list of HTML tags that should be removed from the response.
  * @param sanitize - A function or method used to sanitize the response content, ensuring it is safe to render.
- * @param reqObject - The request object.
+ * @param reqObject - The block helper.
  * @param indicators - Parsed indicators for the request.
  */
 const makeRequest = (
@@ -760,7 +760,7 @@ const getRequestInitFromFn = (
  * Renders the template by processing requests and applying options.
  * @param currentEl - The current element or comment node.
  * @param fn - The render function.
- * @param requests - Array of request objects.
+ * @param requests - Array of block helpers.
  * @param compileOptions - Options provided during compilation.
  * @param isMemoUndefined - Indicates if memoization is undefined.
  * @param isAutoBodyUndefined - Indicates if autoBody is undefined.
@@ -1272,7 +1272,7 @@ const renderTemplate = (
           const currentRequest = requests[currentIndex];
           if (Number.isNaN(currentIndex) || currentRequest === undefined) {
             createError(
-              `${PARSE_ERROR}: Request object with id "${currentIndex}" not found`
+              `${PARSE_ERROR}: Block helper with id "${currentIndex}" not found`
             );
           }
           currentRequest.el = currrentElement as Comment;
@@ -1701,7 +1701,7 @@ export const compile: HMPLCompile = (
 
   const templateArr = parseTemplate(template);
   if (requestsIndexes.length === 0)
-    createError(`${PARSE_ERROR}: Request object not found`);
+    createError(`${PARSE_ERROR}: Block helper not found`);
   const setRequest = (text: string) => {
     const parsedData = JSON5.parse(text);
     for (const key in parsedData) {

@@ -1,4 +1,8 @@
 # Changelog
+## 3.0.5 (2025-10-03)
+
+- Updating README.md
+- Updating package.json
 
 ## 3.0.4 (2025-07-23)
 
