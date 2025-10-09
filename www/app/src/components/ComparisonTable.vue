@@ -1,8 +1,8 @@
 <template>
   <div class="comparison-table-wrapper">
     <div class="comparison-header">
-      <h2 class="comparison-title gradient_text_bottom">Framework Comparison</h2>
-      <p class="comparison-subtitle">See how HMPL compares to other popular frameworks</p>
+      <h2 class="comparison-title gradient_text_bottom">What makes it different from others?</h2>
+      <p class="comparison-subtitle">See how HMPL.js compares to similar projects</p>
     </div>
     
     <div class="table-container">
@@ -12,19 +12,25 @@
             <th class="feature-column">Feature</th>
             <th class="framework-column hmpl-column">
               <div class="framework-header">
-                <div class="framework-logo">H</div>
+                <div class="framework-logo">
+                  <img src="/images/logo_new.svg" alt="HMPL" />
+                </div>
                 <span>HMPL.js</span>
               </div>
             </th>
             <th class="framework-column alpine-column">
               <div class="framework-header">
-                <div class="framework-logo">A</div>
+                <div class="framework-logo">
+                  <img src="https://avatars.githubusercontent.com/u/59030169?s=200&v=4" alt="Alpine.js" />
+                </div>
                 <span>Alpine.js</span>
               </div>
             </th>
             <th class="framework-column htmx-column">
               <div class="framework-header">
-                <div class="framework-logo">H</div>
+                <div class="framework-logo">
+                  <img src="https://raw.githubusercontent.com/bigskysoftware/htmx/master/www/static/img/htmx_logo.1.png" alt="HTMX" />
+                </div>
                 <span>HTMX</span>
               </div>
             </th>
@@ -58,12 +64,12 @@
     
     <div class="comparison-footer">
       <p class="comparison-note">
-        <i class="fas fa-info-circle"></i>
-        Bundle sizes are gzipped and minified. Data sourced from official documentation and bundle analyzers.
+        <i class="fas fa-question-circle"></i>
+        These comparisons are based on two articles. For more details, see<a href="https://blog.hmpl-lang.dev/2025/05/03/best-alpinejs-alternative/" class="metrics-link">about alpine</a>,<a href="https://blog.hmpl-lang.dev/2024/08/10/differences-between-hmpl-and-htmx/" class="metrics-link">about htmx</a>.
       </p>
       <p class="comparison-note">
         <i class="fas fa-chart-line"></i>
-        In real applications, HMPL reduces bundle size by 1.67x compared to vanilla JS and 1.14x compared to Alpine.js.
+        The project also has a comparison of the original sizes of applications.
         <a href="#comparisonChart" class="metrics-link">See detailed metrics below</a>
       </p>
     </div>
@@ -79,80 +85,50 @@ export default {
         {
           name: 'Bundle Size (gzipped)',
           hmpl: '~24KB',
-          alpine: '~8.4KB',
-          htmx: '~14.1KB'
+          alpine: '~19KB',
+          htmx: '~14KB'
         },
         {
-          name: 'Learning Curve',
-          hmpl: 'Medium',
-          alpine: 'Easy',
-          htmx: 'Easy'
-        },
-        {
-          name: 'Server-Side Rendering',
+          name: 'Fetch API support',
           hmpl: true,
-          alpine: false,
-          htmx: true
-        },
-        {
-          name: 'Client-Side Reactivity',
-          hmpl: false,
           alpine: true,
           htmx: false
         },
         {
-          name: 'No Build Step',
-          hmpl: true,
-          alpine: true,
-          htmx: true
+          name: 'Support for modern ECMAScript features (related to Fetch)',
+          hmpl: "Fully",
+          alpine: "Partially",
+          htmx: "Partially",
         },
         {
-          name: 'JSON5 Integration',
+          name: 'Support for HTTP methods OPTIONS and TRACE',
           hmpl: true,
-          alpine: false,
+          alpine: true,
           htmx: false
+        },
+        {
+          name: 'RequestInit Customization',
+          hmpl: "Fully",
+          alpine: "Partially",
+          htmx: "Partially",
         },
         {
           name: 'XSS Protection',
-          hmpl: true,
-          alpine: false,
-          htmx: false
+          hmpl: "Fully",
+          alpine: "Partially",
+          htmx: "Partially",
         },
         {
-          name: 'Template Language',
+          name: 'EventListener support on attributes',
           hmpl: true,
-          alpine: false,
-          htmx: false
-        },
-        {
-          name: 'AJAX Requests',
-          hmpl: true,
-          alpine: false,
+          alpine: true,
           htmx: true
         },
         {
-          name: 'State Management',
-          hmpl: 'Server-side',
-          alpine: 'Client-side',
-          htmx: 'Server-side'
-        },
-        {
-          name: 'Use Case',
-          hmpl: 'Server-oriented templating',
-          alpine: 'Client-side interactivity',
-          htmx: 'HTML enhancement'
-        },
-        {
-          name: 'Performance',
-          hmpl: 'High (server-side)',
-          alpine: 'High (client-side)',
-          htmx: 'High (server-side)'
-        },
-        {
-          name: 'Community',
-          hmpl: 'Growing',
-          alpine: 'Large',
-          htmx: 'Large'
+          name: 'Interacting with the server',
+          hmpl: "Fully",
+          alpine: "Partially",
+          htmx: "Fully",
         }
       ]
     }
@@ -163,10 +139,10 @@ export default {
         return value ? 'check' : 'cross'
       }
       if (typeof value === 'string') {
-        if (value.includes('KB') || value.includes('Easy') || value.includes('true')) {
+        if (value.includes('KB') || value.includes('Fully') || value.includes('true')) {
           return 'positive'
         }
-        if (value.includes('Medium') || value.includes('Server-side')) {
+        if (value.includes('Partially') || value.includes('Server-side')) {
           return 'neutral'
         }
       }
@@ -179,22 +155,11 @@ export default {
 <style scoped>
 .comparison-table-wrapper {
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 20px;
   padding: 40px;
-  margin: 60px 0;
+  margin: 120px 0;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
-}
-
-.comparison-table-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #0183ff 0%, #7e71ba 100%);
 }
 
 .comparison-header {
@@ -218,11 +183,14 @@ export default {
   overflow-x: auto;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin: 0 auto;
+  max-width: 100%;
+  width: fit-content;
 }
 
 .comparison-table {
-  width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background: white;
   border-radius: 12px;
   overflow: hidden;
@@ -233,6 +201,23 @@ export default {
   padding: 16px 20px;
   text-align: left;
   border-bottom: 1px solid #e5e7eb;
+}
+
+/* Rounded corners for table */
+.comparison-table thead tr:first-child th:first-child {
+  border-top-left-radius: 12px;
+}
+
+.comparison-table thead tr:first-child th:last-child {
+  border-top-right-radius: 12px;
+}
+
+.comparison-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+
+.comparison-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
 }
 
 .comparison-table th {
@@ -251,7 +236,7 @@ export default {
 }
 
 .framework-column {
-  width: 150px;
+  width: 190px;
   text-align: center;
 }
 
@@ -271,22 +256,18 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: white;
+  background: white;
+  padding: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.hmpl-column .framework-logo {
-  background: linear-gradient(135deg, #0183ff 0%, #7e71ba 100%);
+.framework-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
-.alpine-column .framework-logo {
-  background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
-}
-
-.htmx-column .framework-logo {
-  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-}
+/* Логотипы теперь имеют белый фон с изображениями */
 
 .feature-row:hover {
   background-color: #f9fafb;
@@ -322,16 +303,17 @@ export default {
 .comparison-footer {
   margin-top: 30px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .comparison-note {
   color: #6b7280;
   font-size: 0.9rem;
   margin: 0;
-  display: flex;
+  display: inline-block;
   align-items: center;
   justify-content: center;
-  gap: 8px;
 }
 
 .comparison-note i {
@@ -346,6 +328,10 @@ export default {
 
 .metrics-link:hover {
   text-decoration: none;
+}
+
+.comparison-note i{
+  margin-right: 4px;
 }
 
 /* Responsive Design */
@@ -381,7 +367,6 @@ export default {
   .framework-logo {
     width: 24px;
     height: 24px;
-    font-size: 0.9rem;
   }
 }
 

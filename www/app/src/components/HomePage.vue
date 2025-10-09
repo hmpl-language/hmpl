@@ -262,20 +262,7 @@
   </div>
   <section>
     <!-- Wave section started -->
-    <div class="wave_info">
-      <div class="wave-background"></div>
-      <img
-        src="/images/wave-bottom.png"
-        alt="Wave Bottom"
-        class="wave-overlay"
-      />
-      <img
-        src="/images/wave-bottom-mobile.png"
-        alt="Wave Bottom"
-        class="wave-overlay-mobile"
-      />
-      <ComparisonTable />
-    </div>
+    <ComparisonTable />
     <!-- Text Block section started -->
     <div class="text_block_wrapper wrapper">
       <div class="container">
@@ -663,7 +650,7 @@
           <a
             href="https://devhunt.org/tool/hmpljs"
             target="_blank"
-            class="badge fade-in-effect"
+            class="badge"
           >
             <img
               class="badge-img"
@@ -775,8 +762,7 @@
       href="https://github.com/hmpl-language/hmpl/issues"
       target="_blank"
       rel="noopener noreferrer"
-      >here</a
-    >.
+      >here</a>.
   </div>
   <!-- Scroll to top button -->
   <button
@@ -798,6 +784,7 @@ export default {
   name: "HomePage",
   components: {
     ComparisonTable
+  },
   data() {
     return {
       showScroll: false
@@ -1049,7 +1036,7 @@ a {
 
 .badge {
   display: block;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 .star_us:hover {
@@ -1806,7 +1793,6 @@ section {
   }
 
   .text_block_wrapper {
-    margin-top: -30%;
     z-index: 3;
     position: relative;
   }
@@ -2078,7 +2064,7 @@ footer {
 }
 
 .producthunt {
-  margin-top: 20px;
+  margin-top: 35px;
   display: block;
 }
 
@@ -2310,7 +2296,7 @@ footer {
 @media (max-width: 600px) {
   .scroll-to-top {
     right: 14px;
-    bottom: 20px;
+    bottom: 65px;
     width: 44px;
     height: 44px;
   }
@@ -2434,9 +2420,7 @@ footer {
   right: 0;
   height: 30px;
   text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline;
   background-color: #0183ff;
   color: #fff;
   z-index: 999;
@@ -2445,11 +2429,16 @@ footer {
 .note_link {
   text-decoration: underline !important;
   font-weight: bold;
-  margin: 0 4px;
 }
 
 .note_link:hover {
   text-decoration: none !important;
+}
+
+@media (max-width: 600px) {
+  .note {
+    height:60px;
+  }
 }
 
 @media (max-width: 1024px) {
