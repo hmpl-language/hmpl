@@ -1,0 +1,73 @@
+title: HMPL Blog
+author:
+  name: "HMPL Team"
+  email: "contact@hmpl-lang.dev"
+description: >
+  HMPL Blog - HMPL.js is a lightweight server-oriented template language for JavaScript. 
+       Fetch HTML, render it safely, and keep apps dynamic, modern, and small.
+tagline: "Server-oriented customizable templating for JavaScript"
+url: "https://blog.hmpl-lang.dev"
+lang: en_US
+
+# SEO Configuration
+seo:
+  type: BlogPosting
+  name: HMPL Blog
+  headline: HMPL Blog - JavaScript Templating Tutorials and Guides
+  description: >
+    Comprehensive tutorials and guides for HMPL, a server-oriented customizable 
+    templating solution for JavaScript applications.
+  keywords: >
+    HMPL, JavaScript, templating, server-side rendering, SSR, web development, 
+    tutorials, guides, frontend, backend, template engine, JavaScript framework
+
+# Social and Branding
+logo: "/favicon.ico"
+
+# Site Configuration
+timezone: UTC
+permalink: /:year/:month/:day/:title/
+excerpt_separator: <!--more-->
+
+# Theme Configuration
+# theme: minima  # Disabled due to Sass compatibility issues
+
+# Sass Configuration
+sass:
+  style: compressed
+  sass_dir: _sass
+  sourcemap: never
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-paginate
+
+# Pagination Configuration
+paginate: 5
+paginate_path: "/page:num/"
+
+# Feed Configuration
+feed:
+  posts_limit: 20
+  excerpt_only: true
+
+# SEO Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "HMPL Team"
+      image: "/favicon.ico"
+      seo:
+        type: "BlogPosting"
+
+# Social Links
+social_links:
+  - { platform: github, user_url: "https://github.com/hmpl-language/hmpl" }
+  - { platform: x, user_url: "https://x.com/hmpljs" }
+  - { platform: discord, user_url: "https://discord.gg/KFunMep36n" }
+  - { platform: rss, user_url: "/feed.xml" }

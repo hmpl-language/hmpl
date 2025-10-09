@@ -1,0 +1,7 @@
+{%- if site.social_links -%}
+<ul class="social-media-list">
+{%- for entry in site.social_links -%}
+  {%- include social-item.html item = entry -%}
+{%- endfor -%}
+</ul>
+{%- endif -%}

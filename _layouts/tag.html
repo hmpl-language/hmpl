@@ -1,0 +1,116 @@
+---
+layout: base
+---
+
+<div
+  class="home tag-page"
+  itemscope
+  itemtype="https://schema.org/CollectionPage"
+>
+  <meta itemprop="name" content="Posts tagged: {{ page.tag }}" />
+  <meta
+    itemprop="description"
+    content="All blog posts tagged with {{ page.tag }}"
+  />
+
+  <h1 class="page-heading" itemprop="headline">
+    Posts tagged: <span class="tag-highlight">{{ page.tag }}</span>
+  </h1>
+
+  <p class="tag-page-back">
+    <a href="{{ '/' | relative_url }}">← Back to all posts</a>
+  </p>
+
+  {%- assign tag_posts = site.tags[page.tag] -%} {%- if tag_posts.size > 0 -%}
+  <p class="tag-page-count">
+    Found {{ tag_posts.size }} post{% if tag_posts.size != 1 %}s{% endif %}
+  </p>
+
+  <ul class="post-list">
+    {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+    {%- for post in tag_posts -%}
+    <li itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+      <meta
+        itemprop="mainEntityOfPage"
+        content="{{ post.url | absolute_url }}"
+      />
+      <meta
+        itemprop="image"
+        content="{{ post.image | default: site.logo | absolute_url }}"
+      />
+      <meta
+        itemprop="description"
+        content="{{ post.description | default: post.excerpt | strip_html | truncatewords: 50 }}"
+      />
+
+      <div
+        itemprop="author"
+        itemscope
+        itemtype="https://schema.org/Person"
+        style="display: none"
+      >
+        <meta
+          itemprop="name"
+          content="{{ post.author | default: site.author.name }}"
+        />
+      </div>
+
+      <div
+        itemprop="publisher"
+        itemscope
+        itemtype="https://schema.org/Organization"
+        style="display: none"
+      >
+        <meta itemprop="name" content="{{ site.title }}" />
+        <meta itemprop="url" content="{{ site.url }}" />
+      </div>
+
+      <span class="post-meta">
+        <time
+          datetime="{{ post.date | date_to_xmlschema }}"
+          itemprop="datePublished"
+        >
+          {{ post.date | date: date_format }}
+        </time>
+        {%- if post.modified_date -%}
+        <meta
+          itemprop="dateModified"
+          content="{{ post.modified_date | date_to_xmlschema }}"
+        />
+        {%- else -%}
+        <meta
+          itemprop="dateModified"
+          content="{{ post.date | date_to_xmlschema }}"
+        />
+        {%- endif -%}
+      </span>
+      <h3>
+        <a
+          class="post-link"
+          href="{{ post.url | relative_url }}"
+          itemprop="url"
+        >
+          <span itemprop="headline">{{ post.title | escape }}</span>
+        </a>
+      </h3>
+      {%- if site.show_excerpts -%}
+      <div class="post-excerpt" itemprop="description">{{ post.excerpt }}</div>
+      {%- endif -%} {%- if post.tags and post.tags.size > 0 -%}
+      <div class="post-tags-preview">
+        {%- for tag in post.tags -%}
+        <a
+          href="{{ '/tags/' | append: tag | slugify | relative_url }}"
+          class="post-tag-preview"
+          itemprop="keywords"
+          >{{ tag }}</a
+        >
+        {%- endfor -%}
+      </div>
+      {%- endif -%}
+    </li>
+    {%- endfor -%}
+  </ul>
+  {%- else -%}
+  <p>No posts found with this tag.</p>
+  {%- endif -%}
+</div>
