@@ -1,0 +1,90 @@
+---
+title: Installation
+description: Install and set up HMPL in your project
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl installation, install hmpl, cdn usage, npm package, vite starter, hmpl setup
+---
+
+:::note
+In the second versions the module has a slightly different installation process. It is best to use the 3rd latest version.
+:::
+
+## Prerequisites (except CDN)
+
+- Node.js [v10.12.0+](https://nodejs.org/en/download)
+- Package manager like [npm](https://www.npmjs.com), [bun](https://bun.com), etc.
+
+## CDN
+
+This method involves connecting the file through a third-party resource, which provides the ability to obtain a javascript file from npm via a link.
+
+```html
+<script src="https://unpkg.com/json5/dist/index.min.js"></script>
+<script src="https://unpkg.com/dompurify/dist/purify.min.js"></script>
+<script src="https://unpkg.com/hmpl-js/dist/hmpl.min.js"></script>
+<!--
+  integrity="..."
+  crossorigin="anonymous"
+-->
+```
+
+This resource could be unpkg, skypack or other resources. The examples include unpkg simply because it is one of the most popular and its url by characters is not so long.
+
+## As a module
+
+The project is also available as a downloadable module using the package manager.
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+<Tabs syncKey="pkg">
+<TabItem label="npm">
+
+```sh
+npm i hmpl-js
+```
+
+</TabItem>
+<TabItem label="bun">
+
+```sh
+bun add hmpl-js
+```
+
+</TabItem>
+</Tabs>
+
+## Through the starter template project
+
+There is a [starter project](https://github.com/hmpl-language/hello-hmpl-starter) on Vite.
+
+<Tabs syncKey="utility">
+<TabItem label="npx">
+
+```sh
+npx degit hmpl-language/hello-hmpl-starter hello-hmpl
+```
+
+</TabItem>
+<TabItem label="bunx">
+
+```sh
+bunx degit hmpl-language/hello-hmpl-starter hello-hmpl
+```
+
+</TabItem>
+</Tabs>
+
+Based on it, you can make web applications.
+
+## Integration with module builders
+
+import { LinkCard } from "@astrojs/starlight/components";
+import { CardGrid } from "@astrojs/starlight/components";
+
+<CardGrid>
+  <LinkCard title="Webpack" href="/webpack"></LinkCard>
+  <LinkCard title="Vite" href="/vite-plugin"></LinkCard>
+</CardGrid>

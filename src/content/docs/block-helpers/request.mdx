@@ -1,0 +1,583 @@
+---
+title: request
+description: About request block helper
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl request helper, server request block, request attributes, dynamic content fetch, indicators, auto body
+---
+
+The request helper block in the template is used as a declarative point for dynamically updating content based on requests to the server, and getting HTML from there.
+
+| Property            | Type                                                         | Default       | Description                                        | Required |
+| ------------------- | ------------------------------------------------------------ | ------------- | -------------------------------------------------- | -------- |
+| src                 | string                                                       | —             | The source URL of the request                      | Yes      |
+| method              | string                                                       | "GET"         | The HTTP method used for the request               | No       |
+| after               | string                                                       | —             | Event trigger specification                        | No       |
+| repeat              | boolean                                                      | true          | Whether the request repeats on subsequent triggers | No       |
+| interval            | number                                                       | —             | Optional interval for repeated requests (in ms)    | No       |
+| indicators          | [HMPLIndicator](/types#hmplindicator)[]                      | []            | Status-specific UI indicators                      | No       |
+| autoBody            | boolean \| [HMPLAutoBodyOptions](/types#hmplautobodyoptions) | false         | Configures automatic body generation               | No       |
+| memo                | boolean                                                      | false         | Enables response caching                           | No       |
+| initId              | string \| number                                             | —             | Identifier for request initialization              | No       |
+| allowedContentTypes | [HMPLContentTypes](/types#hmplcontenttypes)                  | ["text/html"] | Permitted response Content-Types                   | No       |
+| disallowedTags      | [HMPLDisallowedTags](/types#hmpldisallowedtags)              | []            | HTML elements to remove from responses             | No       |
+| sanitize            | [HMPLSanitize](/types#hmplsanitize)                          | false         | Enables HTML sanitization                          | No       |
+
+```javascript
+{{#request
+  src="/api/test"
+  method="get"
+  after="click:.target"
+  repeat=true
+  interval=1000
+  indicators=[
+    {
+      trigger: "pending",
+      content: "<p>Loading...</p>"
+    },
+    {
+      trigger: "rejected",
+      content: "<p>Error</p><button>reload</button>"
+    }
+  ]
+  autoBody={
+    formData: true
+  }
+  memo=true
+  initId="id1"
+  allowedContentTypes=["text/html"]
+  disallowedTags=["script", "style", "iframe"]
+  sanitize=false
+}}{{/request}}
+```
+
+## Nesting
+
+Only [indicator](/block-helpers/indicator) block helper.
+
+```hmpl
+{{#request src="/api/test"}}
+    {{#indicator trigger="pending"}}
+        <span>Loading...</span>
+    {{/indicator}}
+    {{#indicator trigger="error"}}
+        <span>Error</span>
+    {{/indicator}}
+{{/request}}
+```
+
+## src
+
+The src property specifies the target URL for the request.
+
+```hmpl
+{{#request src="/api/test"}}
+{{/request}}
+```
+
+## method
+
+The method property specifies the [HTTP method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods) to be used for the request.
+
+```hmpl
+{{#request src="/api/test" method="POST"}}
+{{/request}}
+```
+
+The supported methods are `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, `TRACE`.
+
+:::note
+The values for this attribute are not case-sensitive. That is, you can write either `get` or `GET`.
+:::
+
+## after
+
+The after property defines when to send the request, using the format `${event}:${selectors}`. Here, `event` is the trigger (e.g., `click`), and `selectors` specify the target elements.
+
+```hmpl
+<div>
+  <button id="btn">Click!</button>
+  <div>
+    Clicks: {{#request src="/api/clicks" after="click:#btn"}}{{/request}}
+  </div>
+</div>
+```
+
+In this example, no request is made to the server until the `button` is pressed. For such cases, it is better to add another helper block that will be triggered during rendering.
+
+import Preview from "../../../components/component-preview.astro";
+
+import Clicker from "../../../components/ClickerComponent.vue";
+
+<Preview>
+
+<div slot="preview">
+  <Clicker client:only="vue" />
+</div>
+
+</Preview>
+
+:::note
+Selectors are scoped to the template's DOM fragment or elements, not the global `document`.
+:::
+
+## repeat
+
+The repeat property controls whether a request re-executes on subsequent trigger events.
+
+```hmpl
+<div>
+  <button id="btn">Click!</button>
+  <div>
+    {{#request src="/api/test" after="click:#btn" repeat=false}}{{/request}}
+  </div>
+</div>
+```
+
+import Repeat from "../../../components/RepeatComponent.vue";
+
+<Preview>
+
+<div slot="preview">
+  <Repeat client:only="vue" />
+</div>
+
+</Preview>
+
+In the example, we have repeat set to `false`, which makes repeated requests to the server by clicking on the `button` impossible.
+
+## interval
+
+The interval property specifies the time in milliseconds between consecutive requests to the server, following the JavaScript `setInterval` timing model.
+
+The interval clearing function is available in the [request context](/context/request).
+
+import Timer from "../../../components/TimerComponent.vue";
+
+```javascript
+const templateFn = compile(`
+<div>
+  <button id="btn">Start timer!</button>
+  <div>
+    Seconds:
+    {{#request
+      src="/api/timer"
+      after="click:#btn"
+      interval=1000
+      repeat=false
+    }}{{/request}}
+  </div>
+</div>
+`);
+
+const el = templateFn({
+  get: (prop, value, context) => {
+    const { clearInterval } = context.request;
+    switch (prop) {
+      case "response":
+        if (value?.outerHTML === `<span>10</span>`) {
+          clearInterval();
+        }
+        break;
+    }
+  }
+});
+```
+
+<Preview>
+
+<div slot="preview">
+  <Timer client:only="vue" />
+</div>
+
+</Preview>
+
+In this example we stop the timer when it reaches 10 seconds.
+
+:::note
+The interval property is currently compatible either:
+
+- on its own — without any `after` property, in which case it starts immediately
+- with after, but only when the repeat mode is disabled (i.e. the event specified by `after` triggers a one-time start of the interval)
+  :::
+
+## indicators
+
+The indicators property is intended to define the HTML content that should be rendered in response to a particular request status. This property enables authors to provide user interface feedback corresponding to specific states of a request initiated by the HMPL module.
+
+The value is an array of each [HMPLIndicator](/types#hmplindicator) object.
+
+```js
+<div>
+  <button id="btn">Get HTML!</button>
+  {{#request
+    src="/api/getHTML"
+    after="click:#btn"
+    indicators=[
+      {
+        trigger: "pending",
+        content: "<p>Loading...</p>"
+      },
+      {
+        trigger: "403",
+        content: "<p>Access error!</p>"
+      }
+    ]
+  }}{{/request}}
+</div>
+```
+
+import Indicators from "../../../components/IndicatorsComponent.vue";
+
+<Preview>
+
+<div slot="preview">
+  <Indicators client:only="vue" />
+</div>
+
+</Preview>
+
+### indicator
+
+An object describing what specific request status the HTML will be displayed on.
+
+| Property | Type                                                | Description                                         | Required |
+| -------- | --------------------------------------------------- | --------------------------------------------------- | -------- |
+| trigger  | [HMPLIndicatorTrigger](/types#hmplindicatortrigger) | The status that the indicator is showing            | Yes      |
+| content  | string                                              | The HTML that is shown when the indicator is active | Yes      |
+
+```hmpl
+{{#request
+  src="/api/getHTML"
+  indicators= [
+    {
+      trigger: "pending",
+      content: "<p>Loading...</p>"
+    }
+  ]
+}}{{/request}}
+```
+
+#### trigger
+
+The trigger property specifies the status condition under which the associated content should be displayed.
+
+```js
+{
+  trigger: 403;
+}
+```
+
+The permissible values for trigger are:
+
+- [HTTP status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status) within the range `400` to `599`, indicating client and server errors as defined by the HTTP specification.
+- The string literal `"pending"`, representing the Promise state where a request is in progress and awaiting resolution.
+- The string literal `"rejected"`, representing a Promise rejection or a failed fetch operation.
+- The string literal `"error"`, a generic value that serves as a catch-all trigger, activated under either of the following circumstances:
+  - A HTTP response with a status code between `400` and `599`.
+  - A `"rejected"` `Promise` state.
+
+:::note
+The `"error"` trigger value overlaps with `"rejected"` and any HTTP status codes in the range `400` to `599`. This allows authors to define a default fallback indicator without the need to enumerate all possible error conditions individually.
+:::
+
+#### content
+
+The content property must be a plain string containing static HTML markup. This markup is not interpreted or extended by the HMPL module, and therefore does not support HMPL-specific syntax or dynamic bindings.
+
+```js
+{
+  content: "<p>Loading...</p><div>Loading...</div>";
+}
+```
+
+Additionally, the value must be a single-line string — line breaks (e.g., `\n`) or other control characters are not allowed.
+
+## autoBody
+
+The autoBody property specifies automatic generation of the `body` property within a [RequestInit](/functions/template#requestinit) object.
+
+The property accepts either a Boolean value or an [HMPLAutoBodyOptions](/types#hmplautobodyoptions) object, determining how the request body should be constructed.
+
+```hmpl
+<div>
+  <form onsubmit="
+    function prevent(e){
+      e.preventDefault();
+    };
+    return prevent(event);
+  " id="form">
+    <div class="form-example">
+      <label for="name">Enter example login:</label>
+      <input type="text"
+      name="login"
+      id="login" required />
+    </div>
+    <div class="form-example">
+      <input type="submit" value="Submit!" />
+    </div>
+  </form>
+  {{#request
+    src="/api/login"
+    after="submit:#form"
+    autoBody=true
+    indicators=[
+      {
+        trigger: "pending",
+        content: "<p>Loading...</p>"
+      }
+    ]
+  }}{{/request}}
+</div>
+```
+
+import LoginFormComponent from "../../../components/LoginFormComponent.vue";
+
+<Preview>
+  <div slot="preview">
+    <LoginFormComponent client:only="vue" />
+  </div>
+</Preview>
+
+It is important to note that automatic generation will only overwrite the existing body property if the [HMPLRequestInit](/types#hmplrequestinit) object is not derived from a [RequestInit function](/types#hmplrequestinitfunction). In such cases, the manually specified body value takes precedence.
+
+If the value of autoBody is true, the module automatically generates a `FormData` instance using the associated [SubmitEvent](https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent) target element and its submitter.
+
+```js
+{
+  body: new FormData(event.target, event.submitter);
+}
+```
+
+:::note
+As of the current specification, automatic body generation exclusively supports targets of type [SubmitEvent](https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement/submit_event) originating from `<form>` elements. Future revisions of the HMPL module may extend this functionality to additional HTML element types, such as input, progress, and other interactive components where automatic body construction is applicable.
+:::
+
+### AutoBody options
+
+Settings object for each automatic generation
+
+| Property | Type    | Description                            | Required |
+| -------- | ------- | -------------------------------------- | -------- |
+| formData | boolean | Automatic body generation for form tag | No       |
+
+```js
+{
+  autoBody: {
+    formData: true;
+  }
+}
+```
+
+## memo
+
+The memo property enables response caching for identical requests. When enabled:
+
+- Identical requests return cached responses
+- Only active when repeat is true
+- Improves performance for repeated requests
+
+```hmpl
+<div>
+  <button id="btn">Get the square root of 256!</button>
+  <div>
+    {{#request src="/api/getSquareRoot" after="click:#btn" memo=true}}{{/request}}
+  </div>
+</div>
+```
+
+The memoization process can be conceptually compared to disabling the `no-cache` directive in the [RequestCache](https://developer.mozilla.org/en-US/docs/Web/API/Request/cache#value) API, as it prevents repeated fetching of the same resource within the same runtime environment.
+
+![memoization](/images/memo.png)
+
+That is, caching means that the DOM tree will not be redrawn if the response from the server is the same.
+
+:::note
+For additional details regarding the behavior and implementation of memoization in HMPL, refer to the article [Memoization in HMPL](https://blog.hmpl-lang.dev/blog/2024/10/03/memoization-in-hmpl.html).
+:::
+
+## initId
+
+The initId property establishes an explicit association between a request and a predefined [initialization object](/functions/template#identification-requestinit). It references the id property of a corresponding entry in the [RequestInit dictionary collection](/types#hmplidentificationrequestinit), determining the initialization parameters for the request.
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import InitId403Example from "../../../components/InitId403Example.vue";
+import InitId200Example from "../../../components/InitId200Example.vue";
+
+<Tabs syncKey="initId">
+<TabItem label="With Identification RequestInit">
+
+```js ins={6}
+const templateFn = compile(`<div>
+  <button id="btn">Take a component with an API!</button>
+  {{#request
+    src="/api/getComponent"
+    after="click:#btn"
+    initId=1
+    indicators=[
+      {
+        trigger: "pending",
+        content: "<p>Loading...</p>"
+      },
+      {
+        trigger: "403",
+        content: "<p>Access error!</p>"
+      }
+    ]
+  }}{{/request}}
+</div>`);
+
+templateFn([
+  {
+    id: 1,
+    value: {
+      credentials: "omit"
+    }
+  }
+]);
+```
+
+<Preview>
+  <div slot="preview">
+    <InitId403Example client:only="vue" />
+  </div>
+</Preview>
+
+</TabItem>
+<TabItem label="Without Identification RequestInit">
+
+```js
+const templateFn = compile(`<div>
+  <button id="btn">Take a component with an API!</button>
+  {{#request
+    src="/api/getComponent"
+    after="click:#btn"
+    indicators=[
+      {
+        trigger: "pending",
+        content: "<p>Loading...</p>"
+      },
+      {
+        trigger: "403",
+        content: "<p>Access error!</p>"
+      }
+    ]
+  }}{{/request}}
+</div>`);
+
+templateFn([
+  {
+    id: 1,
+    value: {
+      credentials: "omit"
+    }
+  }
+]);
+```
+
+<Preview>
+  <div slot="preview">
+    <InitId200Example client:only="vue" />
+  </div>
+</Preview>
+
+</TabItem>
+</Tabs>
+
+In this example, initId, if specified, passes RequestInit with `credentials` with the value `"omit"`, which does not pass `credentials` to the server, thus access to the API will be limited. If we do not pass initId, then RequestInit will be empty, respectively, all its values will be default for `fetch`.
+
+## allowedContentTypes
+
+The allowedContentTypes property defines the list of permissible `Content-Type` values within the headers of HTTP responses returned from server requests. This property enables content validation and type safety when processing server responses.
+
+The property value may be either:
+
+- The string literal `"\*"`, indicating that all content types compatible with the text method are allowed.
+- An array of string values, each representing an explicitly permitted `Content-Type`.
+
+If the array is empty, behavior is equivalent to using `"\*"` — all types supporting the text method are permitted.
+
+```hmpl
+{{#request
+  src="/api/test"
+  allowedContentTypes=[
+    "application/json; charset=utf-8"
+    "text/plain"
+  ]
+}}{{/request}}
+```
+
+For additional guidance on server-side configuration and content type handling, refer to the [Server Configuration](/server-configuration) documentation.
+
+:::note
+For security considerations, it is strongly recommended not to modify this property unless necessary. Accepting unknown or untrusted `Content-Type` values may lead to uncontrolled application behavior or vulnerabilities. For instance, receiving a response with `Content-Type: application/octet-stream` could result in the response `body` being delivered as raw binary data. In such a case, a simple message such as `Hello, World!` may arrive encoded as:
+`48 65 6C 6C 6F 2C 20 77 6F 72 6C 64 21`
+:::
+
+## disallowedTags
+
+The disallowedTags property specifies HTML elements to remove from responses.
+
+**my-component.html**
+
+```html
+<script></script>
+<div>My component</div>
+<iframe></iframe>
+<style></style>
+```
+
+**index.hmpl**
+
+```hmpl
+{{#request
+  src="/api/get-my-component"
+  disallowedTags=["script", "iframe", "style"]
+}}{{/request}}
+```
+
+<Preview>
+  <div slot="preview">
+    ```html
+    <div>My component</div>
+    ```
+  </div>
+</Preview>
+
+The supported methods are `script`, `iframe`, `style`.
+
+## sanitize
+
+The sanitize property enables [DOMPurify](https://www.npmjs.com/package/dompurify)-based HTML sanitization.
+
+**my-component.html**
+
+```html
+<script></script>
+<div>My component</div>
+```
+
+**index.hmpl**
+
+```hmpl
+{{#request
+  src="/api/get-my-component"
+  sanitize=true
+}}{{/request}}
+```
+
+<Preview>
+  <div slot="preview">
+    ```html
+    <div>My component</div>
+    ```
+  </div>
+</Preview>
+
+Unlike disallowedTags, this is a more serious protection when working with uncontrolled API routes. The function that is used looks like this:
+
+```js
+const newResponse = DOMPurify.sanitize(response);
+```
