@@ -97,6 +97,12 @@ body {
   text-decoration: underline !important;
 }
 
+.page-link:active,
+.next-page:active,
+.pager-edge:active {
+  color: inherit !important;
+}
+
 .site-nav .page-link:visited {
   color: #1f2937 !important;
   text-decoration: none !important;
