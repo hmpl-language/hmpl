@@ -24,3 +24,8 @@ A landing page where the components are completely located on the server, so the
 
 ![Photo 4](https://github.com/user-attachments/assets/9c9edeb5-4a23-4a56-9100-2803151e9a3f)
 ![Photo 5](https://github.com/user-attachments/assets/63c89eeb-5b07-4b3d-979b-77cff7b271d0)
+
+## Ant and Apples
+A simple interactive game built with HMPL demonstrating dynamic content loading and state management. [View on GitHub](https://github.com/aanthonymax/ant-and-apples)
+
+<img src="/assets/ant-and-apples.png" alt="Ant and Apples Game" width="730" height="300">
