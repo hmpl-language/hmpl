@@ -78,6 +78,7 @@
     "nock": "^13.5.6",
     "node-fetch": "^2.7.0",
     "node-html-parser": "^6.1.13",
+    "nodemon": "^3.1.10",
     "prettier": "^3.3.3",
     "sinon": "^19.0.2",
     "ts-node": "^10.9.2",
@@ -86,6 +87,8 @@
   },
   "dependencies": {
     "dompurify": "^3.2.7",
-    "json5": "^2.2.3"
+    "json5": "^2.2.3",
+    "vite": "^7.1.9",
+    "vue": "^3.5.22"
   }
 }
