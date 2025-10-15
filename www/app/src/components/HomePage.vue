@@ -2332,19 +2332,27 @@ footer {
 
 .contributors-grid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+  justify-content: center; 
+  align-items: center;
   gap: 30px;
   margin-bottom: 40px;
-  max-width: 80%;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
 }
 
+@media (max-width: 900px) {
+  .contributors-grid {
+    gap: 20px;
+  }
+}
+
 @media (max-width: 600px) {
   .contributors-grid {
-    max-width: unset;
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+    gap: 15px;
   }
 }
 

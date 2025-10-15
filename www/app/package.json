@@ -1,25 +1,91 @@
 {
-  "name": "hmpl-docs",
-  "description": "hmpl documentation",
-  "license": "MIT",
-  "type": "module",
-  "version": "0.0.1",
+  "name": "hmpl-js",
+  "version": "3.0.5",
+  "description": "🐜 HMPL.js is a lightweight server-oriented template language for JavaScript. Fetch HTML, render it safely, and keep apps dynamic, modern, and small.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "start": "tsc --watch",
+    "lint": "npx eslint src/**/* --fix",
+    "lint:test": "npx eslint test/**/* --fix",
+    "prebuild": "npm run lint",
+    "build": "tsc",
+    "build:prod": "tsup",
+    "test": "mocha --require ts-node/esm --experimental-specifier-resolution=node",
+    "test:watch": "mocha --watch --require ts-node/esm --experimental-specifier-resolution=node",
+    "coverage": "c8 --reporter=lcov npm run test",
+    "coverage:default": "c8 npm run test"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist/",
+    "src/"
+  ],
+  "homepage": "https://hmpl-lang.dev",
+  "license": "MIT",
+  "keywords": [
+    "fetch",
+    "html",
+    "template-engine",
+    "rest",
+    "ajax",
+    "hateoas",
+    "hypermedia",
+    "server",
+    "templates",
+    "templating",
+    "template-language",
+    "template-engines",
+    "fetch-api",
+    "server-side",
+    "language",
+    "template",
+    "hmpl",
+    "server"
+  ],
+  "author": "Anton Maklakov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmpl-language/hmpl.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hmpl-language/hmpl/issues"
+  },
+  "engines": {
+    "node": ">=10.12.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.25.9",
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0",
+    "@babel/register": "^7.25.9",
+    "@eslint/plugin-kit": "^0.2.3",
+    "@types/mocha": "^10.0.9",
+    "@types/node": "^22.9.0",
+    "@types/sinon": "^17.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
+    "@typescript-eslint/parser": "^8.14.0",
+    "c8": "^10.1.2",
+    "cross-spawn": "^7.0.6",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "jsdom": "^25.0.1",
+    "jsdom-global": "^3.0.2",
+    "mocha": "^10.8.2",
+    "nock": "^13.5.6",
+    "node-fetch": "^2.7.0",
+    "node-html-parser": "^6.1.13",
+    "prettier": "^3.3.3",
+    "sinon": "^19.0.2",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.5.1",
-    "@astrojs/starlight": "^0.34.5",
-    "@astrojs/vue": "^5.1.0",
-    "astro": "^5.6.1",
-    "axios": "^1.10.0",
-    "sharp": "^0.34.2",
-    "starlight-theme-nova": "^0.9.0",
-    "toastr": "^2.1.4",
-    "vue": "^3.5.17"
+    "dompurify": "^3.2.7",
+    "json5": "^2.2.3"
   }
 }
