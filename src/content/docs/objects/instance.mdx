@@ -1,0 +1,131 @@
+---
+title: Instance
+description: About HMPL Instance
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl instance, instance response, request status, multiple requests, template instance object
+---
+
+import Preview from "../../../components/component-preview.astro";
+import { Code } from "@astrojs/starlight/components";
+
+An object returned from the [template function](/functions/template) that contains data from the responses to requests.
+
+| Property | Type                                          | Description                                                                                                                                   |
+| -------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| response | undefined \| Element \| null                  | Compiled element from template                                                                                                                |
+| status   | [HMPLRequestStatus](/types#hmplrequeststatus) | The status of the response to the request. If there are several requests in the template, this property is not included in the object         |
+| requests | [HMPLRequest](/types#hmplrequest)[]           | Contains information for each request in the template. If the template contains only one request, this property is not included in the object |
+
+```javascript
+const instance = templateFn();
+console.log(instance);
+```
+
+<Preview>
+
+<div slot="preview">
+`{ status: 200, response: div }`
+</div>
+
+</Preview>
+
+## response
+
+The value is the `Element` compiled from the template. If the template does not have a container tag, the response comes as a `template` tag with HTML from the server.
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+<Tabs syncKey="response">
+<TabItem label="With container tag">
+
+```javascript
+const templateFn = compile(`<div>{{#r src="/test"}}{{/r}}</div>`);
+const instance = templateFn();
+console.log(instance);
+```
+
+<Preview>
+
+<div slot="preview">
+  ```html
+  <div>
+    <span>My component</span>
+  </div>
+  ```
+</div>
+
+</Preview>
+
+</TabItem>
+<TabItem label="Without container tag">
+
+```javascript
+const templateFn = compile(`{{#r src="/test"}}{{/r}}`);
+const instance = templateFn();
+console.log(instance);
+```
+
+<Preview>
+
+<div slot="preview">
+  ```html
+  <template>
+    <span>My component</span>
+  </template>
+  ```
+</div>
+
+</Preview>
+
+</TabItem>
+</Tabs>
+
+:::note
+A template can contain only one container tag or helper block.
+:::
+
+## status
+
+Contains all [HTTP request codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status), as well as states such as `"pending"` and `"rejected"`.
+
+```javascript
+const instance = templateFn();
+console.log(instance.status);
+```
+
+<Preview>
+
+<div slot="preview">`200`</div>
+
+</Preview>
+
+## requests
+
+Contains an array of information objects about each request in the template.
+
+```javascript
+const templateFn = compile(
+  `<div>{{#r src="/test1"}}{{/r}}{{#r src="/test2"}}{{/r}}</div>`
+);
+const instance = templateFn();
+console.log(instance);
+```
+
+<Preview>
+
+<div slot="preview">
+```
+{
+    response: div,
+    requests: [
+        { status: 200, response: b },
+        { status: 200, response: [a, div] }
+    ]
+}
+```
+</div>
+
+</Preview>

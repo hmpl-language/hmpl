@@ -1,0 +1,280 @@
+---
+title: Types
+description: About HMPL Types
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl types, request interfaces, template typing, hmplrequestinit, hmpl instance types, compile options
+---
+
+## HMPLRequestInit
+
+```ts
+interface HMPLRequestInit {
+  mode?: RequestMode;
+  cache?: RequestCache;
+  redirect?: RequestRedirect;
+  referrerPolicy?: ReferrerPolicy;
+  integrity?: string;
+  referrer?: string;
+  get?: HMPLRequestGet;
+  body?: BodyInit | null;
+  signal?: AbortSignal | null;
+  window?: any;
+  credentials?: RequestCredentials;
+  headers?: HMPLHeadersInit;
+  timeout?: number;
+}
+```
+
+## HMPLInstance
+
+```ts
+interface HMPLInstance {
+  response: undefined | Element | null;
+  status?: HMPLRequestStatus;
+  requests?: HMPLRequest[];
+}
+```
+
+## HMPLInstanceContext
+
+```ts
+interface HMPLInstanceContext {
+  request: HMPLRequestContext;
+}
+
+interface HMPLRequestContext {
+  event?: Event;
+  clearInterval?: () => void;
+}
+```
+
+## HMPLRequest
+
+```ts
+interface HMPLRequest {
+  response: undefined | Element | null | ChildNode[];
+  status: number;
+  id?: string;
+}
+```
+
+## HMPLRequestGet
+
+```ts
+type HMPLRequestGet = (
+  prop: string,
+  value: any,
+  context: HMPLInstanceContext,
+  request?: HMPLRequest
+) => void;
+```
+
+## HMPLRequestInfo
+
+```ts
+interface HMPLRequestInfo {
+  src: string;
+  method?: string;
+  initId?: string | number;
+  after?: string;
+  repeat?: boolean;
+  memo?: boolean;
+  interval?: number;
+  allowedContentTypes?: HMPLContentTypes;
+  indicators?: HMPLIndicator[];
+  sanitize?: HMPLSanitize;
+  disallowedTags?: HMPLDisallowedTags;
+  autoBody?: boolean | HMPLAutoBodyOptions;
+}
+```
+
+## HMPLCompile
+
+```ts
+type HMPLCompile = (
+  template: string,
+  options?: HMPLCompileOptions
+) => HMPLTemplateFunction;
+```
+
+## HMPLCompileOptions
+
+```ts
+interface HMPLCompileOptions {
+  memo?: boolean;
+  autoBody?: boolean | HMPLAutoBodyOptions;
+  allowedContentTypes?: HMPLContentTypes;
+  sanitize?: HMPLSanitize;
+  disallowedTags?: HMPLDisallowedTags;
+}
+```
+
+## HMPLTemplateFunction
+
+```ts
+type HMPLTemplateFunction = (
+  options?:
+    | HMPLIdentificationRequestInit[]
+    | HMPLRequestInit
+    | HMPLRequestInitFunction
+) => HMPLInstance;
+```
+
+## HMPLClearInterval
+
+```ts
+type HMPLClearInterval = () => void;
+```
+
+## HMPLAutoBodyOptions
+
+```ts
+interface HMPLAutoBodyOptions {
+  formData?: boolean;
+}
+```
+
+## HMPLInitalStatus
+
+```ts
+type HMPLInitalStatus =
+  | "pending"
+  | "rejected"
+  | 100
+  | 101
+  | 102
+  | 103
+  | 300
+  | 301
+  | 302
+  | 303
+  | 304
+  | 305
+  | 306
+  | 307
+  | 308
+  | 400
+  | 401
+  | 402
+  | 403
+  | 404
+  | 405
+  | 406
+  | 407
+  | 408
+  | 409
+  | 410
+  | 411
+  | 412
+  | 413
+  | 414
+  | 415
+  | 416
+  | 417
+  | 418
+  | 421
+  | 422
+  | 423
+  | 424
+  | 425
+  | 426
+  | 428
+  | 429
+  | 431
+  | 451
+  | 500
+  | 501
+  | 502
+  | 503
+  | 504
+  | 505
+  | 506
+  | 507
+  | 508
+  | 510
+  | 511;
+```
+
+## HMPLIndicatorTrigger
+
+```ts
+type HMPLIndicatorTrigger = HMPLInitalStatus | "error";
+```
+
+## HMPLRequestStatus
+
+```ts
+type HMPLRequestStatus =
+  | HMPLInitalStatus
+  | 200
+  | 201
+  | 202
+  | 203
+  | 204
+  | 205
+  | 206
+  | 207
+  | 208
+  | 226;
+```
+
+## HMPLContentTypes
+
+```ts
+type HMPLContentTypes = string[] | "*";
+```
+
+## HMPLDisallowedTag
+
+```ts
+type HMPLDisallowedTag = "script" | "style" | "iframe";
+```
+
+## HMPLDisallowedTags
+
+```ts
+type HMPLDisallowedTags = HMPLDisallowedTag[];
+```
+
+## HMPLSanitize
+
+```ts
+type HMPLSanitize = boolean;
+```
+
+## HMPLIndicator
+
+```ts
+interface HMPLIndicator {
+  trigger: HMPLIndicatorTrigger;
+  content: string;
+}
+```
+
+## HMPLHeadersInit
+
+```ts
+interface HMPLHeadersInit {
+  [key: string]: string;
+}
+```
+
+## HMPLIdentificationRequestInit
+
+```ts
+interface HMPLIdentificationRequestInit {
+  value: HMPLRequestInit | HMPLRequestInitFunction;
+  id: string | number;
+}
+```
+
+## HMPLRequestInitFunction
+
+```ts
+type HMPLRequestInitFunction = (
+  context: HMPLInstanceContext
+) => HMPLRequestInit;
+```
