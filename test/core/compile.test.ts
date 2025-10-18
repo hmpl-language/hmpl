@@ -47,9 +47,9 @@ describe("compile function", () => {
     `${COMPILE_OPTIONS_ERROR}: The value of the property ${MEMO} must be a boolean`
   );
   e(
-    "throws an error if the TEMPLATE string doesn't contain a request object",
+    "throws an error if the TEMPLATE string doesn't contain a block helper",
     () => compile("<div></div>"),
-    `${PARSE_ERROR}: Request object not found`
+    `${PARSE_ERROR}: Block helper not found`
   );
   e(
     "Should throw parse error for unclosed block with no ending '}}'",
@@ -91,9 +91,9 @@ describe("compile function", () => {
     `${REQUEST_COMPONENT_ERROR}: The "${AUTO_BODY}" property does not work without the "${AFTER}" property`
   );
   e(
-    "Should throw parse error when request object with specified id is not found",
+    "Should throw parse error when block helper with specified id is not found",
     () => compile(`<div>{{#r src="123"}}{{/r}}<!--hmpl1--></div>`),
-    `${PARSE_ERROR}: Request object with id "1" not found`
+    `${PARSE_ERROR}: Block helper with id "1" not found`
   );
   e(
     `throws an error if the REQUEST COMPONENT doesn't contain the '${SOURCE}' property`,

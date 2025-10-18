@@ -640,7 +640,7 @@ describe("template function", () => {
   );
   waeq(
     "throws REQUEST_INIT_ERROR when 'signal' overrides AbortSignal from 'timeout'",
-  `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
+    `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
     `${REQUEST_INIT_ERROR}: The "signal" property overwrote the AbortSignal from "timeout"`,
     () => ({}) as any,
     {
@@ -1002,28 +1002,32 @@ describe("template function", () => {
   );
   aeq(
     "renders '<p>Loading...</p>' when 'pending' indicator is triggered",
-    createTestObj2(`${aeq0}`), (res, prop, value) => {
-    switch (prop) {
-      case "response":
-        if (value?.outerHTML === `<div><p>Loading...</p></div>`) {
-          res(true);
-        } else {
-          res(false);
-        }
-        break;
+    createTestObj2(`${aeq0}`),
+    (res, prop, value) => {
+      switch (prop) {
+        case "response":
+          if (value?.outerHTML === `<div><p>Loading...</p></div>`) {
+            res(true);
+          } else {
+            res(false);
+          }
+          break;
+      }
     }
-  });
+  );
   aeq(
     "renders correctly when output is wrapped in a <template> tag",
-    `${aeq0}`, (res, prop, value) => {
-    switch (prop) {
-      case "response":
-        if (value?.outerHTML === `<template><div>123</div></template>`) {
-          res(true);
-        }
-        break;
+    `${aeq0}`,
+    (res, prop, value) => {
+      switch (prop) {
+        case "response":
+          if (value?.outerHTML === `<template><div>123</div></template>`) {
+            res(true);
+          }
+          break;
+      }
     }
-  });
+  );
   aeq(
     "renders a 405 error wrapped in a <template> tag",
     `${aeq4}`,
@@ -1155,18 +1159,20 @@ describe("template function", () => {
   );
   aeqe(
     "renders duplicated '<div>123</div>' blocks",
-    createTestObj3(`${aeq1}${aeq1}`), (res, prop, value) => {
-    switch (prop) {
-      case "response":
-        if (
-          value?.outerHTML ===
-          `<div><button id="click">click</button><div>123</div><div>123</div></div>`
-        ) {
-          res(true);
-        }
-        break;
+    createTestObj3(`${aeq1}${aeq1}`),
+    (res, prop, value) => {
+      switch (prop) {
+        case "response":
+          if (
+            value?.outerHTML ===
+            `<div><button id="click">click</button><div>123</div><div>123</div></div>`
+          ) {
+            res(true);
+          }
+          break;
+      }
     }
-  });
+  );
   let memoItem: Element | undefined = undefined;
   aeqe(
     "memoizes the inner '<div>123</div>' element",
@@ -1463,7 +1469,7 @@ describe("template function", () => {
   );
 
   aeqe(
-    "renders two status placeholders after a 405 response,
+    "renders two status placeholders after a 405 response",
     createTestObj3(`${aeq0}${aeq0}`),
     (res, prop, value) => {
       switch (prop) {
@@ -1550,7 +1556,7 @@ describe("template function", () => {
   );
 
   aeqe(
-    "renders status placeholder '<!--hmpl0-->' after a 405 response"
+    "renders status placeholder '<!--hmpl0-->' after a 405 response",
     createTestObj3(`${aeq2}`),
     (res, prop, value) => {
       switch (prop) {

@@ -29,6 +29,12 @@ timezone: UTC
 permalink: /:year/:month/:day/:title/
 excerpt_separator: <!--more-->
 
+# Liquid Configuration
+liquid:
+  error_mode: warn
+  strict_filters: false
+  strict_variables: false
+
 # Theme Configuration
 # theme: minima  # Disabled due to Sass compatibility issues
 
