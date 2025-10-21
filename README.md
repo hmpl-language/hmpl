@@ -253,6 +253,24 @@ The project has a [roadmap](https://github.com/orgs/hmpl-language/projects/5) wh
 
 Released under the [MIT](https://github.com/hmpl-language/hmpl/blob/main/LICENSE)
 
+## Example: Using Loops and Conditionals in HMPL
+
+```hmpl
+{% for fruit in ["apple", "banana", "cherry"] %}
+  {% if fruit == "banana" %}
+    {{ fruit | upper }}
+  {% else %}
+    {{ fruit }}
+  {% endif %}
+{% endfor %}
+
+
+**Output:**
+apple
+BANANA
+cherry
+
+
 ---
 
 <div align="center">
@@ -262,3 +280,4 @@ Released under the [MIT](https://github.com/hmpl-language/hmpl/blob/main/LICENSE
 <i>This project has been developed with contributions from many amazing community developers!</i>
 
 </div>
+
