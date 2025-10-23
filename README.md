@@ -157,7 +157,7 @@ Also, HMPL can be a great alternative to popular tools such as HTMX and Alpine.j
 
 ## Installation
 
-hmpl can be installed in several ways, which are described in this section. This tool is a simple javascript file that is connected in the usual way through a `script`, or using the `import` construct in an environment that supports this (webpack build, parcel build etc.). 
+hmpl can be installed in several ways, which are described in this section. This tool is a simple javascript file that is connected in the usual way through a `script`, or using the `import` construct in an environment that supports this (webpack build, parcel build etc.).
 > [!NOTE]
 > Starting with version `2.2.0`, the JSON5 module needs to be connected, and starting with version `2.2.5`, the DOMPurify module also needs to be connected. The first and easiest way is to install using a CDN.
 
@@ -179,7 +179,7 @@ This method involves connecting the file through a third-party resource, which p
 <script src="https://unpkg.com/json5/dist/index.min.js"></script>
 <script src="https://unpkg.com/dompurify/dist/purify.min.js"></script>
 <script src="https://unpkg.com/hmpl-js/dist/hmpl.min.js"></script>
-<!--   
+<!--
   integrity="..."
   crossorigin="anonymous"
 -->
