@@ -936,7 +936,7 @@ export default {
           const contributorDiv = document.createElement("div");
           contributorDiv.className = "contributor";
           contributorDiv.innerHTML = `
-        <a class="contributon-block" href="${contributor.html_url}" target="_blank">
+        <a class="contribution-block" href="${contributor.html_url}" target="_blank">
             <img
               class="contributor-avatar"
               src="${contributor.avatar_url}"
@@ -950,7 +950,7 @@ export default {
         const oldContributors = document.createElement("div");
         oldContributors.className = "contributor";
         oldContributors.innerHTML = `
-          <a class="contributon-block" href="https://github.com/hmpl-language/hmpl/discussions/2" target="_blank">
+          <a class="contribution-block" href="https://github.com/hmpl-language/hmpl/discussions/2" target="_blank">
         <img
           class="contributor-avatar"
           src="./images/old-contributors.png"
@@ -2391,18 +2391,18 @@ footer {
   filter: brightness(0) invert(1);
 }
 
-.contributon-block {
+.contribution-block {
   text-decoration: none !important;
 }
 
-.contributon-block {
+.contribution-block {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
 
-.contributon-block:hover .contributor-name {
+.contribution-block:hover .contributor-name {
   color: #0066ff;
 }
 
