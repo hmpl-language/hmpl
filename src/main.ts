@@ -605,7 +605,7 @@ const makeRequest = (
    * Updates the status and handles dependencies.
    * @param status - The new request status.
    */
-  const updateStatusDepenencies = (status: HMPLRequestStatus) => {
+  const updateStatusDependencies = (status: HMPLRequestStatus) => {
     if (isRequests) {
       if (reqObject!.status !== status) {
         reqObject!.status = status;
@@ -654,7 +654,7 @@ const makeRequest = (
   };
 
   let requestStatus: HMPLRequestStatus = 200;
-  updateStatusDepenencies("pending");
+  updateStatusDependencies("pending");
   let isRejectedError = true;
   let isError = true;
 
@@ -663,7 +663,7 @@ const makeRequest = (
     .then((response) => {
       isRejectedError = false;
       requestStatus = response.status as HMPLRequestStatus;
-      updateStatusDepenencies(requestStatus);
+      updateStatusDependencies(requestStatus);
       if (!response.ok) {
         if (indicators) isError = false;
         createError(
@@ -746,7 +746,7 @@ const makeRequest = (
     .catch((error) => {
       // Errors like CORS, timeout and others.
       if (isRejectedError) {
-        updateStatusDepenencies("rejected");
+        updateStatusDependencies("rejected");
         if (!indicators) {
           setComment();
         }

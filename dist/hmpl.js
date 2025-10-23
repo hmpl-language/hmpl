@@ -540,7 +540,7 @@
        * Updates the status and handles dependencies.
        * @param status - The new request status.
        */
-      const updateStatusDepenencies = (status) => {
+      const updateStatusDependencies = (status) => {
         if (isRequests) {
           if (reqObject.status !== status) {
             reqObject.status = status;
@@ -587,7 +587,7 @@
         callGetResponse(reqResponse);
       };
       let requestStatus = 200;
-      updateStatusDepenencies("pending");
+      updateStatusDependencies("pending");
       let isRejectedError = true;
       let isError = true;
       // Perform the fetch request
@@ -595,7 +595,7 @@
         .then((response) => {
           isRejectedError = false;
           requestStatus = response.status;
-          updateStatusDepenencies(requestStatus);
+          updateStatusDependencies(requestStatus);
           if (!response.ok) {
             if (indicators) isError = false;
             createError(
@@ -678,7 +678,7 @@
         .catch((error) => {
           // Errors like CORS, timeout and others.
           if (isRejectedError) {
-            updateStatusDepenencies("rejected");
+            updateStatusDependencies("rejected");
             if (!indicators) {
               setComment();
             }

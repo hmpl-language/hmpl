@@ -449,7 +449,7 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
       }
     }
   };
-  const updateStatusDepenencies = (status) => {
+  const updateStatusDependencies = (status) => {
     if (isRequests) {
       if (reqObject.status !== status) {
         reqObject.status = status;
@@ -493,13 +493,13 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
     callGetResponse(reqResponse);
   };
   let requestStatus = 200;
-  updateStatusDepenencies("pending");
+  updateStatusDependencies("pending");
   let isRejectedError = true;
   let isError = true;
   fetch(source, initRequest).then((response) => {
     isRejectedError = false;
     requestStatus = response.status;
-    updateStatusDepenencies(requestStatus);
+    updateStatusDependencies(requestStatus);
     if (!response.ok) {
       if (indicators) isError = false;
       createError(
@@ -574,7 +574,7 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
     }
   }).catch((error) => {
     if (isRejectedError) {
-      updateStatusDepenencies("rejected");
+      updateStatusDependencies("rejected");
       if (!indicators) {
         setComment();
       }
