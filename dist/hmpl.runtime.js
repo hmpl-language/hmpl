@@ -660,7 +660,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
         if (!isReqIntervalUndefined) {
           if (isAll && after) {
             createError(
-              `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" property does not work with repetiton mode yet`
+              `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" property does not work with repetition mode yet`
             );
           }
         }
