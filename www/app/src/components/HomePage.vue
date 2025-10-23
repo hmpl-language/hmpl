@@ -241,7 +241,7 @@
           <a
             href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg"
             class="fade-in-effect hover_effect"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             target="_blank"
             >Demo Sandbox</a
           >
@@ -423,7 +423,7 @@
               applications presented in
               <a
                 href="https://github.com/hmpl-language/app-size-comparison"
-                rel="nooferer noopener"
+                rel="noreferrer noopener"
                 target="_blank"
                 class="metrics-link"
                 >this</a
@@ -445,7 +445,7 @@
         <div class="left_article">
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             class="article_preview_link fade-in-effect"
             target="_blank"
             ><img
@@ -455,7 +455,7 @@
           /></a>
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             target="_blank"
             ><h2 class="gradient_text_left hover_effect">
               Differences between HMPL <br />and HTMX
@@ -470,7 +470,7 @@
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
             class="main-button article-button hover_effect fade-in-effect"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             target="_blank"
             >Read more about HMPL vs HTMX</a
           >
@@ -478,7 +478,7 @@
         <div class="right_article">
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             class="article_preview_link fade-in-effect"
             target="_blank"
             ><img
@@ -488,7 +488,7 @@
           /></a>
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             target="_blank"
             ><h2 class="gradient_text_left hover_effect">
               Creating a Gallery App in JavaScript with HMPL
@@ -504,7 +504,7 @@
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
             class="main-button article-button hover_effect fade-in-effect"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             target="_blank"
             >Read more about creating a Gallery application</a
           >
@@ -574,7 +574,7 @@
             <a
               class="footer_social-link"
               href="https://github.com/hmpl-language/hmpl"
-              rel="nooferer noopener"
+              rel="noreferrer noopener"
               target="_blank"
             >
               <svg
@@ -595,7 +595,7 @@
             <a
               class="footer_social-link"
               href="https://x.com/hmpljs"
-              rel="nooferer noopener"
+              rel="noreferrer noopener"
               target="_blank"
             >
               <svg
@@ -628,7 +628,7 @@
             <a
               class="footer_social-link"
               href="https://discord.gg/KFunMep36n"
-              rel="nooferer noopener"
+              rel="noreferrer noopener"
               target="_blank"
             >
               <svg
@@ -666,7 +666,7 @@
                 <a
                   class="footer_item_link"
                   href="https://github.com/hmpl-language/examples/tree/main/gallery-app"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   target="_blank"
                   >Gallery App</a
                 >
@@ -675,7 +675,7 @@
                 <a
                   class="footer_item_link"
                   href="https://github.com/hmpl-language/examples/tree/main/landing"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   target="_blank"
                   >Landing Page</a
                 >
@@ -689,7 +689,7 @@
                 <a
                   class="footer_item_link"
                   href="https://github.com/hmpl-language/hmpl/blob/main/CODE_OF_CONDUCT.md"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   target="_blank"
                   >Code Of Conduct</a
                 >
@@ -698,7 +698,7 @@
                 <a
                   class="footer_item_link"
                   href="https://github.com/hmpl-language/hmpl/blob/main/SECURITY.md"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   target="_blank"
                   >Security</a
                 >
@@ -707,7 +707,7 @@
                 <a
                   class="footer_item_link"
                   href="https://github.com/hmpl-language/hmpl/blob/main/LICENSE"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   target="_blank"
                   >MIT License</a
                 >
@@ -720,7 +720,7 @@
               <li class="footer_item">
                 <a
                   target="_blank"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   class="footer_item_link"
                   href="https://hmpl-lang.dev/introduction"
                   >Docs</a
