@@ -180,19 +180,19 @@ const aeqe = (
       if (currentEl) {
         for (let i = 0; i < quantity; i++) {
           if (currentEl) {
-            const dispathCustomEvent = () => {
+            const dispatchCustomEvent = () => {
               const clickEvent = new window.Event(event, eventInit);
               currentEl.dispatchEvent(clickEvent);
             };
             if (eventOptions.timeout) {
               setTimeout(
                 () => {
-                  dispathCustomEvent();
+                  dispatchCustomEvent();
                 },
                 eventOptions.timeout + i * 100
               );
             } else {
-              dispathCustomEvent();
+              dispatchCustomEvent();
             }
           }
         }
