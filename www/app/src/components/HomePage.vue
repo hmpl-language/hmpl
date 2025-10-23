@@ -252,7 +252,7 @@
           class="producthunt"
           ><img
             src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=dark&t=1748847658573"
-            alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt"
+            alt="HMPL.js - Template language for displaying UI from server to client | Product Hunt"
             style="width: 250px; height: 54px"
             width="250"
             height="54"
