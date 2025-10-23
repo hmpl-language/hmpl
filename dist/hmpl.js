@@ -362,7 +362,7 @@
         }
       }
       const isRequestMemo = isMemo && !isRequest && dataObj?.memo;
-      const getIsNotFullfilledStatus = (status) =>
+      const getIsNotFulfilledStatus = (status) =>
         status === "rejected" ||
         (typeof status === "number" && (status < 200 || status > 299));
       const requestContext = getInstanceContext(
@@ -486,7 +486,7 @@
           if (
             isRequestMemo &&
             status !== "pending" &&
-            getIsNotFullfilledStatus(status)
+            getIsNotFulfilledStatus(status)
           ) {
             if (dataObj.memo.isPending) dataObj.memo.isPending = false;
           }
@@ -552,7 +552,7 @@
             get?.(createGetParams("status", status, requestContext));
           }
         }
-        if (isRequestMemo && getIsNotFullfilledStatus(status)) {
+        if (isRequestMemo && getIsNotFulfilledStatus(status)) {
           dataObj.memo.response = null;
           delete dataObj.memo.nodes;
         }

@@ -303,7 +303,7 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
     }
   }
   const isRequestMemo = isMemo && !isRequest && dataObj?.memo;
-  const getIsNotFullfilledStatus = (status) => status === "rejected" || typeof status === "number" && (status < 200 || status > 299);
+  const getIsNotFulfilledStatus = (status) => status === "rejected" || typeof status === "number" && (status < 200 || status > 299);
   const requestContext = getInstanceContext(
     void 0,
     currentClearInterval
@@ -400,7 +400,7 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
   };
   const updateIndicator = (status) => {
     if (indicators) {
-      if (isRequestMemo && status !== "pending" && getIsNotFullfilledStatus(status)) {
+      if (isRequestMemo && status !== "pending" && getIsNotFulfilledStatus(status)) {
         if (dataObj.memo.isPending) dataObj.memo.isPending = false;
       }
       if (status === "pending") {
@@ -461,7 +461,7 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
         get?.(createGetParams("status", status, requestContext));
       }
     }
-    if (isRequestMemo && getIsNotFullfilledStatus(status)) {
+    if (isRequestMemo && getIsNotFulfilledStatus(status)) {
       dataObj.memo.response = null;
       delete dataObj.memo.nodes;
     }

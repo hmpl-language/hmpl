@@ -420,7 +420,7 @@ const makeRequest = (
   }
 
   const isRequestMemo = isMemo && !isRequest && dataObj?.memo;
-  const getIsNotFullfilledStatus = (status: string | number) =>
+  const getIsNotFulfilledStatus = (status: string | number) =>
     status === "rejected" ||
     (typeof status === "number" && (status < 200 || status > 299));
 
@@ -550,7 +550,7 @@ const makeRequest = (
       if (
         isRequestMemo &&
         status !== "pending" &&
-        getIsNotFullfilledStatus(status)
+        getIsNotFulfilledStatus(status)
       ) {
         if (dataObj!.memo!.isPending) dataObj!.memo!.isPending = false;
       }
@@ -617,7 +617,7 @@ const makeRequest = (
         get?.(createGetParams("status", status, requestContext));
       }
     }
-    if (isRequestMemo && getIsNotFullfilledStatus(status)) {
+    if (isRequestMemo && getIsNotFulfilledStatus(status)) {
       dataObj!.memo!.response = null;
       delete dataObj!.memo!.nodes;
     }
