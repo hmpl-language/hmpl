@@ -506,7 +506,7 @@
             class="main-button article-button hover_effect fade-in-effect"
             rel="nooferer noopener"
             target="_blank"
-            >Read more</a
+            >Read more about creating a Gallery application</a
           >
         </div>
       </div>
