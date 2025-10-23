@@ -523,7 +523,7 @@
       </div>
     </div>
     <!-- Contributors section ended -->
-    <!-- Sample text sction started -->
+    <!-- Sample text section started -->
     <div class="wrapper">
       <div class="container">
         <div class="sample_text">
@@ -552,7 +552,7 @@
         </div>
       </div>
     </div>
-    <!-- Sample text sction ended -->
+    <!-- Sample text section ended -->
   </section>
   <!-- Footer -->
   <footer>
