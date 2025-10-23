@@ -1195,7 +1195,7 @@ var compile = (template, options = {}) => {
       `${COMPILE_ERROR}: Template was not found or the type of the passed value is not string`
     );
   if (!template)
-    createError(`${COMPILE_ERROR}: Template must not be a falsey value`);
+    createError(`${COMPILE_ERROR}: Template must not be a falsy value`);
   if (!checkObject(options))
     createError(`${COMPILE_OPTIONS_ERROR}: Options must be an object`);
   const isMemoUndefined = !options.hasOwnProperty(MEMO);

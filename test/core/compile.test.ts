@@ -34,7 +34,7 @@ describe("compile function", () => {
   e(
     "throws an error if the TEMPLATE is an empty string",
     () => compile(""),
-    `${COMPILE_ERROR}: Template must not be a falsey value`
+    `${COMPILE_ERROR}: Template must not be a falsy value`
   );
   e(
     "only accepts COMPILES OPTIONS as an object",
