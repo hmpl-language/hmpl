@@ -3,7 +3,13 @@ title: Changelog
 description: Version history and updates for HMPL
 ---
 
-## 3.0.5 (2025-10-03)
+## 3.1.0 (2025-10-24)
+
+- For the `get` function, instead of 4 arguments, we made a props object, which is convenient to work with.
+- Updated DOMPurify from `3.2.4` to `3.2.7`
+- Adding the `sanitizeConfig` property
+
+## 3.0.5 (2025-09-10)
 
 - Updating README.md
 - Updating package.json
