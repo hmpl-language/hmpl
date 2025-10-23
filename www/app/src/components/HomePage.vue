@@ -756,13 +756,13 @@
     </div>
   </footer>
   <div class="note">
-    This project participates in Hacktoberfest 2025. You can find the issue list
+    This project participates in Hacktoberfest 2025. See the
     <a
       class="note_link"
       href="https://github.com/hmpl-language/hmpl/issues"
       target="_blank"
       rel="noopener noreferrer"
-      >here</a>.
+      >issue list</a>.
   </div>
   <!-- Scroll to top button -->
   <button
@@ -913,7 +913,7 @@ export default {
         try {
           const url = `https://api.github.com/repos/hmpl-language/hmpl/contributors?page=${page}&per_page=100`;
           const response = await axios.get(url);
-          
+
           if (response.data.length === 0) {
             hasMore = false;
           } else {
@@ -2332,8 +2332,8 @@ footer {
 
 .contributors-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
-  justify-content: center; 
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  justify-content: center;
   align-items: center;
   gap: 30px;
   margin-bottom: 40px;
@@ -2351,7 +2351,7 @@ footer {
 
 @media (max-width: 600px) {
   .contributors-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 15px;
   }
 }
