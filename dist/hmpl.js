@@ -27,6 +27,7 @@
     const FORM_DATA = `formData`;
     const DISALLOWED_TAGS = `disallowedTags`;
     const SANITIZE = `sanitize`;
+    const SANITIZE_CONFIG = "sanitizeConfig";
     const ALLOWED_CONTENT_TYPES = "allowedContentTypes";
     const REQUEST_INIT_GET = `get`;
     const INTERVAL = `interval`;
@@ -163,10 +164,12 @@
      * @param str - The string to parse.
      * @returns The first child node of the parsed template.
      */
-    const getTemplateWrapper = (str, sanitize = false) => {
+    const getTemplateWrapper = (str, sanitize = false, sanitizeConfig) => {
       let sanitizedStr = str;
       if (sanitize) {
-        sanitizedStr = DOMPurify.sanitize(str);
+        sanitizedStr = sanitizeConfig
+          ? DOMPurify.sanitize(str, sanitizeConfig)
+          : DOMPurify.sanitize(str);
       }
       const elementDocument = new DOMParser().parseFromString(
         `<template>${sanitizedStr}</template>`,
@@ -182,8 +185,13 @@
      * @param sanitize - Sanitize the response content, ensuring it is safe to render.
      * @returns The parsed template wrapper.
      */
-    const getResponseElements = (response, disallowedTags = [], sanitize) => {
-      const elWrapper = getTemplateWrapper(response, sanitize);
+    const getResponseElements = (
+      response,
+      disallowedTags = [],
+      sanitize,
+      sanitizeConfig
+    ) => {
+      const elWrapper = getTemplateWrapper(response, sanitize, sanitizeConfig);
       const elContent = elWrapper["content"];
       for (let i = 0; i < disallowedTags.length; i++) {
         const tag = disallowedTags[i];
@@ -213,6 +221,22 @@
       return !isContain;
     };
     /**
+     * Creates parameters for HMPLRequestGet function
+     * @param prop - The name of the updated property
+     * @param value - The new property value
+     * @param context - The context of the current request sent to the HMPLInstance
+     * @param request - The associated request block helper (for multi-request templates)
+     * @returns HMPLRequestGetParams object
+     */
+    const createGetParams = (prop, value, context, request) => {
+      return {
+        prop,
+        value,
+        context,
+        request
+      };
+    };
+    /**
      * Makes an HTTP request and handles the response.
      * @param el - The element related to the request.
      * @param mainEl - The main element in the DOM.
@@ -227,7 +251,8 @@
      * @param allowedContentTypes - Allowed Content-Types for response processing.
      * @param disallowedTags - A list of HTML tags that should be removed from the response.
      * @param sanitize - A function or method used to sanitize the response content, ensuring it is safe to render.
-     * @param reqObject - The request object.
+     * @param sanitizeConfig - Configuration object for the sanitize function from DOMPurify.
+     * @param reqObject - The block helper.
      * @param indicators - Parsed indicators for the request.
      */
     const makeRequest = (
@@ -244,6 +269,7 @@
       allowedContentTypes,
       disallowedTags,
       sanitize,
+      sanitizeConfig,
       reqObject,
       indicators,
       currentClearInterval
@@ -350,9 +376,11 @@
       const callGetResponse = (reqResponse) => {
         if (isRequests) {
           reqObject.response = reqResponse;
-          get?.("response", reqResponse, requestContext, reqObject);
+          get?.(
+            createGetParams("response", reqResponse, requestContext, reqObject)
+          );
         }
-        get?.("response", mainEl, requestContext);
+        get?.(createGetParams("response", mainEl, requestContext));
       };
       /**
        * Updates the DOM nodes with new content.
@@ -363,7 +391,7 @@
       const updateNodes = (content, isClone = true, isNodes = false) => {
         if (isRequest) {
           templateObject.response = content.cloneNode(true);
-          get?.("response", content, requestContext);
+          get?.(createGetParams("response", content, requestContext));
         } else {
           let reqResponse = [];
           const newContent = isClone ? content.cloneNode(true) : content;
@@ -413,7 +441,7 @@
       const setComment = () => {
         if (isRequest) {
           templateObject.response = undefined;
-          get?.("response", undefined, requestContext);
+          get?.(createGetParams("response", undefined, requestContext));
         } else {
           if (dataObj?.nodes) {
             const parentNode = dataObj.parentNode;
@@ -429,9 +457,16 @@
             dataObj.parentNode = null;
             if (isRequests) {
               reqObject.response = undefined;
-              get?.("response", undefined, requestContext, reqObject);
+              get?.(
+                createGetParams(
+                  "response",
+                  undefined,
+                  requestContext,
+                  reqObject
+                )
+              );
             }
-            get?.("response", mainEl, requestContext);
+            get?.(createGetParams("response", mainEl, requestContext));
           }
         }
         if (isRequestMemo) {
@@ -509,12 +544,12 @@
         if (isRequests) {
           if (reqObject.status !== status) {
             reqObject.status = status;
-            get?.("status", status, requestContext, reqObject);
+            get?.(createGetParams("status", status, requestContext, reqObject));
           }
         } else {
           if (templateObject.status !== status) {
             templateObject.status = status;
-            get?.("status", status, requestContext);
+            get?.(createGetParams("status", status, requestContext));
           }
         }
         if (isRequestMemo && getIsNotFullfilledStatus(status)) {
@@ -601,11 +636,14 @@
             const templateWrapper = getResponseElements(
               data,
               disallowedTags,
-              sanitize
+              sanitize,
+              sanitizeConfig
             );
             if (isRequest) {
               templateObject.response = templateWrapper;
-              get?.("response", templateWrapper, requestContext);
+              get?.(
+                createGetParams("response", templateWrapper, requestContext)
+              );
             } else {
               const reqResponse = [];
               const nodes = [...templateWrapper.content.childNodes];
@@ -623,9 +661,16 @@
                 parentNode.removeChild(el);
                 if (isRequests) {
                   reqObject.response = reqResponse;
-                  get?.("response", reqResponse, requestContext, reqObject);
+                  get?.(
+                    createGetParams(
+                      "response",
+                      reqResponse,
+                      requestContext,
+                      reqObject
+                    )
+                  );
                 }
-                get?.("response", mainEl, requestContext);
+                get?.(createGetParams("response", mainEl, requestContext));
               }
             }
           }
@@ -678,7 +723,7 @@
      * Renders the template by processing requests and applying options.
      * @param currentEl - The current element or comment node.
      * @param fn - The render function.
-     * @param requests - Array of request objects.
+     * @param requests - Array of block helpers.
      * @param compileOptions - Options provided during compilation.
      * @param isMemoUndefined - Indicates if memoization is undefined.
      * @param isAutoBodyUndefined - Indicates if autoBody is undefined.
@@ -719,6 +764,7 @@
             const interval = req[INTERVAL];
             const isReqMemoUndefined = !req.hasOwnProperty(MEMO);
             const isReqIntervalUndefined = !req.hasOwnProperty(INTERVAL);
+            const sanitizeConfig = compileOptions[SANITIZE_CONFIG];
             let isMemo = isMemoUndefined ? false : compileOptions[MEMO];
             if (!isReqMemoUndefined) {
               if (after) {
@@ -1016,6 +1062,7 @@
                 allowedContentTypes,
                 disallowedTags,
                 sanitize,
+                sanitizeConfig,
                 reqObject,
                 indicators,
                 currentClearInterval
@@ -1177,7 +1224,7 @@
               const currentRequest = requests[currentIndex];
               if (Number.isNaN(currentIndex) || currentRequest === undefined) {
                 createError(
-                  `${PARSE_ERROR}: Request object with id "${currentIndex}" not found`
+                  `${PARSE_ERROR}: Block helper with id "${currentIndex}" not found`
                 );
               }
               currentRequest.el = currrentElement;
@@ -1557,7 +1604,7 @@
       };
       const templateArr = parseTemplate(template);
       if (requestsIndexes.length === 0)
-        createError(`${PARSE_ERROR}: Request object not found`);
+        createError(`${PARSE_ERROR}: Block helper not found`);
       const setRequest = (text) => {
         const parsedData = JSON5.parse(text);
         for (const key in parsedData) {

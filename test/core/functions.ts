@@ -1,7 +1,7 @@
 import "../setup/setup";
 import "../setup/server.setup";
 import { strict as assert } from "assert";
-import { HMPLRequestInfo } from "../../src/types";
+import { HMPLRequestInfo, HMPLRequestGetParams } from "../../src/types";
 import { createScope, clearScope } from "../server/server";
 import { compile, stringify } from "../../src/main";
 import { checkFunction } from "../shared/utils";
@@ -35,7 +35,7 @@ const eaeq = (
       const currentOptions = checkFunction(options)
         ? options(res)
         : {
-            get: (...args: any) => get(res, ...args),
+            get: (params: HMPLRequestGetParams) => get(params, res),
             ...options
           };
       compile(template, compileOptions)(currentOptions);
@@ -54,7 +54,7 @@ const waeq = (
   text: string,
   template: string,
   warningMessage: string,
-  get: (...args: any[]) => void,
+  get: (params: HMPLRequestGetParams) => void,
   options: any = {},
   scopeOptions: ScopeOptions = {},
   compileOptions: any = {}
@@ -69,7 +69,7 @@ const waeq = (
         template,
         compileOptions
       )({
-        get: (...args: any) => get(res, ...args),
+        get: (params: HMPLRequestGetParams) => get(params),
         ...options
       });
       setTimeout(() => {
@@ -104,7 +104,7 @@ const aeq = (
       const currentOptions = checkFunction(options)
         ? options(res)
         : {
-            get: (...args: any) => get(res, ...args),
+            get: (params: HMPLRequestGetParams) => get(params, res),
             ...options
           };
       compile(template, compileOptions)(currentOptions);
@@ -121,7 +121,7 @@ const aeq = (
 
 const aeqError = (
   template: string,
-  get: (...args: any[]) => void,
+  get: (params: HMPLRequestGetParams) => void,
   options: any = {},
   scopeOptions: ScopeOptions = {}
 ) => {
@@ -131,7 +131,7 @@ const aeqError = (
     try {
       const req = await new Promise<string>((resolve) => {
         compile(template)({
-          get: (...args) => get(resolve, ...args),
+          get: (params: HMPLRequestGetParams) => get(params),
           ...options
         });
       });
@@ -171,7 +171,7 @@ const aeqe = (
       const currentOptions = checkFunction(options)
         ? options(res)
         : {
-            get: (...args: any) => get(res, ...args),
+            get: (params: HMPLRequestGetParams) => get(params, res),
             ...options
           };
       const instance = compile(template, compileOptions)(currentOptions);

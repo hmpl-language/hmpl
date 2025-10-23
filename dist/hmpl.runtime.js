@@ -44,6 +44,7 @@ var COMMENT = `hmpl`;
 var FORM_DATA = `formData`;
 var DISALLOWED_TAGS = `disallowedTags`;
 var SANITIZE = `sanitize`;
+var SANITIZE_CONFIG = "sanitizeConfig";
 var ALLOWED_CONTENT_TYPES = "allowedContentTypes";
 var REQUEST_INIT_GET = `get`;
 var INTERVAL = `interval`;
@@ -172,10 +173,10 @@ var createWarning = (text) => {
 var getIsMethodValid = (method) => {
   return VALID_METHODS.includes(method.toLowerCase());
 };
-var getTemplateWrapper = (str, sanitize = false) => {
+var getTemplateWrapper = (str, sanitize = false, sanitizeConfig) => {
   let sanitizedStr = str;
   if (sanitize) {
-    sanitizedStr = import_dompurify.default.sanitize(str);
+    sanitizedStr = sanitizeConfig ? import_dompurify.default.sanitize(str, sanitizeConfig) : import_dompurify.default.sanitize(str);
   }
   const elementDocument = new DOMParser().parseFromString(
     `<template>${sanitizedStr}</template>`,
@@ -184,8 +185,8 @@ var getTemplateWrapper = (str, sanitize = false) => {
   const elWrapper = elementDocument.childNodes[0].childNodes[0].firstChild;
   return elWrapper;
 };
-var getResponseElements = (response, disallowedTags = [], sanitize) => {
-  const elWrapper = getTemplateWrapper(response, sanitize);
+var getResponseElements = (response, disallowedTags = [], sanitize, sanitizeConfig) => {
+  const elWrapper = getTemplateWrapper(response, sanitize, sanitizeConfig);
   const elContent = elWrapper["content"];
   for (let i = 0; i < disallowedTags.length; i++) {
     const tag = disallowedTags[i];
@@ -208,7 +209,15 @@ var getIsNotAllowedContentType = (contentType, allowedContentTypes) => {
   }
   return !isContain;
 };
-var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, isMemo, options = {}, templateObject, allowedContentTypes, disallowedTags, sanitize, reqObject, indicators, currentClearInterval) => {
+var createGetParams = (prop, value, context, request) => {
+  return {
+    prop,
+    value,
+    context,
+    request
+  };
+};
+var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, isMemo, options = {}, templateObject, allowedContentTypes, disallowedTags, sanitize, sanitizeConfig, reqObject, indicators, currentClearInterval) => {
   const {
     mode,
     cache,
@@ -302,14 +311,16 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
   const callGetResponse = (reqResponse) => {
     if (isRequests) {
       reqObject.response = reqResponse;
-      get?.("response", reqResponse, requestContext, reqObject);
+      get?.(
+        createGetParams("response", reqResponse, requestContext, reqObject)
+      );
     }
-    get?.("response", mainEl, requestContext);
+    get?.(createGetParams("response", mainEl, requestContext));
   };
   const updateNodes = (content, isClone = true, isNodes = false) => {
     if (isRequest) {
       templateObject.response = content.cloneNode(true);
-      get?.("response", content, requestContext);
+      get?.(createGetParams("response", content, requestContext));
     } else {
       let reqResponse = [];
       const newContent = isClone ? content.cloneNode(true) : content;
@@ -356,7 +367,7 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
   const setComment = () => {
     if (isRequest) {
       templateObject.response = void 0;
-      get?.("response", void 0, requestContext);
+      get?.(createGetParams("response", void 0, requestContext));
     } else {
       if (dataObj?.nodes) {
         const parentNode = dataObj.parentNode;
@@ -372,9 +383,11 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
         dataObj.parentNode = null;
         if (isRequests) {
           reqObject.response = void 0;
-          get?.("response", void 0, requestContext, reqObject);
+          get?.(
+            createGetParams("response", void 0, requestContext, reqObject)
+          );
         }
-        get?.("response", mainEl, requestContext);
+        get?.(createGetParams("response", mainEl, requestContext));
       }
     }
     if (isRequestMemo) {
@@ -440,12 +453,12 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
     if (isRequests) {
       if (reqObject.status !== status) {
         reqObject.status = status;
-        get?.("status", status, requestContext, reqObject);
+        get?.(createGetParams("status", status, requestContext, reqObject));
       }
     } else {
       if (templateObject.status !== status) {
         templateObject.status = status;
-        get?.("status", status, requestContext);
+        get?.(createGetParams("status", status, requestContext));
       }
     }
     if (isRequestMemo && getIsNotFullfilledStatus(status)) {
@@ -521,11 +534,12 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
       const templateWrapper = getResponseElements(
         data,
         disallowedTags,
-        sanitize
+        sanitize,
+        sanitizeConfig
       );
       if (isRequest) {
         templateObject.response = templateWrapper;
-        get?.("response", templateWrapper, requestContext);
+        get?.(createGetParams("response", templateWrapper, requestContext));
       } else {
         const reqResponse = [];
         const nodes = [
@@ -545,9 +559,16 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
           parentNode.removeChild(el);
           if (isRequests) {
             reqObject.response = reqResponse;
-            get?.("response", reqResponse, requestContext, reqObject);
+            get?.(
+              createGetParams(
+                "response",
+                reqResponse,
+                requestContext,
+                reqObject
+              )
+            );
           }
-          get?.("response", mainEl, requestContext);
+          get?.(createGetParams("response", mainEl, requestContext));
         }
       }
     }
@@ -605,6 +626,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
         const interval = req[INTERVAL];
         const isReqMemoUndefined = !req.hasOwnProperty(MEMO);
         const isReqIntervalUndefined = !req.hasOwnProperty(INTERVAL);
+        const sanitizeConfig = compileOptions[SANITIZE_CONFIG];
         let isMemo = isMemoUndefined ? false : compileOptions[MEMO];
         if (!isReqMemoUndefined) {
           if (after) {
@@ -863,6 +885,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
             allowedContentTypes,
             disallowedTags,
             sanitize,
+            sanitizeConfig,
             reqObject,
             indicators,
             currentClearInterval
@@ -989,7 +1012,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
           const currentRequest = requests[currentIndex];
           if (Number.isNaN(currentIndex) || currentRequest === void 0) {
             createError(
-              `${PARSE_ERROR}: Request object with id "${currentIndex}" not found`
+              `${PARSE_ERROR}: Block helper with id "${currentIndex}" not found`
             );
           }
           currentRequest.el = currrentElement;
@@ -1269,7 +1292,7 @@ var compile = (template, options = {}) => {
   };
   const templateArr = parseTemplate(template);
   if (requestsIndexes.length === 0)
-    createError(`${PARSE_ERROR}: Request object not found`);
+    createError(`${PARSE_ERROR}: Block helper not found`);
   const setRequest = (text) => {
     const parsedData = import_json5.default.parse(text);
     for (const key in parsedData) {

@@ -442,6 +442,19 @@ describe("compile function", () => {
     '<div><form id="form"></form><!--hmpl0--></div>'
   );
   eq(
+    "should sanitize incoming HTML with config",
+    compile(
+      createTestObj2(
+        `<form id="form"></form>{{#r src="/api/test" after="submit:#form" autoBody={ formData:false } initId="1" }}{{/r}}`
+      ),
+      {
+        sanitizeConfig: { USE_PROFILES: { html: true } },
+        sanitize: true
+      }
+    )().response?.outerHTML,
+    '<div><form id="form"></form><!--hmpl0--></div>'
+  );
+  eq(
     "should render multiple request blocks using distinct initID-based RequestInit configurations",
     compile(
       createTestObj2(

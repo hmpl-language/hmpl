@@ -11,6 +11,7 @@ import {
   INTERVAL
 } from "../config/config";
 import { compile, stringify } from "../../src/main";
+import { HMPLRequestGetParams } from "../../src/types";
 import {
   waeq,
   e,
@@ -385,7 +386,7 @@ describe("template function", () => {
     `${RESPONSE_ERROR}: Expected ${DEFAULT_ALLOWED_CONTENT_TYPES.map(
       (type) => `"${type}"`
     ).join(", ")}, but received "${contentType1}"`,
-    () => ({}) as any,
+    (params: HMPLRequestGetParams) => ({}) as any,
     {},
     {
       template: Buffer.from("<div>123</div>", "utf-8"),
@@ -400,7 +401,7 @@ describe("template function", () => {
     `${RESPONSE_ERROR}: Expected ${DEFAULT_ALLOWED_CONTENT_TYPES.map(
       (type) => `"${type}"`
     ).join(", ")}, but received ""`,
-    () => ({}) as any,
+    (params: HMPLRequestGetParams) => ({}) as any,
     {},
     {
       template: Buffer.from("<div>123</div>", "utf-8"),
@@ -413,7 +414,7 @@ describe("template function", () => {
     "throws an error if a header value is not a string",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${REQUEST_INIT_ERROR}: Expected type string, but received type object`,
-    () => ({}) as any,
+    (params: HMPLRequestGetParams) => ({}) as any,
     {
       headers: {
         a: {}
@@ -425,7 +426,7 @@ describe("template function", () => {
     "throws an error if initialization options are not an object",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${REQUEST_INIT_ERROR}: Expected an object with initialization options`,
-    () => ({}) as any,
+    (params: HMPLRequestGetParams) => ({}) as any,
     () => () => 1 as any,
     {}
   );
@@ -435,7 +436,7 @@ describe("template function", () => {
       `{{#r src="${BASE_URL}/api/test"}}{{/r}}{{#r src="${BASE_URL}/api/test"}}{{/r}}`
     ),
     `${REQUEST_INIT_ERROR}: Expected an object with initialization options`,
-    () => ({}) as any,
+    (params: HMPLRequestGetParams) => ({}) as any,
     () => () => 1 as any,
     {}
   );
@@ -443,7 +444,7 @@ describe("template function", () => {
     "throws an error if 'headers' property is not a value object",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
     `${REQUEST_INIT_ERROR}: The "headers" property must contain a value object`,
-    () => ({}) as any,
+    (params: HMPLRequestGetParams) => ({}) as any,
     {
       headers: []
     },
@@ -453,7 +454,7 @@ describe("template function", () => {
     "throws an error if referenced request ID is not found",
     createTestObj2(`${eaeq1}`),
     `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`,
-    () => ({}) as any,
+    (params: HMPLRequestGetParams) => ({}) as any,
     (res: any) => [
       {
         id: "2",
@@ -466,7 +467,7 @@ describe("template function", () => {
     "throws an error if referenced request ID is not found",
     createTestObj2(`${eaeq1}`),
     `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`,
-    () => ({}) as any,
+    (params: HMPLRequestGetParams) => ({}) as any,
     (res: any) => [
       {
         id: "2",
@@ -479,7 +480,7 @@ describe("template function", () => {
     "throws an error if initialization data is not an array and request ID is not found",
     createTestObj2(`${eaeq1}`),
     `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`,
-    () => ({}) as any,
+    (params: HMPLRequestGetParams) => ({}) as any,
     (res: any) => ({}),
     {}
   );
@@ -500,10 +501,12 @@ describe("template function", () => {
   aeq(
     "renders template content inside a template element",
     `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<template><div>123</div></template>`) {
+          if (
+            params.value?.outerHTML === `<template><div>123</div></template>`
+          ) {
             res(true);
           } else {
             res(false);
@@ -516,11 +519,13 @@ describe("template function", () => {
   aeq(
     "renders template content inside a template element and clear interval",
     `{{#r src="${BASE_URL}/api/test" interval=100}}{{/r}}`,
-    (res, prop, value, context) => {
-      context.request.clearInterval();
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      params.context.request?.clearInterval?.();
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<template><div>123</div></template>`) {
+          if (
+            params.value?.outerHTML === `<template><div>123</div></template>`
+          ) {
             res(true);
           } else {
             res(false);
@@ -533,10 +538,10 @@ describe("template function", () => {
   aeq(
     "renders error template when request is rejected",
     createTestObj2(`${aeq5}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><p>Error</p></div>`) {
+          if (params.value?.outerHTML === `<div><p>Error</p></div>`) {
             res(true);
           } else {
             res(false);
@@ -552,10 +557,10 @@ describe("template function", () => {
   aeq(
     "returns the status as 'rejected' when request is rejected",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "status":
-          if (value === "rejected") {
+          if (params.value === "rejected") {
             res(true);
           }
           break;
@@ -569,10 +574,10 @@ describe("template function", () => {
   aeq(
     "returns status 'rejected' when request is rejected",
     createTestObj2(`${aeq7}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "status":
-          if (value === "rejected") {
+          if (params.value === "rejected") {
             res(true);
           }
           break;
@@ -586,10 +591,10 @@ describe("template function", () => {
   aeq(
     "returns status 100 when indicators array is empty",
     createTestObj2(`{{#r src="${BASE_URL}/api/test" indicators=[]}}{{/r}}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "status":
-          if (value === 100) {
+          if (params.value === 100) {
             res(true);
           }
           break;
@@ -603,10 +608,10 @@ describe("template function", () => {
   aeq(
     "renders 'Rejected' indicator when rejection is triggered",
     createTestObj2(`${aeq6}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><p>Rejected</p></div>`) {
+          if (params.value?.outerHTML === `<div><p>Rejected</p></div>`) {
             res(true);
           } else {
             res(false);
@@ -622,10 +627,10 @@ describe("template function", () => {
   aeq(
     "renders the '100' indicator when response status is 100",
     createTestObj2(`${aeq7}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><p>100</p></div>`) {
+          if (params.value?.outerHTML === `<div><p>100</p></div>`) {
             res(true);
           } else {
             res(false);
@@ -642,7 +647,7 @@ describe("template function", () => {
     "throws REQUEST_INIT_ERROR when 'signal' overrides AbortSignal from 'timeout'",
     `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
     `${REQUEST_INIT_ERROR}: The "signal" property overwrote the AbortSignal from "timeout"`,
-    () => ({}) as any,
+    (params: HMPLRequestGetParams) => ({}) as any,
     {
       timeout: 1000,
       signal: new AbortController().signal
@@ -653,7 +658,7 @@ describe("template function", () => {
     "throws REQUEST_INIT_ERROR when 'keepalive' property is used but not supported",
     `{{#r src="${BASE_URL}/api/test"}}{{/r}}`,
     `${REQUEST_INIT_ERROR}: The "keepalive" property is not yet supported`,
-    () => ({}) as any,
+    (params: HMPLRequestGetParams) => ({}) as any,
     {
       keepalive: true
     },
@@ -664,10 +669,10 @@ describe("template function", () => {
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" disallowedTags=["script"]}}{{/r}}`
     ),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -685,10 +690,10 @@ describe("template function", () => {
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" disallowedTags=["script"]}}{{/r}}`
     ),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -710,11 +715,11 @@ describe("template function", () => {
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" disallowedTags=["script"] interval=100}}{{/r}}`
     ),
-    (res, prop, value, context) => {
-      context.request.clearInterval();
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      params.context.request.clearInterval?.();
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -734,10 +739,10 @@ describe("template function", () => {
   aeq(
     "renders correctly when 'sanitize' is enabled and 'script' tag is stripped",
     createTestObj2(`{{#r src="${BASE_URL}/api/test" sanitize=true}}{{/r}}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -754,10 +759,10 @@ describe("template function", () => {
   aeq(
     "renders correctly  when template sanitization is enabled but runtime config disables it",
     createTestObj2(`{{#r src="${BASE_URL}/api/test" sanitize=true}}{{/r}}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -776,10 +781,10 @@ describe("template function", () => {
   aeq(
     "renders correctly when memoization is enabled",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -796,10 +801,10 @@ describe("template function", () => {
   aeq(
     "renders correctly with default configuration",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -813,10 +818,10 @@ describe("template function", () => {
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" indicators=[{trigger:"pending", content:"<p>Loading...</p>"}]}}{{/r}}`
     ),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><p>Loading...</p></div>`) {
+          if (params.value?.outerHTML === `<div><p>Loading...</p></div>`) {
             res(true);
           } else {
             res(false);
@@ -828,10 +833,10 @@ describe("template function", () => {
   aeq(
     "renders correctly with Buffer template and single allowed content type",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -854,10 +859,10 @@ describe("template function", () => {
   aeq(
     "renders correctly with Buffer template when content type is included in allowed list",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -880,10 +885,10 @@ describe("template function", () => {
   aeq(
     "renders correctly when content type is 'application/octet-stream' and no types are allowed",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -908,10 +913,13 @@ describe("template function", () => {
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test"}}{{/r}}{{#r src="${BASE_URL}/api/test"}}{{/r}}`
     ),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div><div>123</div></div>`) {
+          if (
+            params.value?.outerHTML ===
+            `<div><div>123</div><div>123</div></div>`
+          ) {
             res(true);
           }
           break;
@@ -921,12 +929,34 @@ describe("template function", () => {
   );
 
   aeq(
+    "renders correctly when multiple identical templates are composed with sanitizing with config",
+    createTestObj2(
+      `{{#r src="${BASE_URL}/api/test"}}{{/r}}{{#r src="${BASE_URL}/api/test"}}{{/r}}`
+    ),
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
+        case "response":
+          if (
+            params.value?.outerHTML ===
+            `<div><div>123</div><div>123</div></div>`
+          ) {
+            res(true);
+          }
+          break;
+      }
+    },
+    {},
+    { template: "<div>123</div><math></math>" },
+    { sanitize: true, sanitizeConfig: { USE_PROFILES: { html: true } } }
+  );
+
+  aeq(
     "renders correctly when content type is 'application/octet-stream' and all types are allowed",
     createTestObj2(`{{#r src="${BASE_URL}/api/test"}}{{/r}}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -951,10 +981,10 @@ describe("template function", () => {
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" allowedContentTypes=["application/octet-stream"]}}{{/r}}`
     ),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -979,10 +1009,10 @@ describe("template function", () => {
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test" allowedContentTypes=["application/octet-stream"]}}{{/r}}`
     ),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><div>123</div></div>`) {
+          if (params.value?.outerHTML === `<div><div>123</div></div>`) {
             res(true);
           } else {
             res(false);
@@ -1003,10 +1033,10 @@ describe("template function", () => {
   aeq(
     "renders '<p>Loading...</p>' when 'pending' indicator is triggered",
     createTestObj2(`${aeq0}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><p>Loading...</p></div>`) {
+          if (params.value?.outerHTML === `<div><p>Loading...</p></div>`) {
             res(true);
           } else {
             res(false);
@@ -1018,10 +1048,12 @@ describe("template function", () => {
   aeq(
     "renders correctly when output is wrapped in a <template> tag",
     `${aeq0}`,
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<template><div>123</div></template>`) {
+          if (
+            params.value?.outerHTML === `<template><div>123</div></template>`
+          ) {
             res(true);
           }
           break;
@@ -1031,10 +1063,10 @@ describe("template function", () => {
   aeq(
     "renders a 405 error wrapped in a <template> tag",
     `${aeq4}`,
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<template><p>405</p></template>`) {
+          if (params.value?.outerHTML === `<template><p>405</p></template>`) {
             res(true);
           }
           break;
@@ -1048,10 +1080,10 @@ describe("template function", () => {
   aeq(
     "renders the error template when response code is 405",
     `${aeq5}`,
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<template><p>Error</p></template>`) {
+          if (params.value?.outerHTML === `<template><p>Error</p></template>`) {
             res(true);
           }
           break;
@@ -1065,10 +1097,10 @@ describe("template function", () => {
   aeq(
     "renders '<p>Loading...</p>' with advanced fetch options",
     createTestObj2(`${aeq0}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value?.outerHTML === `<div><p>Loading...</p></div>`) {
+          if (params.value?.outerHTML === `<div><p>Loading...</p></div>`) {
             res(true);
           } else {
             res(false);
@@ -1093,11 +1125,11 @@ describe("template function", () => {
   aeqe(
     "renders '<div>123</div>' inside <pre> alongside button",
     `<pre><button id="click">click</button>${aeq1}</pre>`,
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<pre><button id="click">click</button><div>123</div></pre>`
           ) {
             res(true);
@@ -1115,11 +1147,11 @@ describe("template function", () => {
     {},
     (res: any) => () => {
       return {
-        get: (prop: any, value: any) => {
-          switch (prop) {
+        get: (params: HMPLRequestGetParams) => {
+          switch (params.prop) {
             case "response":
               if (
-                value?.outerHTML ===
+                params.value?.outerHTML ===
                 `<div><button id="click">click</button><div>123</div></div>`
               ) {
                 res(true);
@@ -1141,11 +1173,11 @@ describe("template function", () => {
       {
         id: "1",
         value: {
-          get: (prop: any, value: any) => {
-            switch (prop) {
+          get: (params: HMPLRequestGetParams) => {
+            switch (params.prop) {
               case "response":
                 if (
-                  value?.outerHTML ===
+                  params.value?.outerHTML ===
                   `<div><button id="click">click</button><div>123</div></div>`
                 ) {
                   res(true);
@@ -1160,11 +1192,11 @@ describe("template function", () => {
   aeqe(
     "renders duplicated '<div>123</div>' blocks",
     createTestObj3(`${aeq1}${aeq1}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><div>123</div><div>123</div></div>`
           ) {
             res(true);
@@ -1177,17 +1209,17 @@ describe("template function", () => {
   aeqe(
     "memoizes the inner '<div>123</div>' element",
     createTestObj3(`${aeq1}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><div>123</div></div>`
           ) {
             if (!memoItem) {
-              memoItem = value;
+              memoItem = params.value;
             } else {
-              res(memoItem.childNodes[1] === value.childNodes[1]);
+              res(memoItem.childNodes[1] === params.value.childNodes[1]);
             }
           } else {
             res(false);
@@ -1206,11 +1238,11 @@ describe("template function", () => {
   aeqe(
     "renders two duplicated '<div>123</div>' blocks",
     createTestObj3(`${aeq8}${aeq8}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><div>123</div><div>123</div></div>`
           ) {
             res(true);
@@ -1227,11 +1259,11 @@ describe("template function", () => {
   aeqe(
     "renders nested '<pre><pre>123</pre></pre>'",
     createTestObj3(`<pre>${aeq8}</pre>`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><pre><pre>123</pre></pre></div>`
           ) {
             res(true);
@@ -1251,18 +1283,18 @@ describe("template function", () => {
   aeqe(
     "renders distinct nodes for repeated renders when memoization is disabled",
     createTestObj3(`${aeq1}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><div>123</div></div>`
           ) {
             if (!memoItem1) {
-              memoItem1 = value;
+              memoItem1 = params.value;
             } else {
               // this is false
-              res(memoItem1.childNodes[1] === value.childNodes[1]);
+              res(memoItem1.childNodes[1] === params.value.childNodes[1]);
             }
           } else {
             res(false);
@@ -1279,17 +1311,17 @@ describe("template function", () => {
   aeqe(
     "memoizes the inner '<div>123</div>' element",
     createTestObj3(`${aeq2}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><div>123</div></div>`
           ) {
             if (!memoItem2) {
-              memoItem2 = value;
+              memoItem2 = params.value;
             } else {
-              res(memoItem2.childNodes[1] === value.childNodes[1]);
+              res(memoItem2.childNodes[1] === params.value.childNodes[1]);
             }
           }
           break;
@@ -1304,18 +1336,18 @@ describe("template function", () => {
   aeqe(
     "renders '<div>123</div>' consistently across 3 renders",
     createTestObj3(`${aeq1}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><div>123</div></div>`
           ) {
             if (!memoItem2) {
               if (!count) {
                 count++;
               } else {
-                memoItem2 = value;
+                memoItem2 = params.value;
               }
             } else {
               res(true);
@@ -1332,17 +1364,17 @@ describe("template function", () => {
   aeqe(
     "does not memoize '<div>123</div>' across repeated renders",
     createTestObj3(`${aeq2}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><div>123</div></div>`
           ) {
             if (!memoItem2) {
-              memoItem2 = value;
+              memoItem2 = params.value;
             } else {
-              res(memoItem2.childNodes[1] !== value.childNodes[1]);
+              res(memoItem2.childNodes[1] !== params.value.childNodes[1]);
             }
           }
           break;
@@ -1359,11 +1391,11 @@ describe("template function", () => {
   aeqe(
     "renders '<!--hmpl0-->' placeholder after a 200 response",
     createTestObj3(`${aeq1}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><!--hmpl0--></div>`
           ) {
             res(true);
@@ -1393,17 +1425,17 @@ describe("template function", () => {
   aeqe(
     "fails to memoize the inner '<div>123</div>' element",
     createTestObj3(`${aeq2}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><div>123</div></div>`
           ) {
             if (!memoItem2) {
-              memoItem2 = value;
+              memoItem2 = params.value;
             } else {
-              res(memoItem2.childNodes[1] !== value.childNodes[1]);
+              res(memoItem2.childNodes[1] !== params.value.childNodes[1]);
             }
           }
           break;
@@ -1420,11 +1452,11 @@ describe("template function", () => {
   aeqe(
     "fails to memoize with createTestObj4 and autoBody: true",
     createTestObj4(`${aeq3}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><form onsubmit="function prevent(e){e.preventDefault();};return prevent(event);" id="form"></form><div>123</div></div>`
           ) {
             res(true);
@@ -1452,10 +1484,10 @@ describe("template function", () => {
   aeqe(
     "renders undefined response when status code is 405",
     `${aeq0}`,
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value === undefined) {
+          if (params.value === undefined) {
             res(true);
           }
           break;
@@ -1471,11 +1503,11 @@ describe("template function", () => {
   aeqe(
     "renders two status placeholders after a 405 response",
     createTestObj3(`${aeq0}${aeq0}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><!--hmpl0--><!--hmpl1--></div>`
           ) {
             res(true);
@@ -1496,11 +1528,11 @@ describe("template function", () => {
   aeqe(
     "renders updated content after a 200 response",
     createTestObj3(`${aeq1}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><div>567</div></div>`
           ) {
             res(true);
@@ -1526,17 +1558,17 @@ describe("template function", () => {
   aeqe(
     "memoizes inner '<div>123</div>' element",
     createTestObj3(`${aeq2}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><div>123</div></div>`
           ) {
             if (!memoItem3) {
-              memoItem3 = value;
+              memoItem3 = params.value;
             } else {
-              res(memoItem3.childNodes[1] === value.childNodes[1]);
+              res(memoItem3.childNodes[1] === params.value.childNodes[1]);
             }
           }
           break;
@@ -1558,11 +1590,11 @@ describe("template function", () => {
   aeqe(
     "renders status placeholder '<!--hmpl0-->' after a 405 response",
     createTestObj3(`${aeq2}`),
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
           if (
-            value?.outerHTML ===
+            params.value?.outerHTML ===
             `<div><button id="click">click</button><!--hmpl0--></div>`
           ) {
             res(true);
@@ -1585,10 +1617,10 @@ describe("template function", () => {
   aeqe(
     "renders undefined response when status code is 405",
     `${aeq0}`,
-    (res, prop, value) => {
-      switch (prop) {
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
         case "response":
-          if (value === undefined) {
+          if (params.value === undefined) {
             res(true);
           }
           break;

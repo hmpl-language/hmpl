@@ -1,14 +1,22 @@
 "use strict";
 
+import { Config } from "dompurify";
+
+/**
+ * A set of parameters that arrive during the request and after its finalization
+ */
+
+interface HMPLRequestGetParams {
+  prop: string; // The name of the updated property
+  value: any; // The new property value
+  context: HMPLInstanceContext; // The context of the current request sent to the HMPLInstance
+  request?: HMPLRequest; // The associated request block helper (for multi-request templates)
+}
+
 /**
  * get function in options object
  */
-type HMPLRequestGet = (
-  prop: string,
-  value: any,
-  context: HMPLInstanceContext,
-  request?: HMPLRequest
-) => void;
+type HMPLRequestGet = (params: HMPLRequestGetParams) => void;
 
 /**
  * headers object in options object
@@ -196,6 +204,7 @@ interface HMPLCompileOptions {
   allowedContentTypes?: HMPLContentTypes; // Allowed Content-Types for response processing.
   sanitize?: HMPLSanitize; // Sanitize the response content, ensuring it is safe to render.
   disallowedTags?: HMPLDisallowedTags; // Tags to remove from response.
+  sanitizeConfig?: Config; // Configuration object for the sanitize function from DOMPurify
 }
 
 /**
@@ -377,5 +386,6 @@ export {
   HMPLSanitize,
   HMPLClearInterval,
   HMPLRequestGet,
+  HMPLRequestGetParams,
   HMPLHeadersInit
 };
