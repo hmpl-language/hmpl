@@ -1585,7 +1585,7 @@ section {
   }
 }
 
-/* Progess Bar */
+/* Progress Bar */
 
 .metrics-wrapper {
   background: linear-gradient(0deg, #7e71ba 0%, #0183ff 100%);
