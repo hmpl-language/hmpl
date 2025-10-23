@@ -233,7 +233,7 @@ But we will be glad if you make your own :)
 
 The [documentation](https://hmpl-lang.dev/introduction) contains main information on how the HMPL template language works. If you have any questions about how HMPL works, you can use the following resources:
 
-- [Github](https://github.com/hmpl-language/hmpl) - In the discussion and issues sections you can ask any question you are interested in
+- [GitHub](https://github.com/hmpl-language/hmpl) - In the discussion and issues sections you can ask any question you are interested in
 - [Discord](https://discord.gg/KFunMep36n) - You can ask your question in the thematic channel "support"
 - [𝕏 (Twitter)](https://x.com/hmpljs) - There is a lot of interesting stuff there, concerning the template language and not only :)
 
