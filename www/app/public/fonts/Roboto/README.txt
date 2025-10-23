@@ -97,7 +97,7 @@ Online
 
 Installing fonts
 
-  MacOS: https://support.apple.com/en-us/HT201749
+  macOS: https://support.apple.com/en-us/HT201749
   Linux: https://www.google.com/search?q=how+to+install+a+font+on+gnu%2Blinux
   Windows: https://support.microsoft.com/en-us/help/314960/how-to-install-or-remove-a-font-in-windows
 
