@@ -472,7 +472,7 @@
             class="main-button article-button hover_effect fade-in-effect"
             rel="nooferer noopener"
             target="_blank"
-            >Read more</a
+            >Read more about HMPL vs HTMX</a
           >
         </div>
         <div class="right_article">
