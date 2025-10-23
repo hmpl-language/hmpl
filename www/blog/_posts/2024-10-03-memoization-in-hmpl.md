@@ -103,7 +103,7 @@ A small diagram has been created to visually display the process:
 
 ![memo](/images/2024-10-03-memoization-in-hmpl/memo.png)
 
-Here, too, the concept of a cache appears, which has already been used before. Also, if we take HTTP requests, then additional concepts of fresh and state response, revalidation, etc. are considered. This all comes from the HTTP cache theory. This point is discussed in more detail in the msdn documentation [here](https://developer.mozilla.org/en-US/docs/Web/API/Request/cache). An analogy can be drawn that memoization in HMPL is logically comparable to the no-cache value of the caching mode.
+Here, too, the concept of a cache appears, which has already been used before. Also, if we take HTTP requests, then additional concepts of fresh and state response, revalidation, etc. are considered. This all comes from the HTTP cache theory. This point is discussed in more detail in the [MDN documentation](https://developer.mozilla.org/en-US/docs/Web/API/Request/cache). An analogy can be drawn that memoization in HMPL is logically comparable to the no-cache value of the caching mode.
 
 An example of hmpl working without memoization and with it in the DOM:
 
@@ -125,10 +125,10 @@ Also, memoization will be available not only for one query object, but also for 
 
 ```javascript
 const templateFn = hmpl.compile(
-  `{ 
+  `{
      {
-       "src":"/api/test" 
-     } 
+       "src":"/api/test"
+     }
    }`,
   {
     memo: true,
