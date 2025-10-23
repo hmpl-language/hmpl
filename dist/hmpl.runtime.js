@@ -1002,10 +1002,10 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
     reqFn = renderRequest(requests[0]);
   } else {
     let id = -2;
-    const getRequests = (currrentElement) => {
+    const getRequests = (currentElement) => {
       id++;
-      if (currrentElement.nodeType == 8) {
-        let value = currrentElement.nodeValue;
+      if (currentElement.nodeType == 8) {
+        let value = currentElement.nodeValue;
         if (value && value.startsWith(COMMENT)) {
           value = value.slice(4);
           const currentIndex = Number(value);
@@ -1015,12 +1015,12 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
               `${PARSE_ERROR}: Block helper with id "${currentIndex}" not found`
             );
           }
-          currentRequest.el = currrentElement;
+          currentRequest.el = currentElement;
           currentRequest.nodeId = id;
         }
       }
-      if (currrentElement.hasChildNodes()) {
-        const chNodes = currrentElement.childNodes;
+      if (currentElement.hasChildNodes()) {
+        const chNodes = currentElement.childNodes;
         for (let i = 0; i < chNodes.length; i++) {
           getRequests(chNodes[i]);
         }
@@ -1413,20 +1413,20 @@ var compile = (template, options = {}) => {
       };
       if (!isRequest) {
         let id = -2;
-        const getRequests = (currrentElement) => {
+        const getRequests = (currentElement) => {
           id++;
-          if (currrentElement.nodeType == 8) {
-            const value = currrentElement.nodeValue;
+          if (currentElement.nodeType == 8) {
+            const value = currentElement.nodeValue;
             if (value && value.startsWith(COMMENT)) {
               const elObj = {
-                el: currrentElement,
+                el: currentElement,
                 id
               };
               data.els.push(elObj);
             }
           }
-          if (currrentElement.hasChildNodes()) {
-            const chNodes = currrentElement.childNodes;
+          if (currentElement.hasChildNodes()) {
+            const chNodes = currentElement.childNodes;
             for (let i = 0; i < chNodes.length; i++) {
               getRequests(chNodes[i]);
             }
