@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
-import sitemap from '@astrojs/sitemap';
+import sitemap from "@astrojs/sitemap";
 import starlight from "@astrojs/starlight";
 import vue from "@astrojs/vue";
 import starlightThemeNova from "starlight-theme-nova";
@@ -19,10 +19,11 @@ export default defineConfig({
       customCss: ["./src/styles/main.css"],
       head: [
         {
-          tag: 'meta',
+          tag: "meta",
           attrs: {
             name: "keywords",
-            content: "hmpl, hmpl templates, fast template engine, html templating, server side rendering, express template engine"
+            content:
+              "hmpl, hmpl templates, fast template engine, html templating, server side rendering, express template engine"
           }
         }
       ],
@@ -186,6 +187,10 @@ export default defineConfig({
             },
             { label: "HMPLRequest", link: "/types#hmplrequest" },
             { label: "HMPLRequestGet", link: "/types#hmplrequestget" },
+            {
+              label: "HMPLRequestGetParams",
+              link: "/types#hmplrequestgetparams"
+            },
             { label: "HMPLRequestInfo", link: "/types#hmplrequestinfo" },
             { label: "HMPLCompile", link: "/types#hmplcompile" },
             { label: "HMPLCompileOptions", link: "/types#hmplcompileoptions" },

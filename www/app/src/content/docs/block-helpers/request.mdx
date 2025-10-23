@@ -173,7 +173,7 @@ const templateFn = compile(`
 `);
 
 const el = templateFn({
-  get: (prop, value, context) => {
+  get: ({ prop, value, context }) => {
     const { clearInterval } = context.request;
     switch (prop) {
       case "response":

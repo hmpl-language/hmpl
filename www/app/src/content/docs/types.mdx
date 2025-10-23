@@ -64,12 +64,18 @@ interface HMPLRequest {
 ## HMPLRequestGet
 
 ```ts
-type HMPLRequestGet = (
-  prop: string,
-  value: any,
-  context: HMPLInstanceContext,
-  request?: HMPLRequest
-) => void;
+type HMPLRequestGet = (params: HMPLRequestGetParams) => void;
+```
+
+## HMPLRequestGetParams
+
+```ts
+interface HMPLRequestGetParams {
+  prop: string;
+  value: any;
+  context: HMPLInstanceContext;
+  request?: HMPLRequest;
+}
 ```
 
 ## HMPLRequestInfo
@@ -109,6 +115,7 @@ interface HMPLCompileOptions {
   allowedContentTypes?: HMPLContentTypes;
   sanitize?: HMPLSanitize;
   disallowedTags?: HMPLDisallowedTags;
+  sanitizeConfig?: Config;
 }
 ```
 

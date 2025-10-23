@@ -70,16 +70,22 @@ const elementObj = templateFn({
 
 The get property specifies a callback function that executes on property updates within the HMPLInstance.
 
-| Argument | Type               | Description                                                       |
+| Argument | Type                                                | Description        |
+| -------- | --------------------------------------------------- | ------------------ |
+| params   | [HMPLRequestGetParams](/types#hmplrequestgetparams) | List of parameters |
+
+The list includes the following parameters:
+
+| Property | Type               | Description                                                       |
 | -------- | ------------------ | ----------------------------------------------------------------- |
 | prop     | string             | The name of the updated property                                  |
 | value    | any                | The new property value                                            |
-| redirect | HMPLRequestContext | The context of the current request sent to the HMPLInstance       |
+| context  | HMPLRequestContext | The context of the current request sent to the HMPLInstance       |
 | request  | HMPLRequest        | The associated request block helper (for multi-request templates) |
 
 ```js
 const elementObj = templateFn({
-  get: (prop, value, context, request) => {
+  get: ({ prop, value, context, request }) => {
     switch (prop) {
       case "response":
         if (!request) console.log(request);
@@ -104,7 +110,7 @@ Also, this function is great for implementing with `Promise` in JavaScript:
 ```js
 const val = await new Promise((res, rej) => {
   templateFn({
-    get: (prop, value, context, request) => {
+    get: ({ prop, value, context, request }) => {
       switch (prop) {
         case "response":
           if (!value) return;
@@ -115,6 +121,10 @@ const val = await new Promise((res, rej) => {
   });
 });
 ```
+
+:::note
+Since version `3.1.0`, the only argument to the function is an object
+:::
 
 ## RequestInit Function
 
@@ -135,7 +145,7 @@ const elementObj = templateFn(({ request: { event, clearInterval } }) => {
       "Content-Type": "text/html"
     },
     redirect: "follow",
-    get: (prop, value) => {},
+    get: ({ prop, value }) => {},
     referrerPolicy: "no-referrer",
     body: new FormatData(event.target, event.submitter)
   };
@@ -158,7 +168,7 @@ const instance = templateFn([
         "Content-Type": "text/html"
       },
       redirect: "follow",
-      get: (prop, value) => {},
+      get: ({ prop, value }) => {},
       referrerPolicy: "no-referrer",
       body: JSON.stringify(data)
     }
