@@ -27,7 +27,7 @@ import { e, eq, createTestObj1, createTestObj2 } from "./functions";
 
 describe("compile function", () => {
   e(
-    "throws an error if the TEMPLATE is not a stringthrows an error if the TEMPLATE is not a string",
+    "throws an error if the TEMPLATE is not a string",
     () => compile(123 as any),
     `${COMPILE_ERROR}: Template was not found or the type of the passed value is not string`
   );
