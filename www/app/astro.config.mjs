@@ -142,7 +142,7 @@ export default defineConfig({
                 },
                 {
                   label: "initId",
-                  link: "/block-helpers/request#iniid"
+                  link: "/block-helpers/request#initid"
                 },
                 {
                   label: "allowedContentTypes",
