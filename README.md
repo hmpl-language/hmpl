@@ -245,6 +245,14 @@ We have a [Contributing Guide](https://github.com/hmpl-language/hmpl/blob/main/C
 
 Thank you to all the people who have already contributed to HMPL, or related projects!
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=hmpl-language/hmpl&type=date&legend=top-left)](https://www.star-history.com/#hmpl-language/hmpl&type=date&legend=top-left)
+
+<div align="center">
+★ Star us if you find HMPL.js useful!
+</div>
+
 ## Roadmap
 
 The project has a [roadmap](https://github.com/orgs/hmpl-language/projects/5) where you can see the plans for future development.
