@@ -1,0 +1,49 @@
+---
+title: Attribute
+description: About attribute used in HMPL
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl attributes, helper attributes, request parameters, attribute syntax, template customization, json5 attributes
+---
+
+:::note
+Attributes in HMPL are related to [block helpers](/syntax/block-helper). When considering this concept, we recommend reading the page about them first.
+:::
+
+## What is this?
+
+These are some parameters that we set for block helpers in order to customize their work for our needs. For example, if we want to link our layout with javascript, then without attributes it will be problematic to specify which of the numerous block helpers to apply, for example, HMPLRequestInit and other points.
+
+```hmpl
+{{#request
+  src="/api/hello"
+  after="submit:#form"
+  repeat=false
+}}{{/request}}
+```
+
+It is worth considering that JSON5 is also used for parsing attributes. If you write a complex structure that passes in JavaScript, for example, for an object, then for JSON5 it may not pass (comments and so on).
+
+## Structure
+
+An attribute consists of a **key** and a **value**, just like in regular HTML, but with some exceptions. An attribute consists of a key and a value, just like in regular HTML, but with a few exceptions. In HMPL, there is a key, which is the string (`src` as an example), followed by an equals symbol `=`, and then the value itself.
+
+```hmpl
+{{#request
+  attr1="Text1"
+  attr2=["Text2", "Text3"]
+  attr3=true
+  attr4={
+    foo: "bar"
+  }
+  attr5=1
+}}{{/request}}
+```
+
+The following types are supported in values: `string`, `array`, `boolean`, `object` and `number`.
+
+## Peculiarities
+
+Some attributes can be overwritten in block helpers. So, for example, if you write indicators as an attribute, and then specify nested indicators.

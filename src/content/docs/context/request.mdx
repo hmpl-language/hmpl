@@ -1,0 +1,48 @@
+---
+title: Context
+description: About request context
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl request context, context object, event context, interval control, template context
+---
+
+Context in HMPL is a concept that describes the environment of a certain block.
+
+:::note
+Currently, there is only one type of context. Over time, we plan to add a global context that covers all instances of a template function.
+:::
+
+## request
+
+This context describes the environment within a single specific request.
+
+| Property      | Type                           | Description                                                                        |
+| ------------- | ------------------------------ | ---------------------------------------------------------------------------------- |
+| event         | Event \| undefined             | This property provides access to the event object described in the after attribute |
+| clearInterval | HMPLClearInterval \| undefined | Required to stop the interval described in the corresponding attribute             |
+
+```javascript
+const templateFn = hmpl.compile(
+  `<div>
+      <button data-action="increment" id="btn">Click!</button>
+      <div>Clicks: {{#request src="/api/clicks" interval=1000 after="click:#btn"}}{{/request}}</div>
+  </div>`
+);
+const elementObj = templateFn({
+  get: (prop, value, context, request) => {
+    console.log(context);
+  }
+});
+```
+
+import Preview from "../../../components/component-preview.astro";
+
+<Preview>
+
+<div slot="preview">
+`{ request: { event: Event, clearInterval: () => void } }`
+</div>
+
+</Preview>

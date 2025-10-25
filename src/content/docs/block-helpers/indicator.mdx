@@ -1,0 +1,50 @@
+---
+title: indicator
+description: About indicator block helper
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl indicator helper, status ui, request status display, loading state, error state, block helper indicator
+---
+
+The indicator helper block in the template serves as a declarative mechanism for conditionally rendering UI elements based on the current status of a server request, such as `403`, `"pending"`, etc.
+
+| Property | Type   | Default | Description                              | Required |
+| -------- | ------ | ------- | ---------------------------------------- | -------- |
+| trigger  | string | —       | The status that the indicator is showing | Yes      |
+
+```hmpl
+{{#indicator trigger="pending"}}
+    <span>Loading...</span>
+{{/indicator}}
+```
+
+This helper block is completely based on the [indicator](/block-helpers/request#indicator) attribute.
+
+:::note
+When duplicating indicators, the attribute is overwritten.
+:::
+
+## Nesting
+
+Only HTML markup. Also, used only within the [request](/block-helpers/request) helper block.
+
+```hmpl
+{{#indicator trigger=403}}
+    <div>Access error!</div>
+    <button>Reload page</button>
+{{/indicator}}
+```
+
+## trigger
+
+The trigger property specifies the status condition under which the associated content should be displayed.
+
+```hmpl
+{{#indicator trigger="error"}}
+    <div>Error!</div>
+{{/indicator}}
+```
+
+The list of values can be found [here](/block-helpers/request#trigger).
