@@ -1,0 +1,138 @@
+---
+layout: base
+---
+
+<article
+  class="post h-entry"
+  itemscope
+  itemtype="https://schema.org/BlogPosting"
+>
+  <!-- Hidden schema.org metadata -->
+  <meta itemprop="mainEntityOfPage" content="{{ page.url | absolute_url }}" />
+  <meta
+    itemprop="image"
+    content="{{ page.image | default: site.logo | absolute_url }}"
+  />
+  <meta
+    itemprop="description"
+    content="{{ page.description | default: page.excerpt | strip_html | truncatewords: 50 }}"
+  />
+
+  {%- assign page_keywords = "" -%} {%- if page.tags and page.tags.size > 0 -%}
+  {%- assign page_keywords = page.tags | join: ", " -%} {%- elsif
+  page.categories and page.categories.size > 0 -%} {%- assign page_keywords =
+  page.categories | join: ", " -%} {%- endif -%} {%- if page_keywords == "" -%}
+  {%- assign page_keywords = "HMPL, JavaScript, templating, web development" -%}
+  {%- endif -%}
+
+  <meta itemprop="keywords" content="{{ page_keywords }}" />
+
+  <!-- Publisher information -->
+  <div
+    itemprop="publisher"
+    itemscope
+    itemtype="https://schema.org/Organization"
+    style="display: none"
+  >
+    <meta itemprop="name" content="{{ site.title }}" />
+    <meta itemprop="url" content="{{ site.url }}" />
+    <div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+      <meta itemprop="url" content="{{ site.logo | absolute_url }}" />
+    </div>
+  </div>
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">
+      {{ page.title | escape }}
+    </h1>
+    <p class="post-meta">
+      {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y"
+      -%}
+      <time
+        class="dt-published"
+        datetime="{{ page.date | date_to_xmlschema }}"
+        itemprop="datePublished"
+      >
+        {{ page.date | date: date_format }}
+      </time>
+      {%- if page.modified_date -%} ~ {%- assign mdate = page.modified_date |
+      date_to_xmlschema -%}
+      <time class="dt-modified" datetime="{{ mdate }}" itemprop="dateModified">
+        {{ mdate | date: date_format }}
+      </time>
+      {%- else -%}
+      <meta
+        itemprop="dateModified"
+        content="{{ page.date | date_to_xmlschema }}"
+      />
+      {%- endif -%} {%- if page.author -%} • {% for author in page.author %}
+      <span itemprop="author" itemscope itemtype="https://schema.org/Person">
+        <span class="p-author h-card" itemprop="name">{{ author }}</span></span
+      >
+      {%- if forloop.last == false %}, {% endif -%} {% endfor %} {%- else -%}
+      <span
+        itemprop="author"
+        itemscope
+        itemtype="https://schema.org/Person"
+        style="display: none"
+      >
+        <meta itemprop="name" content="{{ site.author.name }}" />
+      </span>
+      {%- endif -%}
+
+      <!-- Reading time estimation -->
+      {%- assign words = content | number_of_words -%} {%- assign reading_time =
+      words | divided_by: 200 -%} {%- if reading_time == 0 -%}{%- assign
+      reading_time = 1 -%}{%- endif -%} •
+      <span itemprop="timeRequired" content="PT{{ reading_time }}M"
+        >{{ reading_time }} min read</span
+      >
+    </p>
+
+    <!-- Article tags/categories -->
+    {%- if page.tags and page.tags.size > 0 -%}
+    <div class="post-tags">
+      {%- for tag in page.tags -%}
+      <a
+        href="javascript:void(0)"
+        class="post-tag tag-filter-link"
+        data-tag="{{ tag }}"
+        itemprop="keywords"
+        >{{ tag }}</a
+      >
+      {%- endfor -%}
+    </div>
+    {%- elsif page.categories and page.categories.size > 0 -%}
+    <div class="post-categories">
+      {%- for category in page.categories -%}
+      <span class="post-category" itemprop="about">{{ category }}</span>
+      {%- endfor -%}
+    </div>
+    {%- endif -%}
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">{{ content }}</div>
+
+  {%- if site.disqus.shortname -%} {%- include disqus_comments.html -%} {%-
+  endif -%}
+
+  <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+</article>
+
+<nav class="post-navigation">
+  {% if page.previous %}
+  <div class="post-navigation__prev">
+    <a href="{{ page.previous.url | relative_url }}" class="nav-link">
+      <div class="nav-label">◁ Previous</div>
+    </a>
+    <div class="nav-title">“{{ page.previous.title }}”</div>
+  </div>
+  {% endif %} {% if page.next %}
+  <div class="post-navigation__next">
+    <a href="{{ page.next.url | relative_url }}" class="nav-link">
+      <div class="nav-label">Next ▷</div>
+    </a>
+    <div class="nav-title">“{{ page.next.title }}”</div>
+  </div>
+  {% endif %}
+</nav>
