@@ -75,21 +75,21 @@ To do this, we will create a `components` folder, where these files will be stor
 ```html
 <div>
   <div class="gallery-initial" id="gallery-initial">
-    { 
-      { 
-        src: "http://localhost:8000/api/images", 
-        method: "POST" 
-      } 
+    {
+      {
+        src: "http://localhost:8000/api/images",
+        method: "POST"
+      }
     }
   </div>
   <div class="gallery" id="gallery">
-    { 
-      { 
-        src: "http://localhost:8000/api/images", 
+    {
+      {
+        src: "http://localhost:8000/api/images",
         after:
-        "click:.navigation-button", 
-        method: "POST" 
-      } 
+        "click:.navigation-button",
+        method: "POST"
+      }
     }
   </div>
 
@@ -294,7 +294,7 @@ h1 {
 
 The styles are minimal, just so that the gallery looks more or less presentable.
 
-Also, I usually use ready-made webpack assemblies that I made a long time ago (I had to make a website for the framework), but now there is no point in dwelling on each point of what is responsible for what in `webpack.config.js`. The file can be viewed [here](https://github.com/hmpl-language/examples/blob/main/gallery-app/main/webpack.config.js).
+Also, I usually use ready-made webpack assemblies that I made a long time ago (I had to make a website for the framework), but now there is no point in dwelling on each point of what is responsible for what in [`webpack.config.js`](https://github.com/hmpl-language/examples/blob/main/gallery-app/main/webpack.config.js).
 
 Now, it's time to move on to the backend.
 
@@ -305,7 +305,7 @@ When creating a backend, we can now calmly look at the client and, based on this
 We see that the route that needs to be created is `/api/images`:
 
 ```html
-src: "http://localhost:8000/api/images", 
+src: "http://localhost:8000/api/images",
 ```
 
 Now, for it, you just need to prepare the HTML markup that would be issued in response. Moreover, the method for the route will be `POST`, because in the `body` of `RequestInit` you need to pass `page` with the required value. Let's set a similar route:

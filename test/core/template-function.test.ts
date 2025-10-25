@@ -308,7 +308,7 @@ describe("template function", () => {
           `<button id="increment">Click</button>{{#r src="/api/test" after="click:#increment" memo=true interval=1000}}{{/r}}`
         )
       )(),
-    `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" property does not work with repetiton mode yet`
+    `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" property does not work with repetition mode yet`
   );
   e(
     "throws an error if interval is passed as a string instead of a number",
