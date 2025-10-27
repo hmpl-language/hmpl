@@ -1,0 +1,100 @@
+name: "Task / Enhancement / Content Update"
+description: >
+  Use this template for most issues: site tweaks, UI changes, docs/blog edits,
+  examples, minor features, etc. (This covers 90%+ of our issues.)
+title: "[AREA] Short summary of the change"
+labels:
+  - help wanted
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing to HMPL.js!
+        Please fill out all required fields so we can review quickly.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      description: Which part of the project does this change?
+      options:
+        - core library (/src, /dist)
+        - website (/www/app)
+        - blog (/www/blog)
+        - docs / spec (/www/spec)
+        - examples / demos (/www/app/examples)
+        - tests (/test)
+        - other (I'll describe below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: task
+    attributes:
+      label: What needs to be done?
+      description: Clear, concrete task for the contributor.
+      placeholder: >
+        Example: "Add the same hover animation to blog post tags that we use on
+        the homepage category tags."
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Where in the repo / live site?
+      description: Add direct links so contributors know where to work.
+      placeholder: |
+        Site / page URL:
+        https://blog.hmpl-lang.dev/
+
+        Relevant folder / file:
+        /www/blog/components/PostTags.tsx
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Expected result / acceptance criteria
+      description: After this task is complete, what should be true?
+      placeholder: |
+        - Hover animation matches homepage tag animation
+        - No layout shift or flicker
+        - Works on desktop + mobile
+    validations:
+      required: true
+
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Who should work on this?
+      description: This helps us label "good first issue" vs "experienced only".
+      options:
+        - good first issue (beginner-friendly)
+        - experienced contributor only
+    validations:
+      required: true
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshots / mockups / references
+      description: Drag & drop screenshots, screen recordings, Figma links, etc.
+      placeholder: |
+        Add screenshots, GIFs, or short video of current vs expected behavior.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Contributor checklist
+      options:
+        - label: "I have read CONTRIBUTING.md"
+          required: true
+        - label: "I agree to follow the Code of Conduct"
+          required: true
+        - label: "This is a specific actionable task (not just a question or idea)"
+          required: true
