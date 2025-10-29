@@ -103,8 +103,7 @@ export default defineConfig({
           items: [
             {
               label: "template",
-              link: "/functions/template",
-              badge: { text: "new", variant: "note" }
+              link: "/functions/template"
             }
           ]
         },
