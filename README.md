@@ -25,7 +25,7 @@
 <br/>
 
 <div align="center">
-<a href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=neutral&t=1756166891784" alt="HMPL.js - Template language for displaying UI from server to client | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+<a href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=neutral&t=1756166891784" alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 </div>
 
 ## Introduction
@@ -36,11 +36,9 @@ HMPL.js provides the flexibility to build server-driven templates with minimal J
 
 ```html
 <div>
-  {{#request src="/api/my-component.html"}}
-    {{#indicator trigger="pending"}}
-      <p>Loading...</p>
-    {{/indicator}}
-  {{/request}}
+  {{#request src="/api/my-component.html"}} {{#indicator trigger="pending"}}
+  <p>Loading...</p>
+  {{/indicator}} {{/request}}
 </div>
 ```
 
@@ -112,11 +110,10 @@ If you need an option without using js, then by connecting the additional [hmpl-
     <main>
       <template hmpl>
         <div>
-          {{#request src="/api/my-component.html"}}
-            {{#indicator trigger="pending"}}
-              <p>Loading...</p>
-            {{/indicator}}
-          {{/request}}
+          {{#request src="/api/my-component.html"}} {{#indicator
+          trigger="pending"}}
+          <p>Loading...</p>
+          {{/indicator}} {{/request}}
         </div>
       </template>
     </main>
@@ -158,6 +155,7 @@ Also, HMPL can be a great alternative to popular tools such as HTMX and Alpine.j
 ## Installation
 
 hmpl can be installed in several ways, which are described in this section. This tool is a simple javascript file that is connected in the usual way through a `script`, or using the `import` construct in an environment that supports this (webpack build, parcel build etc.).
+
 > [!NOTE]
 > Starting with version `2.2.0`, the JSON5 module needs to be connected, and starting with version `2.2.5`, the DOMPurify module also needs to be connected. The first and easiest way is to install using a CDN.
 
@@ -179,7 +177,7 @@ This method involves connecting the file through a third-party resource, which p
 <script src="https://unpkg.com/json5/dist/index.min.js"></script>
 <script src="https://unpkg.com/dompurify/dist/purify.min.js"></script>
 <script src="https://unpkg.com/hmpl-js/dist/hmpl.min.js"></script>
-<!--
+<!--   
   integrity="..."
   crossorigin="anonymous"
 -->
@@ -244,10 +242,6 @@ You can also ask your question on [Stack Overflow](https://stackoverflow.com/) a
 We have a [Contributing Guide](https://github.com/hmpl-language/hmpl/blob/main/CONTRIBUTING.md) that describes the main steps for contributing to the project.
 
 Thank you to all the people who have already contributed to HMPL, or related projects!
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=hmpl-language/hmpl&type=date&legend=top-left)](https://www.star-history.com/#hmpl-language/hmpl&type=date&legend=top-left)
 
 ## Roadmap
 

@@ -84,7 +84,7 @@ Some properties in options are also found in block helper attributes. If you use
 The sanitizeConfig property specifies configuration settings for the `sanitize` function of DOMPurify.
 
 ```js
-compile({
+compile(`...`, {
   sanitize: true,
   sanitizeConfig: { USE_PROFILES: { html: true } }
 });

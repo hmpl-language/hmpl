@@ -84,7 +84,11 @@ export default defineConfig({
             {
               label: "hmpl",
               items: [
-                { label: "compile", link: "/objects/hmpl#compile" },
+                {
+                  label: "compile",
+                  link: "/objects/hmpl#compile",
+                  badge: { text: "new", variant: "note" }
+                },
                 { label: "stringify", link: "/objects/hmpl#stringify" }
               ]
             },
@@ -99,7 +103,8 @@ export default defineConfig({
           items: [
             {
               label: "template",
-              link: "/functions/template"
+              link: "/functions/template",
+              badge: { text: "new", variant: "note" }
             }
           ]
         },
@@ -161,7 +166,6 @@ export default defineConfig({
             },
             {
               label: "indicator",
-              badge: { text: "new", variant: "note" },
               items: [
                 {
                   label: "trigger",
@@ -244,7 +248,6 @@ export default defineConfig({
           items: [
             {
               label: "Migration from v2 to v3",
-              badge: { text: "new", variant: "note" },
               link: "/about/migration-from-v2-to-v3-version"
             },
             { label: "Security", link: "/about/security" },

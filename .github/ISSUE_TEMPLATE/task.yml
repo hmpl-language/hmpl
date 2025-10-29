@@ -1,8 +1,8 @@
-name: "Task / Enhancement / Content Update"
+name: "Task, Enhancement, Content Update"
 description: >
-  Use this template for most issues: site tweaks, UI changes, docs/blog edits,
+  Use this template for most issues: site tweaks, UI changes, docs, blog or main page edits,
   examples, minor features, etc. (This covers 90%+ of our issues.)
-title: "[AREA] Short summary of the change"
+title: ""
 labels:
   - help wanted
 
@@ -22,8 +22,7 @@ body:
         - core library (/src, /dist)
         - website (/www/app)
         - blog (/www/blog)
-        - docs / spec (/www/spec)
-        - examples / demos (/www/app/examples)
+        - docs (/www/app/content/docs)
         - tests (/test)
         - other (I'll describe below)
     validations:
@@ -43,13 +42,13 @@ body:
   - type: textarea
     id: location
     attributes:
-      label: Where in the repo / live site?
+      label: Where in the repo?
       description: Add direct links so contributors know where to work.
       placeholder: |
-        Site / page URL:
-        https://blog.hmpl-lang.dev/
+        Site:
+        https://blog.hmpl-lang.dev
 
-        Relevant folder / file:
+        Relevant folder or file:
         /www/blog/components/PostTags.tsx
     validations:
       required: true
@@ -57,7 +56,7 @@ body:
   - type: textarea
     id: acceptance
     attributes:
-      label: Expected result / acceptance criteria
+      label: Expected result or acceptance criteria
       description: After this task is complete, what should be true?
       placeholder: |
         - Hover animation matches homepage tag animation
@@ -80,7 +79,7 @@ body:
   - type: textarea
     id: media
     attributes:
-      label: Screenshots / mockups / references
+      label: Screenshots, mockups, references
       description: Drag & drop screenshots, screen recordings, Figma links, etc.
       placeholder: |
         Add screenshots, GIFs, or short video of current vs expected behavior.
@@ -96,5 +95,5 @@ body:
           required: true
         - label: "I agree to follow the Code of Conduct"
           required: true
-        - label: "This is a specific actionable task (not just a question or idea)"
+        - label: "This is a specific actionable task (not just a question)"
           required: true

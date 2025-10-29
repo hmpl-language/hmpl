@@ -1,12 +1,12 @@
 blank_issues_enabled: false
 contact_links:
-  - name: "Ask a question / need help using HMPL.js?"
+  - name: "Ask a question or need help using HMPL.js?"
     url: https://discord.gg/KFunMep36n
     about: >
       For support and how-to questions, please use our Discord (channel: support)
       instead of opening an issue.
 
-  - name: "Idea / discussion / proposal"
+  - name: "Idea, discussion, proposal"
     url: https://github.com/hmpl-language/hmpl/discussions
     about: >
       Got a feature idea or want to brainstorm? Start a Discussion instead of

@@ -10,7 +10,7 @@ head:
 
 `hmpl-dom` is a library for integrating HMPL templates directly into the DOM. It allows you to use templates written with [hmpl-js](https://www.npmjs.com/package/hmpl-js) right in your HTML documents using the `<template>` tag, and automatically mounts them into the DOM.
 
-> Requires `hmpl-js` version `3.0.5` or higher.
+> Requires `hmpl-js` version `3.0.0` or higher.
 
 ## Installation
 

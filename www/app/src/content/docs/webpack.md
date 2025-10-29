@@ -26,4 +26,4 @@ const templateFn = require("./main.hmpl");
 const elementObj = templateFn();
 ```
 
-For the loader to work, it is better to use versions `0.0.6` or higher.
+For the loader to work, it is better to use versions `0.0.2` or higher.

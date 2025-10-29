@@ -472,7 +472,7 @@
             class="main-button article-button hover_effect fade-in-effect"
             rel="noreferrer noopener"
             target="_blank"
-            >Read more about HMPL vs HTMX</a
+            >Read more</a
           >
         </div>
         <div class="right_article">
@@ -506,7 +506,7 @@
             class="main-button article-button hover_effect fade-in-effect"
             rel="noreferrer noopener"
             target="_blank"
-            >Read more about creating a Gallery application</a
+            >Read more</a
           >
         </div>
       </div>
@@ -680,6 +680,15 @@
                   >Landing Page</a
                 >
               </li>
+              <li class="footer_item">
+                <a
+                  class="footer_item_link"
+                  href="https://github.com/aanthonymax/ant-and-apples"
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  >Game</a
+                >
+              </li>
             </ul>
           </div>
           <div class="footer_section">
@@ -706,6 +715,15 @@
               <li class="footer_item">
                 <a
                   class="footer_item_link"
+                  href="https://github.com/hmpl-language/hmpl/blob/main/CONTRIBUTING.md"
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  >Contributing</a
+                >
+              </li>
+              <li class="footer_item">
+                <a
+                  class="footer_item_link"
                   href="https://github.com/hmpl-language/hmpl/blob/main/LICENSE"
                   rel="noreferrer noopener"
                   target="_blank"
@@ -718,16 +736,7 @@
             <h3 class="footer_section_title">Resources</h3>
             <ul class="footer_list">
               <li class="footer_item">
-                <a
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  class="footer_item_link"
-                  href="https://hmpl-lang.dev/introduction"
-                  >Docs</a
-                >
-              </li>
-              <li class="footer_item">
-                <a class="footer_item_link" href="/introduction">Overview</a>
+                <a class="footer_item_link" href="/introduction">Docs</a>
               </li>
               <li class="footer_item">
                 <a class="footer_item_link" href="/examples">Examples</a>
@@ -762,7 +771,8 @@
       href="https://github.com/hmpl-language/hmpl/issues"
       target="_blank"
       rel="noopener noreferrer"
-      >issue list</a>.
+      >issue list</a
+    >.
   </div>
   <!-- Scroll to top button -->
   <button
@@ -833,8 +843,7 @@ export default {
       } finally {
         document.body.removeChild(textArea);
       }
-    }
-    ,
+    },
     scrollToTop() {
       try {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1000,8 +1009,7 @@ export default {
     };
     this._handleScroll();
     window.addEventListener("scroll", this._handleScroll);
-  }
-  ,
+  },
   beforeDestroy() {
     window.removeEventListener("scroll", this._handleScroll);
   },
@@ -1028,7 +1036,8 @@ h2 {
   padding: 0 !important;
   border-bottom: 0 !important;
 }
-.sample_button.sample_button_secondary.hover_effect.fade-in-effect {
+.sample_text
+  .sample_button.sample_button_secondary.hover_effect.fade-in-effect {
   background: linear-gradient(135deg, #7da6ff 0%, #a47cff 100%);
   color: #fff;
   border: none;
@@ -1036,29 +1045,30 @@ h2 {
   padding: 12px 32px;
   font-size: 16px;
   font-weight: 600;
-  font-family: "Inter", sans-serif;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   cursor: pointer;
   transition: all 0.35s ease;
-  box-shadow: 0 6px 18px rgba(140, 120, 255, 0.35),
-              inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 6px 18px rgba(140, 120, 255, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
 
-/* Add a glossy highlight that appears on hover */
-.sample_button.sample_button_secondary.hover_effect.fade-in-effect:hover {
+.sample_text
+  .sample_button.sample_button_secondary.hover_effect.fade-in-effect:hover {
   transform: translateY(-3px) scale(1.02);
   background: linear-gradient(135deg, #89b0ff 0%, #b28bff 100%);
-  box-shadow: 0 8px 24px rgba(150, 130, 255, 0.45),
-              0 0 12px rgba(160, 140, 255, 0.4);
+  box-shadow:
+    0 8px 24px rgba(150, 130, 255, 0.45),
+    0 0 12px rgba(160, 140, 255, 0.4);
 }
 
-/* Optional subtle glow pulse when hovered */
-.sample_button.sample_button_secondary.hover_effect.fade-in-effect:hover::after {
+.sample_text
+  .sample_button.sample_button_secondary.hover_effect.fade-in-effect:hover::after {
   content: "";
   position: absolute;
   width: 100%;
@@ -1066,23 +1076,28 @@ h2 {
   border-radius: inherit;
   top: 0;
   left: 0;
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 70%);
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.25),
+    transparent 70%
+  );
   opacity: 0.5;
 }
 
-/* Icon styling */
-.sample_button.sample_button_secondary.hover_effect.fade-in-effect .copy-icon {
+.sample_text
+  .sample_button.sample_button_secondary.hover_effect.fade-in-effect
+  .copy-icon {
   width: 18px;
   height: 18px;
   opacity: 0.9;
   transition: all 0.3s ease;
-  filter: brightness(1.1) invert(1);
 }
 
-.sample_button.sample_button_secondary.hover_effect.fade-in-effect:hover .copy-icon {
+.sample_text
+  .sample_button.sample_button_secondary.hover_effect.fade-in-effect:hover
+  .copy-icon {
   transform: scale(1.1);
   opacity: 1;
-  filter: drop-shadow(0 0 4px rgba(255,255,255,0.8));
 }
 
 a {
@@ -2064,7 +2079,6 @@ section {
     gap: 20px;
   }
   .sample_button {
-    height: 50px;
     text-align: center;
     margin: 0 auto;
     width: 100%;
@@ -2340,7 +2354,9 @@ footer {
   box-shadow: 0 6px 18px rgba(1, 131, 255, 0.22);
   cursor: pointer;
   z-index: 1200;
-  transition: transform 0.18s ease, opacity 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease;
 }
 .scroll-to-top:hover {
   transform: translateY(-4px);
@@ -2417,6 +2433,7 @@ footer {
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  margin-top: 1rem !important;
 }
 
 .contributor-avatar {
@@ -2501,7 +2518,7 @@ footer {
 
 @media (max-width: 600px) {
   .note {
-    height:60px;
+    height: 60px;
   }
 }
 
