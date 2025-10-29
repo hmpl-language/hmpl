@@ -241,7 +241,7 @@
           <a
             href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg"
             class="fade-in-effect hover_effect"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             target="_blank"
             >Demo Sandbox</a
           >
@@ -252,7 +252,7 @@
           class="producthunt"
           ><img
             src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=dark&t=1748847658573"
-            alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt"
+            alt="HMPL.js - Template language for displaying UI from server to client | Product Hunt"
             style="width: 250px; height: 54px"
             width="250"
             height="54"
@@ -423,7 +423,7 @@
               applications presented in
               <a
                 href="https://github.com/hmpl-language/app-size-comparison"
-                rel="nooferer noopener"
+                rel="noreferrer noopener"
                 target="_blank"
                 class="metrics-link"
                 >this</a
@@ -445,7 +445,7 @@
         <div class="left_article">
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             class="article_preview_link fade-in-effect"
             target="_blank"
             ><img
@@ -455,7 +455,7 @@
           /></a>
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             target="_blank"
             ><h2 class="gradient_text_left hover_effect">
               Differences between HMPL <br />and HTMX
@@ -470,15 +470,15 @@
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
             class="main-button article-button hover_effect fade-in-effect"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             target="_blank"
-            >Read more</a
+            >Read more about HMPL vs HTMX</a
           >
         </div>
         <div class="right_article">
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             class="article_preview_link fade-in-effect"
             target="_blank"
             ><img
@@ -488,7 +488,7 @@
           /></a>
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             target="_blank"
             ><h2 class="gradient_text_left hover_effect">
               Creating a Gallery App in JavaScript with HMPL
@@ -504,9 +504,9 @@
           <a
             href="https://blog.hmpl-lang.dev/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
             class="main-button article-button hover_effect fade-in-effect"
-            rel="nooferer noopener"
+            rel="noreferrer noopener"
             target="_blank"
-            >Read more</a
+            >Read more about creating a Gallery application</a
           >
         </div>
       </div>
@@ -523,7 +523,7 @@
       </div>
     </div>
     <!-- Contributors section ended -->
-    <!-- Sample text sction started -->
+    <!-- Sample text section started -->
     <div class="wrapper">
       <div class="container">
         <div class="sample_text">
@@ -552,7 +552,7 @@
         </div>
       </div>
     </div>
-    <!-- Sample text sction ended -->
+    <!-- Sample text section ended -->
   </section>
   <!-- Footer -->
   <footer>
@@ -574,7 +574,7 @@
             <a
               class="footer_social-link"
               href="https://github.com/hmpl-language/hmpl"
-              rel="nooferer noopener"
+              rel="noreferrer noopener"
               target="_blank"
             >
               <svg
@@ -595,7 +595,7 @@
             <a
               class="footer_social-link"
               href="https://x.com/hmpljs"
-              rel="nooferer noopener"
+              rel="noreferrer noopener"
               target="_blank"
             >
               <svg
@@ -628,7 +628,7 @@
             <a
               class="footer_social-link"
               href="https://discord.gg/KFunMep36n"
-              rel="nooferer noopener"
+              rel="noreferrer noopener"
               target="_blank"
             >
               <svg
@@ -666,7 +666,7 @@
                 <a
                   class="footer_item_link"
                   href="https://github.com/hmpl-language/examples/tree/main/gallery-app"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   target="_blank"
                   >Gallery App</a
                 >
@@ -675,7 +675,7 @@
                 <a
                   class="footer_item_link"
                   href="https://github.com/hmpl-language/examples/tree/main/landing"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   target="_blank"
                   >Landing Page</a
                 >
@@ -689,7 +689,7 @@
                 <a
                   class="footer_item_link"
                   href="https://github.com/hmpl-language/hmpl/blob/main/CODE_OF_CONDUCT.md"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   target="_blank"
                   >Code Of Conduct</a
                 >
@@ -698,7 +698,7 @@
                 <a
                   class="footer_item_link"
                   href="https://github.com/hmpl-language/hmpl/blob/main/SECURITY.md"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   target="_blank"
                   >Security</a
                 >
@@ -707,7 +707,7 @@
                 <a
                   class="footer_item_link"
                   href="https://github.com/hmpl-language/hmpl/blob/main/LICENSE"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   target="_blank"
                   >MIT License</a
                 >
@@ -720,7 +720,7 @@
               <li class="footer_item">
                 <a
                   target="_blank"
-                  rel="nooferer noopener"
+                  rel="noreferrer noopener"
                   class="footer_item_link"
                   href="https://hmpl-lang.dev/introduction"
                   >Docs</a
@@ -756,13 +756,13 @@
     </div>
   </footer>
   <div class="note">
-    This project participates in Hacktoberfest 2025. You can find the issue list
+    This project participates in Hacktoberfest 2025. See the
     <a
       class="note_link"
       href="https://github.com/hmpl-language/hmpl/issues"
       target="_blank"
       rel="noopener noreferrer"
-      >here</a>.
+      >issue list</a>.
   </div>
   <!-- Scroll to top button -->
   <button
@@ -913,7 +913,7 @@ export default {
         try {
           const url = `https://api.github.com/repos/hmpl-language/hmpl/contributors?page=${page}&per_page=100`;
           const response = await axios.get(url);
-          
+
           if (response.data.length === 0) {
             hasMore = false;
           } else {
@@ -936,7 +936,7 @@ export default {
           const contributorDiv = document.createElement("div");
           contributorDiv.className = "contributor";
           contributorDiv.innerHTML = `
-        <a class="contributon-block" href="${contributor.html_url}" target="_blank">
+        <a class="contribution-block" href="${contributor.html_url}" target="_blank">
             <img
               class="contributor-avatar"
               src="${contributor.avatar_url}"
@@ -950,7 +950,7 @@ export default {
         const oldContributors = document.createElement("div");
         oldContributors.className = "contributor";
         oldContributors.innerHTML = `
-          <a class="contributon-block" href="https://github.com/hmpl-language/hmpl/discussions/2" target="_blank">
+          <a class="contribution-block" href="https://github.com/hmpl-language/hmpl/discussions/2" target="_blank">
         <img
           class="contributor-avatar"
           src="./images/old-contributors.png"
@@ -1641,7 +1641,7 @@ section {
   }
 }
 
-/* Progess Bar */
+/* Progress Bar */
 
 .metrics-wrapper {
   background: linear-gradient(0deg, #7e71ba 0%, #0183ff 100%);
@@ -2388,8 +2388,8 @@ footer {
 
 .contributors-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
-  justify-content: center; 
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  justify-content: center;
   align-items: center;
   gap: 30px;
   margin-bottom: 40px;
@@ -2407,7 +2407,7 @@ footer {
 
 @media (max-width: 600px) {
   .contributors-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 15px;
   }
 }
@@ -2447,18 +2447,18 @@ footer {
   filter: brightness(0) invert(1);
 }
 
-.contributon-block {
+.contribution-block {
   text-decoration: none !important;
 }
 
-.contributon-block {
+.contribution-block {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
 
-.contributon-block:hover .contributor-name {
+.contribution-block:hover .contributor-name {
   color: #0066ff;
 }
 

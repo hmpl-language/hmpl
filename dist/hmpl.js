@@ -362,7 +362,7 @@
         }
       }
       const isRequestMemo = isMemo && !isRequest && dataObj?.memo;
-      const getIsNotFullfilledStatus = (status) =>
+      const getIsNotFulfilledStatus = (status) =>
         status === "rejected" ||
         (typeof status === "number" && (status < 200 || status > 299));
       const requestContext = getInstanceContext(
@@ -486,7 +486,7 @@
           if (
             isRequestMemo &&
             status !== "pending" &&
-            getIsNotFullfilledStatus(status)
+            getIsNotFulfilledStatus(status)
           ) {
             if (dataObj.memo.isPending) dataObj.memo.isPending = false;
           }
@@ -540,7 +540,7 @@
        * Updates the status and handles dependencies.
        * @param status - The new request status.
        */
-      const updateStatusDepenencies = (status) => {
+      const updateStatusDependencies = (status) => {
         if (isRequests) {
           if (reqObject.status !== status) {
             reqObject.status = status;
@@ -552,7 +552,7 @@
             get?.(createGetParams("status", status, requestContext));
           }
         }
-        if (isRequestMemo && getIsNotFullfilledStatus(status)) {
+        if (isRequestMemo && getIsNotFulfilledStatus(status)) {
           dataObj.memo.response = null;
           delete dataObj.memo.nodes;
         }
@@ -587,7 +587,7 @@
         callGetResponse(reqResponse);
       };
       let requestStatus = 200;
-      updateStatusDepenencies("pending");
+      updateStatusDependencies("pending");
       let isRejectedError = true;
       let isError = true;
       // Perform the fetch request
@@ -595,7 +595,7 @@
         .then((response) => {
           isRejectedError = false;
           requestStatus = response.status;
-          updateStatusDepenencies(requestStatus);
+          updateStatusDependencies(requestStatus);
           if (!response.ok) {
             if (indicators) isError = false;
             createError(
@@ -678,7 +678,7 @@
         .catch((error) => {
           // Errors like CORS, timeout and others.
           if (isRejectedError) {
-            updateStatusDepenencies("rejected");
+            updateStatusDependencies("rejected");
             if (!indicators) {
               setComment();
             }
@@ -798,7 +798,7 @@
             if (!isReqIntervalUndefined) {
               if (isAll && after) {
                 createError(
-                  `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" property does not work with repetiton mode yet`
+                  `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" property does not work with repetition mode yet`
                 );
               }
             }
@@ -1214,10 +1214,10 @@
         reqFn = renderRequest(requests[0]);
       } else {
         let id = -2;
-        const getRequests = (currrentElement) => {
+        const getRequests = (currentElement) => {
           id++;
-          if (currrentElement.nodeType == 8) {
-            let value = currrentElement.nodeValue;
+          if (currentElement.nodeType == 8) {
+            let value = currentElement.nodeValue;
             if (value && value.startsWith(COMMENT)) {
               value = value.slice(4);
               const currentIndex = Number(value);
@@ -1227,12 +1227,12 @@
                   `${PARSE_ERROR}: Block helper with id "${currentIndex}" not found`
                 );
               }
-              currentRequest.el = currrentElement;
+              currentRequest.el = currentElement;
               currentRequest.nodeId = id;
             }
           }
-          if (currrentElement.hasChildNodes()) {
-            const chNodes = currrentElement.childNodes;
+          if (currentElement.hasChildNodes()) {
+            const chNodes = currentElement.childNodes;
             for (let i = 0; i < chNodes.length; i++) {
               getRequests(chNodes[i]);
             }
@@ -1490,7 +1490,7 @@
           `${COMPILE_ERROR}: Template was not found or the type of the passed value is not string`
         );
       if (!template)
-        createError(`${COMPILE_ERROR}: Template must not be a falsey value`);
+        createError(`${COMPILE_ERROR}: Template must not be a falsy value`);
       if (!checkObject(options))
         createError(`${COMPILE_OPTIONS_ERROR}: Options must be an object`);
       const isMemoUndefined = !options.hasOwnProperty(MEMO);
@@ -1727,20 +1727,20 @@
           };
           if (!isRequest) {
             let id = -2;
-            const getRequests = (currrentElement) => {
+            const getRequests = (currentElement) => {
               id++;
-              if (currrentElement.nodeType == 8) {
-                const value = currrentElement.nodeValue;
+              if (currentElement.nodeType == 8) {
+                const value = currentElement.nodeValue;
                 if (value && value.startsWith(COMMENT)) {
                   const elObj = {
-                    el: currrentElement,
+                    el: currentElement,
                     id
                   };
                   data.els.push(elObj);
                 }
               }
-              if (currrentElement.hasChildNodes()) {
-                const chNodes = currrentElement.childNodes;
+              if (currentElement.hasChildNodes()) {
+                const chNodes = currentElement.childNodes;
                 for (let i = 0; i < chNodes.length; i++) {
                   getRequests(chNodes[i]);
                 }

@@ -25,7 +25,7 @@
 <br/>
 
 <div align="center">
-<a href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=neutral&t=1756166891784" alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+<a href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=neutral&t=1756166891784" alt="HMPL.js - Template language for displaying UI from server to client | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 </div>
 
 ## Introduction
@@ -157,7 +157,7 @@ Also, HMPL can be a great alternative to popular tools such as HTMX and Alpine.j
 
 ## Installation
 
-hmpl can be installed in several ways, which are described in this section. This tool is a simple javascript file that is connected in the usual way through a `script`, or using the `import` construct in an environment that supports this (webpack build, parcel build etc.). 
+hmpl can be installed in several ways, which are described in this section. This tool is a simple javascript file that is connected in the usual way through a `script`, or using the `import` construct in an environment that supports this (webpack build, parcel build etc.).
 > [!NOTE]
 > Starting with version `2.2.0`, the JSON5 module needs to be connected, and starting with version `2.2.5`, the DOMPurify module also needs to be connected. The first and easiest way is to install using a CDN.
 
@@ -179,7 +179,7 @@ This method involves connecting the file through a third-party resource, which p
 <script src="https://unpkg.com/json5/dist/index.min.js"></script>
 <script src="https://unpkg.com/dompurify/dist/purify.min.js"></script>
 <script src="https://unpkg.com/hmpl-js/dist/hmpl.min.js"></script>
-<!--   
+<!--
   integrity="..."
   crossorigin="anonymous"
 -->
@@ -233,7 +233,7 @@ But we will be glad if you make your own :)
 
 The [documentation](https://hmpl-lang.dev/introduction) contains main information on how the HMPL template language works. If you have any questions about how HMPL works, you can use the following resources:
 
-- [Github](https://github.com/hmpl-language/hmpl) - In the discussion and issues sections you can ask any question you are interested in
+- [GitHub](https://github.com/hmpl-language/hmpl) - In the discussion and issues sections you can ask any question you are interested in
 - [Discord](https://discord.gg/KFunMep36n) - You can ask your question in the thematic channel "support"
 - [𝕏 (Twitter)](https://x.com/hmpljs) - There is a lot of interesting stuff there, concerning the template language and not only :)
 
