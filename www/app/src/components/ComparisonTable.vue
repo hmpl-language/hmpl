@@ -154,111 +154,97 @@ export default {
 
 <style scoped>
 .comparison-table-wrapper {
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  padding: 40px;
-  margin: 120px 0;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  padding: 20px 0;
+  margin: 60px 0;
   position: relative;
-  overflow: hidden;
 }
 
 .comparison-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .comparison-title {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  margin-bottom: 10px;
+  color: #111827;
 }
 
 .comparison-subtitle {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #6b7280;
-  margin: 0;
+  margin-top: 4px;
 }
 
+/* Table container */
 .table-container {
   overflow-x: auto;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   margin: 0 auto;
-  max-width: 100%;
-  width: fit-content;
-}
-
-.comparison-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  background: white;
+  width: 100%;
   border-radius: 12px;
-  overflow: hidden;
 }
 
-.comparison-table th,
-.comparison-table td {
-  padding: 16px 20px;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+/* Clean minimalist table look */
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  color: #111827;
+  background: #fff;
 }
 
-/* Rounded corners for table */
-.comparison-table thead tr:first-child th:first-child {
-  border-top-left-radius: 12px;
-}
-
-.comparison-table thead tr:first-child th:last-child {
-  border-top-right-radius: 12px;
-}
-
-.comparison-table tbody tr:last-child td:first-child {
-  border-bottom-left-radius: 12px;
-}
-
-.comparison-table tbody tr:last-child td:last-child {
-  border-bottom-right-radius: 12px;
-}
-
+/* Header styling */
 .comparison-table th {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  text-align: left;
+  padding: 12px 16px;
   font-weight: 600;
-  font-size: 0.9rem;
+  color: #6b7280;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #374151;
+  font-size: 0.8rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
 }
 
-.feature-column {
-  width: 200px;
-  font-weight: 600;
+/* Data cells */
+.comparison-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
   color: #1f2937;
+  vertical-align: middle;
+}
+
+/* Hover effect like the first screenshot */
+.comparison-table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Column widths */
+.feature-column {
+  width: 250px;
+  font-weight: 500;
 }
 
 .framework-column {
-  width: 190px;
-  text-align: center;
+  text-align: left;
+  width: 200px;
 }
 
+/* Framework name + logo layout */
 .framework-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 10px;
   font-weight: 600;
-  color: #1f2937;
+  color: #111827;
 }
 
 .framework-logo {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
-  padding: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .framework-logo img {
@@ -267,61 +253,45 @@ export default {
   object-fit: contain;
 }
 
-/* Логотипы теперь имеют белый фон с изображениями */
-
-.feature-row:hover {
-  background-color: #f9fafb;
+/* Icons and text colors */
+.feature-value.check i {
+  color: #16a34a;
 }
 
-.feature-name {
-  font-weight: 500;
-  color: #374151;
-}
-
-.feature-value {
-  text-align: center;
-  font-weight: 500;
-}
-
-.feature-value.check {
-  color: #059669;
-}
-
-.feature-value.cross {
+.feature-value.cross i {
   color: #dc2626;
 }
 
 .feature-value.positive {
-  color: #059669;
-  font-weight: 600;
+  color: #16a34a;
+  font-weight: 500;
 }
 
 .feature-value.neutral {
   color: #6b7280;
 }
 
+/* Footer */
 .comparison-footer {
-  margin-top: 30px;
+  margin-top: 20px;
   text-align: center;
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 
 .comparison-note {
   color: #6b7280;
-  font-size: 0.9rem;
-  margin: 0;
-  display: inline-block;
-  align-items: center;
-  justify-content: center;
+  font-size: 0.85rem;
 }
 
 .comparison-note i {
   color: #3b82f6;
+  margin-right: 4px;
 }
 
 .metrics-link {
-  color: #3b82f6;
+  color: #2563eb;
   text-decoration: underline;
   margin-left: 4px;
 }
@@ -330,71 +300,15 @@ export default {
   text-decoration: none;
 }
 
-.comparison-note i{
-  margin-right: 4px;
-}
-
-/* Responsive Design */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .comparison-table-wrapper {
-    padding: 20px;
-    margin: 40px 0;
-  }
-  
-  .comparison-title {
-    font-size: 2rem;
-  }
-  
-  .comparison-table th,
-  .comparison-table td {
-    padding: 12px 8px;
-    font-size: 0.85rem;
-  }
-  
-  .feature-column {
-    width: 120px;
-  }
-  
-  .framework-column {
-    width: 100px;
-  }
-  
-  .framework-header {
-    flex-direction: column;
-    gap: 4px;
-  }
-  
-  .framework-logo {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-@media (max-width: 480px) {
-  .comparison-table-wrapper {
-    padding: 15px;
-  }
-  
   .comparison-title {
     font-size: 1.5rem;
   }
-  
-  .comparison-subtitle {
-    font-size: 1rem;
-  }
-  
   .comparison-table th,
   .comparison-table td {
-    padding: 8px 4px;
-    font-size: 0.8rem;
-  }
-  
-  .feature-column {
-    width: 100px;
-  }
-  
-  .framework-column {
-    width: 80px;
+    padding: 10px 8px;
+    font-size: 0.85rem;
   }
 }
 </style>
