@@ -1084,22 +1084,6 @@ h2 {
   opacity: 0.5;
 }
 
-.sample_text
-  .sample_button.sample_button_secondary.hover_effect.fade-in-effect
-  .copy-icon {
-  width: 18px;
-  height: 18px;
-  opacity: 0.9;
-  transition: all 0.3s ease;
-}
-
-.sample_text
-  .sample_button.sample_button_secondary.hover_effect.fade-in-effect:hover
-  .copy-icon {
-  transform: scale(1.1);
-  opacity: 1;
-}
-
 a {
   text-decoration: none;
   color: #fff;
