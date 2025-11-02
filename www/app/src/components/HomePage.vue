@@ -2352,7 +2352,7 @@ footer {
 @media (max-width: 600px) {
   .scroll-to-top {
     right: 14px;
-    bottom: 65px;
+    bottom: 30px;
     width: 44px;
     height: 44px;
   }
@@ -2484,8 +2484,8 @@ footer {
   left: 0;
   right: 0;
   height: 30px;
+  display: none;
   text-align: center;
-  display: inline;
   background-color: #0183ff;
   color: #fff;
   z-index: 999;
