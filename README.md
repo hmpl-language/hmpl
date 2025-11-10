@@ -24,10 +24,6 @@
 
 <br/>
 
-<div align="center">
-<a href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=972730&theme=neutral&t=1756166891784" alt="HMPL&#0046;js - Template&#0032;language&#0032;for&#0032;displaying&#0032;UI&#0032;from&#0032;server&#0032;to&#0032;client | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
-</div>
-
 ## Introduction
 
 HMPL.js provides the flexibility to build server-driven templates with minimal JavaScript. With its block-based syntax, customizable <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">fetch</a> requests, and built-in support for forms, events, and time-based syncing you can deliver dynamic user interfaces without relying on a heavy framework. HMPL integrates with <a href="https://www.npmjs.com/package/json5">JSON5</a> for expressive object syntax and <a href="https://www.npmjs.com/package/dompurify">DOMPurify</a> for safe HTML rendering, all in just a few kilobytes.
