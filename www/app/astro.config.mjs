@@ -138,6 +138,11 @@ export default defineConfig({
                   link: "/block-helpers/request#indicators"
                 },
                 {
+                  label: "bind",
+                  link: "/block-helpers/request#bind",
+                  badge: { text: "new", variant: "note" }
+                },
+                {
                   label: "autoBody",
                   link: "/block-helpers/request#autobody"
                 },

@@ -295,6 +295,74 @@ The content property must be a plain string containing static HTML markup. This 
 
 Additionally, the value must be a single-line string — line breaks (e.g., `\n`) or other control characters are not allowed.
 
+## bind
+
+The bind property binds the request status with the attribute value of the corresponding tag.
+
+The property accepts either a string value or an [HMPLBindOptions](/types#hmplbindoptions) object that describes how the value for the attribute will be generated.
+
+```hmpl
+<div class="{{requestStatus}} class1">Text</div>
+{{#request
+  src="/api/getHTML"
+  bind="{{requestStatus}}"
+}}{{/request}}
+```
+
+The value itself is generated in the following form `${prefix}${target}-${status}`:
+
+```hmpl
+<div class="hmpl-status-requestStatus-200 class1">Text</div>
+```
+
+### Bind options
+
+Settings object for each attribute value generation.
+
+| Property | Type   | Description                                                        | Required |
+| -------- | ------ | ------------------------------------------------------------------ | -------- |
+| target   | string | A value that specifies which specific attribute to bind to         | Yes      |
+| prefix   | string | A string that is added to the attribute value before target-status | No       |
+
+#### target
+
+Specifies the binding target. The value is a string without spaces and unique for each block helper.
+
+```hmpl
+<div class="{{requestStatus1}} {{requestStatus2}}">Text</div>
+<div class="{{requestStatus1}} {{requestStatus2}}">Text</div>
+{{#request
+  src="/api/getHTML"
+  bind={ target: "requestStatus1" }
+}}{{/request}}
+{{#request
+  src="/api/getHTML"
+  bind={ target: "requestStatus2" }
+}}{{/request}}
+```
+
+Values ​​can be assigned to multiple attributes of multiple tags.
+
+#### prefix
+
+A string appended to the target and status in the attribute value. The value is not unique.
+
+```hmpl
+<div class="{{requestStatus}}">Text</div>
+{{#request
+  src="/api/getHTML"
+  bind={ target: "requestStatus", prefix: "custom-prefix-" }
+}}{{/request}}
+```
+
+The result of generating the value will be like this:
+
+```hmpl
+<tag attr="custom-prefix-requestStatus-200">...</tag>
+```
+
+The default value is `"hmpl-status-"`.
+
 ## autoBody
 
 The autoBody property specifies automatic generation of the `body` property within a [RequestInit](/functions/template#requestinit) object.
@@ -357,7 +425,7 @@ As of the current specification, automatic body generation exclusively supports 
 
 ### AutoBody options
 
-Settings object for each automatic generation
+Settings object for each automatic generation.
 
 | Property | Type    | Description                            | Required |
 | -------- | ------- | -------------------------------------- | -------- |

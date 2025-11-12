@@ -246,6 +246,7 @@
             >Demo Sandbox</a
           >
         </div>
+        <!--
         <a
           href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js"
           target="_blank"
@@ -256,7 +257,7 @@
             style="width: 250px; height: 54px"
             width="250"
             height="54"
-        /></a>
+        /></a> -->
       </div>
     </div>
   </div>

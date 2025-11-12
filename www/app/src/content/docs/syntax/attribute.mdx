@@ -47,3 +47,17 @@ The following types are supported in values: `string`, `array`, `boolean`, `obje
 ## Peculiarities
 
 Some attributes can be overwritten in block helpers. So, for example, if you write indicators as an attribute, and then specify nested indicators.
+
+## External attribute values
+
+Since version 3.2.0, the template language now supports the ability to create constructs with double quotes outside of block helpers. Now, tag attributes can specify names that are functionally related to server requests.
+
+```hmpl
+<div class="{{requestStatus}} text">Some text</div>
+{{#request
+  src="/api/hello"
+  after="submit:#form"
+  repeat=false
+  bind="{{requestStatus}}"
+}}{{/request}}
+```

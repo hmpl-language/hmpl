@@ -3,6 +3,12 @@ title: Changelog
 description: Version history and updates for HMPL
 ---
 
+## 3.2.0 (2025-11-12)
+
+- Adding the `bind` property
+- Correcting syntax errors
+- Adding `{{name}}` values ​​to attributes
+
 ## 3.1.0 (2025-10-24)
 
 - For the `get` function, instead of 4 arguments, we made a props object, which is convenient to work with.

@@ -94,6 +94,7 @@ interface HMPLRequestInfo {
   sanitize?: HMPLSanitize;
   disallowedTags?: HMPLDisallowedTags;
   autoBody?: boolean | HMPLAutoBodyOptions;
+  bind?: string | HMPLBindOptions;
 }
 ```
 
@@ -141,6 +142,15 @@ type HMPLClearInterval = () => void;
 ```ts
 interface HMPLAutoBodyOptions {
   formData?: boolean;
+}
+```
+
+## HMPLBindOptions
+
+```ts
+interface HMPLBindOptions {
+  target: string;
+  prefix?: string;
 }
 ```
 
