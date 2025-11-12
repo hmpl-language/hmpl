@@ -1,0 +1,178 @@
+---
+title: Examples
+description: Real-world examples and use cases for HMPL
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl examples, template examples, request block demo, form example, dynamic components, hmpl code samples
+---
+
+{/* List of test examples of work without request to api. Will also work by itself. */}
+
+import Preview from "../../components/component-preview.astro";
+import MainExample from "../../components/MainExample.vue";
+import RegistrationFormExample from "../../components/RegistrationFormExample.vue";
+import TableExample from "../../components/TableExample.vue";
+
+## Main example
+
+<Preview>
+  <div slot="preview">
+    <MainExample client:only="vue" />
+  </div>
+</Preview>
+
+### Source
+
+```js v-pre
+import { compile } from "hmpl-js";
+
+const templateFn = compile(
+  `
+  <div>
+    <button class="getHTML">Get HTML!</button>
+    {{#request
+      src="/api/test"
+      after="click:.getHTML"
+      repeat=false
+    }}
+      {{#indicator trigger="pending"}}
+        <p>Loading...</p>
+      {{/indicator}}
+    {{/request}}
+  </div>`
+);
+
+const wrapper = document.getElementById("wrapper");
+
+const elementObj = templateFn();
+
+wrapper.appendChild(elementObj.response);
+```
+
+## Registration form
+
+<Preview>
+  <div slot="preview">
+    <RegistrationFormExample client:only="vue" />
+  </div>
+</Preview>
+
+### Source
+
+```js v-pre
+import { compile } from "hmpl-js";
+
+const templateFn = compile(
+  `<div>
+  <form onsubmit="function prevent(e){e.preventDefault();};return prevent(event);" id="form">
+    <div class="form-example">
+      <label for="login">Login: </label>
+      <input type="text" name="login" id="login" required /><br/>
+      <label for="password">Password: </label>
+      <input type="password" name="password" id="password" required />
+    </div>
+    <div class="form-example">
+      <input type="submit" value="Register!" />
+    </div>
+  </form>
+  <p>
+    {{#request
+      src="/api/register"
+      after="submit:#form"
+      repeat=false
+      indicators=[
+        {
+          trigger: "pending",
+          content: "<p>Loading...</p>"
+        }
+      ]
+    }}
+    {{/request}}
+  </p>
+</div>`
+);
+const initFn = (ctx) => {
+  const event = ctx.request.event;
+
+  return {
+    body: new FormData(event.target, event.submitter),
+    credentials: "same-origin"
+  };
+};
+const obj = templateFn(initFn);
+const wrapper = document.getElementById("wrapper");
+wrapper.appendChild(obj.response);
+```
+
+## Working with a table
+
+<Preview>
+  <div slot="preview">
+    <TableExample client:only="vue" />
+  </div>
+</Preview>
+
+## Source
+
+```js v-pre
+import { compile } from "hmpl-js";
+
+const templateFn = compile(
+  `<div>
+  <table>
+    <caption>
+      List of products in the store
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Product name</th>
+        <th scope="col">Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Coca Cola</td>
+        <td>10</td>
+      </tr>
+      <tr>
+        <td>Lays</td>
+        <td>4</td>
+      </tr>
+      {{#request
+        src="/api/products"
+        after="submit:#form"
+        autoBody=true
+        indicators=[
+          {
+            trigger: "pending",
+            content: "<tr><td>Loading...</td><td>Loading...</td></tr>"
+          }
+        ]
+      }}
+      {{/request}}
+    </tbody>
+  </table>
+  <form id="form">
+    <div class="form-example">
+      <label>Product name: </label>
+      <input type="text" name="product" id="product" required /><br/>
+      <label>Quantity: </label>
+      <input type="number" name="quantity" id="quantity" required />
+    </div>
+    <div class="form-example">
+      <input type="submit" value="Add product" />
+    </div>
+  </form>
+</div>
+  `
+);
+const obj = templateFn({ credentials: "same-origin" });
+const wrapper = document.getElementById("wrapper");
+wrapper.appendChild(obj.response);
+```
+
+## A repository of simple projects examples on hmpl
+
+[Examples](https://github.com/hmpl-language/examples)
