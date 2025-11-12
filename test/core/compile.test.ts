@@ -14,7 +14,10 @@ import {
   SOURCE,
   AFTER,
   DISALLOWED_TAGS,
-  SANITIZE
+  SANITIZE,
+  BIND,
+  BIND_TARGET,
+  BIND_PREFIX
 } from "../config/config";
 
 import { checkFunction } from "../shared/utils";
@@ -96,6 +99,11 @@ describe("compile function", () => {
     `${PARSE_ERROR}: Block helper with id "1" not found`
   );
   e(
+    "Should throw an error when there is no target for binding the status",
+    () => compile(`{{#r src="123" bind="123"}}{{/r}}`),
+    `${RENDER_ERROR}: Binding target is undefined`
+  );
+  e(
     `throws an error if the REQUEST COMPONENT doesn't contain the '${SOURCE}' property`,
     () => compile(createTestObj2(`{{#r repeat=true}}{{/r}}`)),
     `${REQUEST_COMPONENT_ERROR}: The "${SOURCE}" property are not found or empty`
@@ -173,6 +181,90 @@ describe("compile function", () => {
         disallowedTags: true as any
       }),
     `${COMPILE_OPTIONS_ERROR}: The value of the property "${DISALLOWED_TAGS}" must be an array`
+  );
+  e(
+    ``,
+    () =>
+      compile(
+        createTestObj2(
+          `{{#r src="/api/test" bind="customTarget"}}{{/r}}{{#r src="/api/test" bind="customTarget"}}{{/r}}`
+        )
+      ),
+    `${REQUEST_COMPONENT_ERROR}: Duplicate binding target value "customTarget"`
+  );
+  e(
+    ``,
+    () => compile(createTestObj2(`{{#r src="/api/test" bind=1}}{{/r}}`)),
+    `${REQUEST_COMPONENT_ERROR}: The "${BIND}" value must be a string or an object`
+  );
+  e(
+    ``,
+    () =>
+      compile(
+        createTestObj2(
+          `{{#r src="/api/test" bind={ target: "status", a:"" } }}{{/r}}`
+        )
+      ),
+    `${REQUEST_COMPONENT_ERROR}: Unexpected property "a"`
+  );
+  e(
+    ``,
+    () => compile(createTestObj2(`{{#r src="/api/test" bind={} }}{{/r}}`)),
+    `${REQUEST_COMPONENT_ERROR}: The "${BIND_TARGET}" property is missing`
+  );
+  e(
+    ``,
+    () =>
+      compile(
+        createTestObj2(`{{#r src="/api/test" bind={ target:1 } }}{{/r}}`)
+      ),
+    `${REQUEST_COMPONENT_ERROR}: The "${BIND_TARGET}" property should be a string`
+  );
+  e(
+    ``,
+    () =>
+      compile(
+        createTestObj2(
+          `{{#r src="/api/test" bind={ target: "status", prefix:1 } }}{{/r}}`
+        )
+      ),
+    `${REQUEST_COMPONENT_ERROR}: The "${BIND_PREFIX}" property should be a string`
+  );
+  e(
+    ``,
+    () =>
+      compile(
+        createTestObj2(`{{#r src="/api/test" bind="customTarget"}}{{/r}}`)
+      )(),
+    `${RENDER_ERROR}: Binding target "customTarget" not found`
+  );
+  e(
+    ``,
+    () =>
+      compile(
+        createTestObj2(`{{#r src="/api/test" bind="custom Target"}}{{/r}}`)
+      )(),
+    `${REQUEST_COMPONENT_ERROR}: The binding target "custom Target" must not contain spaces`
+  );
+  e(
+    ``,
+    () =>
+      compile(
+        createTestObj2(
+          `{{#r src="/api/test" bind={ target:"custom Target" } }}{{/r}}`
+        )
+      ),
+    `${REQUEST_COMPONENT_ERROR}: The binding target "custom Target" must not contain spaces`
+  );
+  e(
+    ``,
+    () =>
+      compile(
+        createTestObj2(
+          `<div class="{{customTarget}}"></div>{{#r src="/api/test"}}{{/r}}`
+        )
+      )(),
+    `${RENDER_ERROR}: Request with binding source "customTarget" not found`
   );
   e(
     `throws an error if the 'disallowedTags' array contains an unprocessable value`,

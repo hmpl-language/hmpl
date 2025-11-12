@@ -48,6 +48,9 @@ var SANITIZE_CONFIG = "sanitizeConfig";
 var ALLOWED_CONTENT_TYPES = "allowedContentTypes";
 var REQUEST_INIT_GET = `get`;
 var INTERVAL = `interval`;
+var BIND = `bind`;
+var BIND_TARGET = `target`;
+var BIND_PREFIX = `prefix`;
 var RESPONSE_ERROR = `BadResponseError`;
 var REQUEST_INIT_ERROR = `RequestInitError`;
 var RENDER_ERROR = `RenderError`;
@@ -61,6 +64,7 @@ var DEFAULT_AUTO_BODY = {
 var DEFAULT_FALSE_AUTO_BODY = {
   formData: false
 };
+var DEFAULT_BIND_PREFIX = `hmpl-status-`;
 var REQUEST_OPTIONS = [
   SOURCE,
   METHOD,
@@ -73,7 +77,8 @@ var REQUEST_OPTIONS = [
   ALLOWED_CONTENT_TYPES,
   DISALLOWED_TAGS,
   SANITIZE,
-  INTERVAL
+  INTERVAL,
+  BIND
 ];
 var VALID_METHODS = [
   "get",
@@ -217,7 +222,7 @@ var createGetParams = (prop, value, context, request) => {
     request
   };
 };
-var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, isMemo, options = {}, templateObject, allowedContentTypes, disallowedTags, sanitize, sanitizeConfig, reqObject, indicators, currentClearInterval) => {
+var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, isMemo, options = {}, templateObject, allowedContentTypes, disallowedTags, sanitize, statusValue, sanitizeConfig, reqObject, indicators, currentClearInterval) => {
   const {
     mode,
     cache,
@@ -308,6 +313,15 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
     void 0,
     currentClearInterval
   );
+  const updateDependentAttrs = (status) => {
+    if (!statusValue) return;
+    const { dependentAttrs } = statusValue;
+    statusValue.value = status;
+    for (let i = 0; i < dependentAttrs.length; i++) {
+      const dependentAttr = dependentAttrs[i];
+      dependentAttr.setValue();
+    }
+  };
   const callGetResponse = (reqResponse) => {
     if (isRequests) {
       reqObject.response = reqResponse;
@@ -453,11 +467,13 @@ var makeRequest = (el, mainEl, dataObj, method, source, isRequest, isRequests, i
     if (isRequests) {
       if (reqObject.status !== status) {
         reqObject.status = status;
+        updateDependentAttrs(status);
         get?.(createGetParams("status", status, requestContext, reqObject));
       }
     } else {
       if (templateObject.status !== status) {
         templateObject.status = status;
+        updateDependentAttrs(status);
         get?.(createGetParams("status", status, requestContext));
       }
     }
@@ -606,7 +622,7 @@ var getRequestInitFromFn = (fn, event, currentClearInterval) => {
   const result = fn(context);
   return result;
 };
-var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, isAutoBodyUndefined, isAllowedContentTypesUndefined, isDisallowedTagsUndefined, isSanitizeUndefined, isRequest = false) => {
+var renderTemplate = (currentEl, fn, requests, statusValuesGenerator, compileOptions, isMemoUndefined, isAutoBodyUndefined, isAllowedContentTypesUndefined, isDisallowedTagsUndefined, isSanitizeUndefined, isRequest = false) => {
   const renderRequest = (req, mainEl) => {
     const source = req[SOURCE];
     if (source) {
@@ -617,8 +633,28 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
         );
       } else {
         const after = req[AFTER];
+        let bindStatus = req[BIND];
         if (after && isRequest)
           createError(`${RENDER_ERROR}: EventTarget is undefined`);
+        if (bindStatus && isRequest)
+          createError(`${RENDER_ERROR}: Binding target is undefined`);
+        if (bindStatus) {
+          let bindPrefix;
+          const isBindStatusObject = checkObject(bindStatus);
+          validateBindStatus(bindStatus, isBindStatusObject);
+          if (isBindStatusObject) {
+            const newPrefix = bindStatus[BIND_PREFIX];
+            if (newPrefix !== void 0) bindPrefix = newPrefix;
+            bindStatus = bindStatus[BIND_TARGET];
+          }
+          if (statusValuesGenerator.hasOwnProperty(bindStatus)) {
+            createError(
+              `${REQUEST_COMPONENT_ERROR}: Duplicate binding target value "${bindStatus}"`
+            );
+          } else {
+            statusValuesGenerator[bindStatus] = bindPrefix !== void 0 ? bindPrefix : null;
+          }
+        }
         const isModeUndefined = !req.hasOwnProperty(REPEAT);
         const oldMode = isModeUndefined ? true : req[REPEAT];
         const modeAttr = oldMode ? "all" : "one";
@@ -795,7 +831,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
         };
         const isInterval = interval !== void 0;
         const isDataObj = isAll && after || isInterval;
-        const reqFunction = (reqEl, options, templateObject, data, reqMainEl, isArray = false, reqObject, isRequests = false, currentHMPLElement, event, currentInterval) => {
+        const reqFunction = (reqEl, options, templateObject, data, statusValues, reqMainEl, isArray = false, reqObject, isRequests = false, currentHMPLElement, event, currentInterval) => {
           const id = data.currentId;
           if (isRequest) {
             if (!reqEl) reqEl = mainEl;
@@ -860,6 +896,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
               );
             }
           }
+          const statusValue = bindStatus !== void 0 ? statusValues[bindStatus] : void 0;
           let currentClearInterval = currentInterval ? () => clearInterval(currentInterval) : void 0;
           currentClearInterval = isRequest ? currentClearInterval : dataObj?.interval?.clearInterval;
           const requestInit = isOptionsFunction ? getRequestInitFromFn(
@@ -885,6 +922,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
             allowedContentTypes,
             disallowedTags,
             sanitize,
+            statusValue,
             sanitizeConfig,
             reqObject,
             indicators,
@@ -895,7 +933,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
         if (interval) {
           validateInterval(interval);
           const time = Number(interval);
-          currentReqFunction = (reqEl, options, templateObject, data, reqMainEl, isArray = false, reqObject, isRequests = false, currentHMPLElement, event) => {
+          currentReqFunction = (reqEl, options, templateObject, data, statusValues, reqMainEl, isArray = false, reqObject, isRequests = false, currentHMPLElement, event) => {
             let interval2 = null;
             interval2 = setInterval(() => {
               reqFunction(
@@ -903,6 +941,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
                 options,
                 templateObject,
                 data,
+                statusValues,
                 reqMainEl,
                 isArray,
                 reqObject,
@@ -916,7 +955,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
         }
         let requestFunction = currentReqFunction;
         if (after) {
-          const setEvents = (reqEl, event, selector, options, templateObject, data, isArray, isRequests, reqMainEl, reqObject, currentHMPLElement) => {
+          const setEvents = (reqEl, event, selector, options, templateObject, data, statusValues, isArray, isRequests, reqMainEl, reqObject, currentHMPLElement) => {
             const els = reqMainEl.querySelectorAll(selector);
             if (els.length === 0) {
               createError(`${RENDER_ERROR}: Selectors nodes not found`);
@@ -927,6 +966,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
                 options,
                 templateObject,
                 data,
+                statusValues,
                 reqMainEl,
                 isArray,
                 reqObject,
@@ -940,6 +980,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
                 options,
                 templateObject,
                 data,
+                statusValues,
                 reqMainEl,
                 isArray,
                 reqObject,
@@ -961,7 +1002,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
             const afterArr = after.split(":");
             const event = afterArr[0];
             const selector = afterArr.slice(1).join(":");
-            requestFunction = (reqEl, options, templateObject, data, reqMainEl, isArray = false, reqObject, isRequests = false, currentHMPLElement) => {
+            requestFunction = (reqEl, options, templateObject, data, statusValues, reqMainEl, isArray = false, reqObject, isRequests = false, currentHMPLElement) => {
               setEvents(
                 reqEl,
                 event,
@@ -969,6 +1010,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
                 options,
                 templateObject,
                 data,
+                statusValues,
                 isArray,
                 isRequests,
                 reqMainEl,
@@ -1033,7 +1075,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
         const currentRequest = requests[i];
         algorithm.push(renderRequest(currentRequest, currentEl));
       }
-      reqFn = (reqEl, options, templateObject, data, mainEl, isArray = false) => {
+      reqFn = (reqEl, options, templateObject, data, statusValues, mainEl, isArray = false) => {
         if (!reqEl) {
           reqEl = mainEl;
         }
@@ -1051,6 +1093,7 @@ var renderTemplate = (currentEl, fn, requests, compileOptions, isMemoUndefined, 
             options,
             templateObject,
             data,
+            statusValues,
             reqEl,
             isArray,
             currentReq,
@@ -1165,6 +1208,47 @@ var validateInterval = (time) => {
     createError(
       `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" value must be number`
     );
+  }
+};
+var validateBindStatus = (value, isObject) => {
+  const validateBindTarget = (val) => {
+    if (val.includes(" ")) {
+      createError(
+        `${REQUEST_COMPONENT_ERROR}: The binding target "${val}" must not contain spaces`
+      );
+    }
+  };
+  if (isObject === void 0) isObject = checkObject(value);
+  if (typeof value !== "string" && !isObject)
+    createError(
+      `${REQUEST_COMPONENT_ERROR}: The "${BIND}" value must be a string or an object`
+    );
+  if (isObject) {
+    if (!value.hasOwnProperty(BIND_TARGET))
+      createError(
+        `${REQUEST_COMPONENT_ERROR}: The "${BIND_TARGET}" property is missing`
+      );
+    for (const key in value) {
+      switch (key) {
+        case BIND_TARGET:
+        case BIND_PREFIX:
+          const isBindTarget = BIND_TARGET === key;
+          const currentKey = isBindTarget ? BIND_TARGET : BIND_PREFIX;
+          if (typeof value[key] !== "string")
+            createError(
+              `${REQUEST_COMPONENT_ERROR}: The "${currentKey}" property should be a string`
+            );
+          if (isBindTarget) validateBindTarget(value[key]);
+          break;
+        default:
+          createError(
+            `${REQUEST_COMPONENT_ERROR}: Unexpected property "${key}"`
+          );
+          break;
+      }
+    }
+  } else {
+    validateBindTarget(value);
   }
 };
 var stringify = (info) => {
@@ -1339,6 +1423,9 @@ var compile = (template, options = {}) => {
         case INTERVAL:
           validateInterval(value);
           break;
+        case BIND:
+          validateBindStatus(value);
+          break;
         default:
           if (typeof value !== "string") {
             createError(
@@ -1400,8 +1487,21 @@ var compile = (template, options = {}) => {
     return currentEl;
   };
   const templateEl = getElement(template);
+  const statusValuesGenerator = {};
+  const createStatusValue = (bindPrefix) => {
+    const newStatusValue = {
+      dependentAttrs: [],
+      prefix: bindPrefix !== null ? bindPrefix : DEFAULT_BIND_PREFIX
+    };
+    return newStatusValue;
+  };
   const renderFn = (requestFunction) => {
     const templateFunction = (options2 = {}) => {
+      const statusValues = {};
+      for (const key in statusValuesGenerator) {
+        const bindPrefix = statusValuesGenerator[key];
+        statusValues[key] = createStatusValue(bindPrefix);
+      }
       const el = templateEl.cloneNode(true);
       const templateObject = {
         response: isRequest ? void 0 : el
@@ -1413,8 +1513,68 @@ var compile = (template, options = {}) => {
       };
       if (!isRequest) {
         let id = -2;
-        const getRequests = (currentElement) => {
+        const parseSyntax = (currentElement) => {
           id++;
+          if (currentElement.nodeType === 1) {
+            const element = currentElement;
+            for (const { value, name } of Array.from(element.attributes)) {
+              const matches = [...value.matchAll(/{{(.*?)}}/g)].map(
+                (m) => m[1]
+              );
+              if (matches) {
+                const statusAttr = {
+                  setValue: () => {
+                  }
+                };
+                const constructorVal = value.split(/(\{\{\s*[^}]+\s*\}\})/);
+                const dynamicValues = {};
+                for (let i = 0; i < constructorVal.length; i++) {
+                  const part = constructorVal[i];
+                  if (!part.trim()) continue;
+                  const match = part.match(/\{\{\s*([^}]+)\s*\}\}/);
+                  if (match) {
+                    const key = match[1].trim();
+                    if (!dynamicValues[key]) {
+                      if (!statusValues.hasOwnProperty(key)) {
+                        createError(
+                          `${RENDER_ERROR}: Request with binding source "${key}" not found`
+                        );
+                      }
+                      statusValues[key].dependentAttrs.push(statusAttr);
+                      dynamicValues[key] = [];
+                    }
+                    dynamicValues[key].push(i);
+                  }
+                }
+                const buildValue = () => {
+                  const resultParts = [...constructorVal];
+                  for (const [key, indexes] of Object.entries(dynamicValues)) {
+                    const isStatusValue = statusValues.hasOwnProperty(key);
+                    let replaceVal;
+                    if (isStatusValue) {
+                      const { value: value2, prefix } = statusValues[key];
+                      if (value2 !== void 0) {
+                        replaceVal = `${prefix !== void 0 ? prefix : DEFAULT_BIND_PREFIX}${key}-${value2}`;
+                      } else {
+                        replaceVal = "";
+                      }
+                    } else {
+                      replaceVal = "";
+                    }
+                    for (const idx of indexes) {
+                      resultParts[idx] = replaceVal;
+                    }
+                  }
+                  return resultParts.join("");
+                };
+                const setValue = () => {
+                  const newValue = buildValue();
+                  element.setAttribute(name, newValue);
+                };
+                statusAttr.setValue = setValue;
+              }
+            }
+          }
           if (currentElement.nodeType == 8) {
             const value = currentElement.nodeValue;
             if (value && value.startsWith(COMMENT)) {
@@ -1428,11 +1588,18 @@ var compile = (template, options = {}) => {
           if (currentElement.hasChildNodes()) {
             const chNodes = currentElement.childNodes;
             for (let i = 0; i < chNodes.length; i++) {
-              getRequests(chNodes[i]);
+              parseSyntax(chNodes[i]);
             }
           }
         };
-        getRequests(el);
+        parseSyntax(el);
+      }
+      for (const key in statusValues) {
+        const { dependentAttrs } = statusValues[key];
+        if (!dependentAttrs.length) {
+          createError(`${RENDER_ERROR}: Binding target "${key}" not found`);
+          break;
+        }
       }
       if (checkObject(options2) || checkFunction(options2)) {
         validateOptions(options2);
@@ -1441,6 +1608,7 @@ var compile = (template, options = {}) => {
           options2,
           templateObject,
           data,
+          statusValues,
           el
         );
       } else if (Array.isArray(options2)) {
@@ -1452,6 +1620,7 @@ var compile = (template, options = {}) => {
           options2,
           templateObject,
           data,
+          statusValues,
           el,
           true
         );
@@ -1468,6 +1637,7 @@ var compile = (template, options = {}) => {
     templateEl,
     renderFn,
     requests,
+    statusValuesGenerator,
     options,
     isMemoUndefined,
     isAutoBodyUndefined,

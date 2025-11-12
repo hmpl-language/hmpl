@@ -929,6 +929,106 @@ describe("template function", () => {
   );
 
   aeq(
+    "",
+    createTestObj2(
+      `<div class="{{requestStatus}}">123</div>{{#r bind="requestStatus" src="${BASE_URL}/api/test"}}{{/r}}`
+    ),
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
+        case "response":
+          if (
+            params.value?.outerHTML ===
+            `<div><div class="hmpl-status-requestStatus-200">123</div><div>123</div></div>`
+          ) {
+            res(true);
+          }
+          break;
+      }
+    },
+    {}
+  );
+
+  aeq(
+    "",
+    createTestObj2(
+      `<div data-custom-attr="{{requestStatus}}">123</div>{{#r bind="requestStatus" src="${BASE_URL}/api/test"}}{{/r}}`
+    ),
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
+        case "response":
+          if (
+            params.value?.outerHTML ===
+            `<div><div data-custom-attr="hmpl-status-requestStatus-200">123</div><div>123</div></div>`
+          ) {
+            res(true);
+          }
+          break;
+      }
+    },
+    {}
+  );
+
+  aeq(
+    "",
+    createTestObj2(
+      `<div class="{{requestStatus}}">123</div>{{#r bind={target: "requestStatus"} src="${BASE_URL}/api/test"}}{{/r}}`
+    ),
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
+        case "response":
+          if (
+            params.value?.outerHTML ===
+            `<div><div class="hmpl-status-requestStatus-200">123</div><div>123</div></div>`
+          ) {
+            res(true);
+          }
+          break;
+      }
+    },
+    {}
+  );
+
+  aeq(
+    "",
+    createTestObj2(
+      `<div class="{{requestStatus}}">123</div>{{#r bind={ target: "requestStatus", prefix: "hmpl-customPrefix-" } src="${BASE_URL}/api/test"}}{{/r}}`
+    ),
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
+        case "response":
+          if (
+            params.value?.outerHTML ===
+            `<div><div class="hmpl-customPrefix-requestStatus-200">123</div><div>123</div></div>`
+          ) {
+            res(true);
+          }
+          break;
+      }
+    },
+    {}
+  );
+
+  aeq(
+    "",
+    createTestObj2(
+      `<div class="{{requestStatus1}} {{requestStatus2}}">123</div><div class="{{requestStatus1}} {{requestStatus2}}">123</div>{{#r bind="requestStatus1" src="${BASE_URL}/api/test"}}{{/r}}{{#r bind="requestStatus2" src="${BASE_URL}/api/test"}}{{/r}}`
+    ),
+    (params: HMPLRequestGetParams, res: (value: any) => void) => {
+      switch (params.prop) {
+        case "response":
+          if (
+            params.value?.outerHTML ===
+            `<div><div class="hmpl-status-requestStatus1-200 hmpl-status-requestStatus2-200">123</div><div class="hmpl-status-requestStatus1-200 hmpl-status-requestStatus2-200">123</div><div>123</div><div>123</div></div>`
+          ) {
+            res(true);
+          }
+          break;
+      }
+    },
+    {}
+  );
+
+  aeq(
     "renders correctly when multiple identical templates are composed with sanitizing with config",
     createTestObj2(
       `{{#r src="${BASE_URL}/api/test"}}{{/r}}{{#r src="${BASE_URL}/api/test"}}{{/r}}`

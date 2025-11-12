@@ -11,6 +11,9 @@ const FORM_DATA = `formData`;
 const DISALLOWED_TAGS = `disallowedTags`;
 const SANITIZE = `sanitize`;
 const ALLOWED_CONTENT_TYPES = "allowedContentTypes";
+const BIND = `bind`;
+const BIND_TARGET = `target`;
+const BIND_PREFIX = `prefix`;
 const REQUEST_INIT_GET = `get`;
 const INTERVAL = `interval`;
 const RESPONSE_ERROR = `BadResponseError`;
@@ -47,5 +50,8 @@ export {
   PARSE_ERROR,
   COMPILE_ERROR,
   BASE_URL,
-  DEFAULT_ALLOWED_CONTENT_TYPES
+  DEFAULT_ALLOWED_CONTENT_TYPES,
+  BIND,
+  BIND_TARGET,
+  BIND_PREFIX
 };

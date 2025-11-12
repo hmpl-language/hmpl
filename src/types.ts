@@ -171,6 +171,14 @@ type HMPLDisallowedTags = HMPLDisallowedTag[];
 type HMPLSanitize = boolean;
 
 /**
+ * Options for binding an attribute with a request status
+ */
+interface HMPLBindOptions {
+  target: string; // A value that specifies which specific attribute to bind to
+  prefix?: string; // a string that is added to the attribute value before target-status
+}
+
+/**
  * An object that defines the properties of a request.
  */
 interface HMPLRequestInfo {
@@ -186,6 +194,7 @@ interface HMPLRequestInfo {
   sanitize?: HMPLSanitize; // Sanitize the response content, ensuring it is safe to render.
   disallowedTags?: HMPLDisallowedTags; // Tags to remove from response.
   autoBody?: boolean | HMPLAutoBodyOptions; // Automatic generation of body for request.
+  bind?: string | HMPLBindOptions; // Binding an attribute with a request status
 }
 
 /**
@@ -286,9 +295,35 @@ interface HMPLInstance {
  */
 interface HMPLElement {
   el: Element; // DOM element associated with this instance.
-  id: number; // Unique identifier for this element instance.
+  id: number; // Unique identifier for every block hepler.
   objNode?: HMPLNodeObj; // Optional reference to an associated node object.
 }
+
+/**
+ * Describes the status attribute object for binding usage. Used to store a function for setting the bound status value.
+ */
+interface HMPLStatusAttr {
+  setValue: (...args: any[]) => void; // Function for setting the bound attribute value. Can be called with any arguments (usually none).
+}
+
+/**
+ * Structure of a stored request status value. Contains the status value, related attributes, and an optional prefix.
+ */
+interface HMPLStatusValue {
+  value?: HMPLRequestStatus; // Status value (e.g., "pending" or "success"). Optional field.
+  dependentAttrs: HMPLStatusAttr[]; // Array of attributes associated with this value that should be updated upon status change.
+  prefix?: string; // Prefix to be added to the result (for example, for formatting the value). Optional field.
+}
+
+/**
+ * Dictionary of all current status values by name. Key is the name, value is a HMPLStatusValue object.
+ */
+type HMPLStatusValues = Record<string, HMPLStatusValue>;
+
+/**
+ * Generator type for status values: key is a name, value is null or a string (generated value).
+ */
+type HMPLStatusValuesGenerator = Record<string, null | string>;
 
 /**
  * Contains data storage objects related to requests and nodes.
@@ -315,6 +350,7 @@ type HMPLRequestFunction = (
     | HMPLIdentificationRequestInit[],
   templateObject: HMPLInstance,
   data: HMPLData,
+  statusValue: HMPLStatusValues,
   mainEl?: Element,
   isArray?: boolean,
   reqObject?: HMPLRequest,
@@ -354,6 +390,8 @@ type HMPLTemplateFunction = (
     | HMPLRequestInitFunction
 ) => HMPLInstance;
 
+type HMPLDynamicValues = Record<string, number[]>;
+
 // Exports
 export {
   HMPLRequestInit,
@@ -387,5 +425,11 @@ export {
   HMPLClearInterval,
   HMPLRequestGet,
   HMPLRequestGetParams,
-  HMPLHeadersInit
+  HMPLHeadersInit,
+  HMPLStatusAttr,
+  HMPLStatusValue,
+  HMPLStatusValues,
+  HMPLDynamicValues,
+  HMPLBindOptions,
+  HMPLStatusValuesGenerator
 };

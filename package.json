@@ -1,6 +1,6 @@
 {
   "name": "hmpl-js",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "🐜 HMPL.js is a lightweight server-oriented template language for JavaScript. Fetch HTML, render it safely, and keep apps dynamic, modern, and small.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

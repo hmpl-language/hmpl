@@ -31,6 +31,9 @@
     const ALLOWED_CONTENT_TYPES = "allowedContentTypes";
     const REQUEST_INIT_GET = `get`;
     const INTERVAL = `interval`;
+    const BIND = `bind`;
+    const BIND_TARGET = `target`;
+    const BIND_PREFIX = `prefix`;
     const RESPONSE_ERROR = `BadResponseError`;
     const REQUEST_INIT_ERROR = `RequestInitError`;
     const RENDER_ERROR = `RenderError`;
@@ -44,6 +47,7 @@
     const DEFAULT_FALSE_AUTO_BODY = {
       formData: false
     };
+    const DEFAULT_BIND_PREFIX = `hmpl-status-`;
     /**
      * List of request options that are allowed.
      */
@@ -59,7 +63,8 @@
       ALLOWED_CONTENT_TYPES,
       DISALLOWED_TAGS,
       SANITIZE,
-      INTERVAL
+      INTERVAL,
+      BIND
     ];
     /**
      * List of valid HTTP methods
@@ -269,6 +274,7 @@
       allowedContentTypes,
       disallowedTags,
       sanitize,
+      statusValue,
       sanitizeConfig,
       reqObject,
       indicators,
@@ -369,6 +375,15 @@
         undefined,
         currentClearInterval
       );
+      const updateDependentAttrs = (status) => {
+        if (!statusValue) return;
+        const { dependentAttrs } = statusValue;
+        statusValue.value = status;
+        for (let i = 0; i < dependentAttrs.length; i++) {
+          const dependentAttr = dependentAttrs[i];
+          dependentAttr.setValue();
+        }
+      };
       /**
        * Calls the 'get' function with the response if provided.
        * @param reqResponse - The response to pass to the 'get' function.
@@ -544,11 +559,13 @@
         if (isRequests) {
           if (reqObject.status !== status) {
             reqObject.status = status;
+            updateDependentAttrs(status);
             get?.(createGetParams("status", status, requestContext, reqObject));
           }
         } else {
           if (templateObject.status !== status) {
             templateObject.status = status;
+            updateDependentAttrs(status);
             get?.(createGetParams("status", status, requestContext));
           }
         }
@@ -737,6 +754,7 @@
       currentEl,
       fn,
       requests,
+      statusValuesGenerator,
       compileOptions,
       isMemoUndefined,
       isAutoBodyUndefined,
@@ -755,8 +773,29 @@
             );
           } else {
             const after = req[AFTER];
+            let bindStatus = req[BIND];
             if (after && isRequest)
               createError(`${RENDER_ERROR}: EventTarget is undefined`);
+            if (bindStatus && isRequest)
+              createError(`${RENDER_ERROR}: Binding target is undefined`);
+            if (bindStatus) {
+              let bindPrefix;
+              const isBindStatusObject = checkObject(bindStatus);
+              validateBindStatus(bindStatus, isBindStatusObject);
+              if (isBindStatusObject) {
+                const newPrefix = bindStatus[BIND_PREFIX];
+                if (newPrefix !== undefined) bindPrefix = newPrefix;
+                bindStatus = bindStatus[BIND_TARGET];
+              }
+              if (statusValuesGenerator.hasOwnProperty(bindStatus)) {
+                createError(
+                  `${REQUEST_COMPONENT_ERROR}: Duplicate binding target value "${bindStatus}"`
+                );
+              } else {
+                statusValuesGenerator[bindStatus] =
+                  bindPrefix !== undefined ? bindPrefix : null;
+              }
+            }
             const isModeUndefined = !req.hasOwnProperty(REPEAT);
             const oldMode = isModeUndefined ? true : req[REPEAT];
             const modeAttr = oldMode ? "all" : "one";
@@ -952,6 +991,7 @@
               options,
               templateObject,
               data,
+              statusValues,
               reqMainEl,
               isArray = false,
               reqObject,
@@ -1031,6 +1071,8 @@
                   currentOptions.body = new FormData(target, event.submitter);
                 }
               }
+              const statusValue =
+                bindStatus !== undefined ? statusValues[bindStatus] : undefined;
               let currentClearInterval = currentInterval
                 ? () => clearInterval(currentInterval)
                 : undefined;
@@ -1062,6 +1104,7 @@
                 allowedContentTypes,
                 disallowedTags,
                 sanitize,
+                statusValue,
                 sanitizeConfig,
                 reqObject,
                 indicators,
@@ -1077,6 +1120,7 @@
                 options,
                 templateObject,
                 data,
+                statusValues,
                 reqMainEl,
                 isArray = false,
                 reqObject,
@@ -1091,6 +1135,7 @@
                     options,
                     templateObject,
                     data,
+                    statusValues,
                     reqMainEl,
                     isArray,
                     reqObject,
@@ -1111,6 +1156,7 @@
                 options,
                 templateObject,
                 data,
+                statusValues,
                 isArray,
                 isRequests,
                 reqMainEl,
@@ -1128,6 +1174,7 @@
                         options,
                         templateObject,
                         data,
+                        statusValues,
                         reqMainEl,
                         isArray,
                         reqObject,
@@ -1142,6 +1189,7 @@
                         options,
                         templateObject,
                         data,
+                        statusValues,
                         reqMainEl,
                         isArray,
                         reqObject,
@@ -1168,6 +1216,7 @@
                   options,
                   templateObject,
                   data,
+                  statusValues,
                   reqMainEl,
                   isArray = false,
                   reqObject,
@@ -1181,6 +1230,7 @@
                     options,
                     templateObject,
                     data,
+                    statusValues,
                     isArray,
                     isRequests,
                     reqMainEl,
@@ -1250,6 +1300,7 @@
             options,
             templateObject,
             data,
+            statusValues,
             mainEl,
             isArray = false
           ) => {
@@ -1270,6 +1321,7 @@
                 options,
                 templateObject,
                 data,
+                statusValues,
                 reqEl,
                 isArray,
                 currentReq,
@@ -1445,6 +1497,51 @@
         createError(
           `${REQUEST_COMPONENT_ERROR}: The "${INTERVAL}" value must be number`
         );
+      }
+    };
+    /**
+     * Validates the target of the status binding
+     * @param value - The value to validate (expected to be a string or an object).
+     */
+    const validateBindStatus = (value, isObject) => {
+      const validateBindTarget = (val) => {
+        if (val.includes(" ")) {
+          createError(
+            `${REQUEST_COMPONENT_ERROR}: The binding target "${val}" must not contain spaces`
+          );
+        }
+      };
+      if (isObject === undefined) isObject = checkObject(value);
+      if (typeof value !== "string" && !isObject)
+        createError(
+          `${REQUEST_COMPONENT_ERROR}: The "${BIND}" value must be a string or an object`
+        );
+      if (isObject) {
+        if (!value.hasOwnProperty(BIND_TARGET))
+          createError(
+            `${REQUEST_COMPONENT_ERROR}: The "${BIND_TARGET}" property is missing`
+          );
+        for (const key in value) {
+          switch (key) {
+            case BIND_TARGET:
+            case BIND_PREFIX:
+              const isBindTarget = BIND_TARGET === key;
+              const currentKey = isBindTarget ? BIND_TARGET : BIND_PREFIX;
+              if (typeof value[key] !== "string")
+                createError(
+                  `${REQUEST_COMPONENT_ERROR}: The "${currentKey}" property should be a string`
+                );
+              if (isBindTarget) validateBindTarget(value[key]);
+              break;
+            default:
+              createError(
+                `${REQUEST_COMPONENT_ERROR}: Unexpected property "${key}"`
+              );
+              break;
+          }
+        }
+      } else {
+        validateBindTarget(value);
       }
     };
     /**
@@ -1651,6 +1748,9 @@
             case INTERVAL:
               validateInterval(value);
               break;
+            case BIND:
+              validateBindStatus(value);
+              break;
             default:
               if (typeof value !== "string") {
                 createError(
@@ -1714,8 +1814,21 @@
         return currentEl;
       };
       const templateEl = getElement(template);
+      const statusValuesGenerator = {};
+      const createStatusValue = (bindPrefix) => {
+        const newStatusValue = {
+          dependentAttrs: [],
+          prefix: bindPrefix !== null ? bindPrefix : DEFAULT_BIND_PREFIX
+        };
+        return newStatusValue;
+      };
       const renderFn = (requestFunction) => {
         const templateFunction = (options = {}) => {
+          const statusValues = {};
+          for (const key in statusValuesGenerator) {
+            const bindPrefix = statusValuesGenerator[key];
+            statusValues[key] = createStatusValue(bindPrefix);
+          }
           const el = templateEl.cloneNode(true);
           const templateObject = {
             response: isRequest ? undefined : el
@@ -1727,8 +1840,69 @@
           };
           if (!isRequest) {
             let id = -2;
-            const getRequests = (currentElement) => {
+            const parseSyntax = (currentElement) => {
               id++;
+              if (currentElement.nodeType === 1) {
+                const element = currentElement;
+                for (const { value, name } of Array.from(element.attributes)) {
+                  const matches = [...value.matchAll(/{{(.*?)}}/g)].map(
+                    (m) => m[1]
+                  );
+                  if (matches) {
+                    const statusAttr = {
+                      setValue: () => {}
+                    };
+                    const constructorVal = value.split(/(\{\{\s*[^}]+\s*\}\})/);
+                    const dynamicValues = {};
+                    for (let i = 0; i < constructorVal.length; i++) {
+                      const part = constructorVal[i];
+                      if (!part.trim()) continue;
+                      const match = part.match(/\{\{\s*([^}]+)\s*\}\}/);
+                      if (match) {
+                        const key = match[1].trim();
+                        if (!dynamicValues[key]) {
+                          if (!statusValues.hasOwnProperty(key)) {
+                            createError(
+                              `${RENDER_ERROR}: Request with binding source "${key}" not found`
+                            );
+                          }
+                          statusValues[key].dependentAttrs.push(statusAttr);
+                          dynamicValues[key] = [];
+                        }
+                        dynamicValues[key].push(i);
+                      }
+                    }
+                    const buildValue = () => {
+                      const resultParts = [...constructorVal];
+                      for (const [key, indexes] of Object.entries(
+                        dynamicValues
+                      )) {
+                        const isStatusValue = statusValues.hasOwnProperty(key);
+                        let replaceVal;
+                        if (isStatusValue) {
+                          const { value, prefix } = statusValues[key];
+                          if (value !== undefined) {
+                            replaceVal = `${prefix !== undefined ? prefix : DEFAULT_BIND_PREFIX}${key}-${value}`;
+                          } else {
+                            replaceVal = "";
+                          }
+                        } else {
+                          replaceVal = "";
+                        }
+                        for (const idx of indexes) {
+                          resultParts[idx] = replaceVal;
+                        }
+                      }
+                      return resultParts.join("");
+                    };
+                    const setValue = () => {
+                      const newValue = buildValue();
+                      element.setAttribute(name, newValue);
+                    };
+                    statusAttr.setValue = setValue;
+                  }
+                }
+              }
               if (currentElement.nodeType == 8) {
                 const value = currentElement.nodeValue;
                 if (value && value.startsWith(COMMENT)) {
@@ -1742,18 +1916,40 @@
               if (currentElement.hasChildNodes()) {
                 const chNodes = currentElement.childNodes;
                 for (let i = 0; i < chNodes.length; i++) {
-                  getRequests(chNodes[i]);
+                  parseSyntax(chNodes[i]);
                 }
               }
             };
-            getRequests(el);
+            parseSyntax(el);
+          }
+          for (const key in statusValues) {
+            const { dependentAttrs } = statusValues[key];
+            if (!dependentAttrs.length) {
+              createError(`${RENDER_ERROR}: Binding target "${key}" not found`);
+              break;
+            }
           }
           if (checkObject(options) || checkFunction(options)) {
             validateOptions(options);
-            requestFunction(undefined, options, templateObject, data, el);
+            requestFunction(
+              undefined,
+              options,
+              templateObject,
+              data,
+              statusValues,
+              el
+            );
           } else if (Array.isArray(options)) {
             validateIdentificationOptionsArray(options);
-            requestFunction(undefined, options, templateObject, data, el, true);
+            requestFunction(
+              undefined,
+              options,
+              templateObject,
+              data,
+              statusValues,
+              el,
+              true
+            );
           } else {
             createError(
               `${REQUEST_INIT_ERROR}: The type of the value being passed does not match the supported types for RequestInit`
@@ -1767,6 +1963,7 @@
         templateEl,
         renderFn,
         requests,
+        statusValuesGenerator,
         options,
         isMemoUndefined,
         isAutoBodyUndefined,
