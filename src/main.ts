@@ -2046,7 +2046,7 @@ export const compile: HMPLCompile = (
                     let replaceVal: string;
                     const { value, prefix } = statusValues[key];
                     if (value !== undefined) {
-                      replaceVal = `${prefix !== undefined ? prefix : DEFAULT_BIND_PREFIX}${key}-${value}`;
+                      replaceVal = `${prefix}${key}-${value}`;
                     } else {
                       replaceVal = "";
                     }

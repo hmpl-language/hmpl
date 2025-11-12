@@ -1549,15 +1549,10 @@ var compile = (template, options = {}) => {
                 const buildValue = () => {
                   const resultParts = [...constructorVal];
                   for (const [key, indexes] of Object.entries(dynamicValues)) {
-                    const isStatusValue = statusValues.hasOwnProperty(key);
                     let replaceVal;
-                    if (isStatusValue) {
-                      const { value: value2, prefix } = statusValues[key];
-                      if (value2 !== void 0) {
-                        replaceVal = `${prefix !== void 0 ? prefix : DEFAULT_BIND_PREFIX}${key}-${value2}`;
-                      } else {
-                        replaceVal = "";
-                      }
+                    const { value: value2, prefix } = statusValues[key];
+                    if (value2 !== void 0) {
+                      replaceVal = `${prefix}${key}-${value2}`;
                     } else {
                       replaceVal = "";
                     }

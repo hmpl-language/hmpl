@@ -1877,18 +1877,14 @@
                       for (const [key, indexes] of Object.entries(
                         dynamicValues
                       )) {
-                        const isStatusValue = statusValues.hasOwnProperty(key);
                         let replaceVal;
-                        if (isStatusValue) {
-                          const { value, prefix } = statusValues[key];
-                          if (value !== undefined) {
-                            replaceVal = `${prefix !== undefined ? prefix : DEFAULT_BIND_PREFIX}${key}-${value}`;
-                          } else {
-                            replaceVal = "";
-                          }
+                        const { value, prefix } = statusValues[key];
+                        if (value !== undefined) {
+                          replaceVal = `${prefix}${key}-${value}`;
                         } else {
                           replaceVal = "";
                         }
+
                         for (const idx of indexes) {
                           resultParts[idx] = replaceVal;
                         }
