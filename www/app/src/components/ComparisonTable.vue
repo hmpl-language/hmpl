@@ -195,7 +195,7 @@ export default {
 .comparison-table-wrapper {
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   padding: 40px;
-  margin: 120px 0;
+  margin: 2.5rem 0;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
@@ -209,7 +209,7 @@ export default {
 .comparison-title {
   font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 3px;
 }
 
 .comparison-subtitle {
