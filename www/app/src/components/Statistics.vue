@@ -80,7 +80,7 @@ const fetchGitStats = async () => {
     if (contributorsLink) {
       const match = contributorsLink.match(/&page=(\d+)>; rel="last"/);
       if (match) {
-        contributors.value = match[1];
+        contributors.value = match[1] - 1;
       }
     } else {
       const contributorsData = await contributorsResponse.json();

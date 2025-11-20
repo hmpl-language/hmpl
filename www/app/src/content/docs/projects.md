@@ -8,7 +8,7 @@ head:
       content: A list of community projects built with hmpl-js
 ---
 
-A list of community projects built with hmpl-js
+A [list](https://github.com/hmpl-language/projects) of community projects built with hmpl-js
 
 ## Example
 
