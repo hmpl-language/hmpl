@@ -1,3 +1,6 @@
+<script setup>
+  import Statistics from './Statistics.vue'
+</script> 
 <template>
   <div class="banner">
     <div class="container">
@@ -246,7 +249,9 @@
             >Demo Sandbox</a
           >
         </div>
-        <!--
+    <!--Statistics-->
+      <Statistics />       
+<!--
         <a
           href="https://www.producthunt.com/products/hmpl-js?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-hmpl&#0045;js"
           target="_blank"
@@ -1240,7 +1245,7 @@ a {
 .wrapper {
   max-width: 1440px;
   width: 100%;
-  margin: 0 auto;
+  margin:0 auto ;
 }
 
 /* Header */

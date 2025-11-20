@@ -61,7 +61,7 @@
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-typescript": "^7.26.0",
     "@babel/register": "^7.25.9",
-    "@eslint/plugin-kit": "^0.2.3",
+    "@eslint/plugin-kit": "^0.5.0",
     "@types/mocha": "^10.0.9",
     "@types/node": "^22.9.0",
     "@types/sinon": "^17.0.3",
@@ -86,6 +86,8 @@
   },
   "dependencies": {
     "dompurify": "^3.2.7",
-    "json5": "^2.2.3"
+    "github-api": "^3.4.0",
+    "json5": "^2.2.3",
+    "npm-api": "^0.4.13"
   }
 }
