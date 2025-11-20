@@ -84,7 +84,9 @@ const fetchGitStats = async () => {
       }
     } else {
       const contributorsData = await contributorsResponse.json();
-      contributors.value = contributorsData.length?.toString() || "NaN";
+      contributors.value = contributorsData.length
+        ? (contributorsData.length - 1).toString()
+        : "NaN";
     }
     const repoResponse = await fetch(
       "https://api.github.com/repos/hmpl-language/hmpl"

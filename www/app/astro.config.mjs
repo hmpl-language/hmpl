@@ -277,6 +277,10 @@ export default defineConfig({
               link: "https://blog.hmpl-lang.dev"
             },
             {
+              label: "Community projects",
+              link: "/projects"
+            },
+            {
               label: "Changelog",
               link: "/changelog"
             }
@@ -297,6 +301,10 @@ export default defineConfig({
             {
               label: "Examples",
               href: "/examples"
+            },
+            {
+              label: "Community projects",
+              href: "/projects"
             },
             {
               label: "Blog",
