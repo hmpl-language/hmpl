@@ -129,7 +129,7 @@ This way, components from the server are mounted into the DOM without having to 
 
 ## Why HMPL?
 
-Using template language capabilities, you can multiply reduce the size of the application bundle. Full customization of the request based on the modern `fetch` standard, as well as support for all the functionality necessary for modern work in applications (request indicator, sending by event, automatic generation of `body` for the `form`, caching) and the syntax of the object in the markup, which requires a minimum number of characters, will help to build interaction with the server and client as efficiently as possible. App size [comparison](https://github.com/hmpl-language/app-size-comparison) (bytes):
+Using template language capabilities, you can greatly reduce the size of the application bundle. Full customization of the request based on the modern `fetch` standard, as well as support for all the functionality necessary for modern work in applications (request indicator, sending by event, automatic generation of `body` for the `form`, caching) and the syntax of the object in the markup, which requires a minimum number of characters, will help to build interaction with the server and client as efficiently as possible. App size [comparison](https://github.com/hmpl-language/app-size-comparison) (bytes):
 
 <div>
     <a href="https://github.com/hmpl-language/app-size-comparison">
@@ -154,7 +154,7 @@ Also, HMPL can be a great alternative to popular tools such as HTMX and Alpine.j
 
 ## Installation
 
-hmpl can be installed in several ways, which are described in this section. This tool is a simple javascript file that is connected in the usual way through a `script`, or using the `import` construct in an environment that supports this (webpack build, parcel build etc.). 
+HMPL can be installed in several ways, which are described in this section. This tool is a simple javascript file that is connected in the usual way through a `script`, or using the `import` construct in an environment that supports this (webpack build, parcel build etc.). 
 > [!NOTE]
 > Starting with version `2.2.0`, the JSON5 module needs to be connected, and starting with version `2.2.5`, the DOMPurify module also needs to be connected. The first and easiest way is to install using a CDN.
 
@@ -166,7 +166,7 @@ This method involves downloading through npm or other package managers.
 npm i hmpl-js
 ```
 
-Along the path `node-modules/hmpl/dist` you can find two files that contain a regular js file and a minified one.
+Along the path `node_modules/hmpl/dist` you can find two files that contain a regular js file and a minified one.
 
 ### CDN
 
