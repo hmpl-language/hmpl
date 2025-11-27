@@ -26,6 +26,13 @@ A landing page where the components are completely located on the server, so the
 ![Photo 5](https://github.com/user-attachments/assets/63c89eeb-5b07-4b3d-979b-77cff7b271d0)
 
 ## Ant and Apples
+
 A simple interactive game built with HMPL demonstrating dynamic content loading and state management. [View on GitHub](https://github.com/aanthonymax/ant-and-apples)
 
 <img src="/assets/ant-and-apples.png" alt="Ant and Apples Game" width="730" height="300">
+
+## HATEOAS App
+
+A small application built on the HATEOAS architecture. It uses hmpl-dom. The application itself is a small clothing store.
+
+<img width="1436" height="671" alt="HATEOAS app" src="https://github.com/user-attachments/assets/efd3803d-ca58-4432-b453-01df23a4fb46" />
