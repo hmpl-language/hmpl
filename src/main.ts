@@ -35,7 +35,8 @@ import {
   HMPLDynamicValues,
   HMPLStatusValue,
   HMPLBindOptions,
-  HMPLStatusValuesGenerator
+  HMPLStatusValuesGenerator,
+  HMPLTemplateFunctionOptions
 } from "./types";
 
 /**
@@ -1986,10 +1987,7 @@ export const compile: HMPLCompile = (
     requestFunction: HMPLRequestFunction
   ) => {
     const templateFunction: HMPLTemplateFunction = (
-      options:
-        | HMPLIdentificationRequestInit[]
-        | HMPLRequestInit
-        | HMPLRequestInitFunction = {}
+      options: HMPLTemplateFunctionOptions = {}
     ): HMPLInstance => {
       const statusValues: HMPLStatusValues = {};
       for (const key in statusValuesGenerator) {
@@ -2042,17 +2040,15 @@ export const compile: HMPLCompile = (
                 }
                 const buildValue = () => {
                   const resultParts = [...constructorVal];
-                  for (const [key, indexes] of Object.entries(dynamicValues)) {
-                    let replaceVal: string;
-                    const { value, prefix } = statusValues[key];
-                    if (value !== undefined) {
-                      replaceVal = `${prefix}${key}-${value}`;
-                    } else {
-                      replaceVal = "";
-                    }
+                  for (const key in dynamicValues) {
+                    const indexes = dynamicValues[key];
 
-                    for (const idx of indexes) {
-                      resultParts[idx] = replaceVal;
+                    const { value, prefix } = statusValues[key];
+                    const replaceVal =
+                      value !== undefined ? `${prefix}${key}-${value}` : "";
+
+                    for (let i = 0; i < indexes.length; i++) {
+                      resultParts[indexes[i]] = replaceVal;
                     }
                   }
                   return resultParts.join("");

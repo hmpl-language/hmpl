@@ -1874,19 +1874,13 @@
                     }
                     const buildValue = () => {
                       const resultParts = [...constructorVal];
-                      for (const [key, indexes] of Object.entries(
-                        dynamicValues
-                      )) {
-                        let replaceVal;
+                      for (const key in dynamicValues) {
+                        const indexes = dynamicValues[key];
                         const { value, prefix } = statusValues[key];
-                        if (value !== undefined) {
-                          replaceVal = `${prefix}${key}-${value}`;
-                        } else {
-                          replaceVal = "";
-                        }
-
-                        for (const idx of indexes) {
-                          resultParts[idx] = replaceVal;
+                        const replaceVal =
+                          value !== undefined ? `${prefix}${key}-${value}` : "";
+                        for (let i = 0; i < indexes.length; i++) {
+                          resultParts[indexes[i]] = replaceVal;
                         }
                       }
                       return resultParts.join("");

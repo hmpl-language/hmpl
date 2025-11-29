@@ -120,14 +120,19 @@ interface HMPLCompileOptions {
 }
 ```
 
+## HMPLTemplateFunctionOptions
+
+```ts
+type HMPLTemplateFunctionOptions =
+  | HMPLIdentificationRequestInit[]
+  | HMPLRequestInit
+  | HMPLRequestInitFunction;
+```
 ## HMPLTemplateFunction
 
 ```ts
 type HMPLTemplateFunction = (
-  options?:
-    | HMPLIdentificationRequestInit[]
-    | HMPLRequestInit
-    | HMPLRequestInitFunction
+  options?: HMPLTemplateFunctionOptions
 ) => HMPLInstance;
 ```
 

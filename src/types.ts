@@ -381,13 +381,18 @@ type HMPLCompile = (
 ) => HMPLTemplateFunction;
 
 /**
+ * Sets options for the template function.
+ */
+type HMPLTemplateFunctionOptions =
+  | HMPLIdentificationRequestInit[]
+  | HMPLRequestInit
+  | HMPLRequestInitFunction;
+
+/**
  * The function returned in response to the compile function. Creates template instances.
  */
 type HMPLTemplateFunction = (
-  options?:
-    | HMPLIdentificationRequestInit[]
-    | HMPLRequestInit
-    | HMPLRequestInitFunction
+  options?: HMPLTemplateFunctionOptions
 ) => HMPLInstance;
 
 type HMPLDynamicValues = Record<string, number[]>;
@@ -418,6 +423,7 @@ export {
   HMPLRenderFunction,
   HMPLCompile,
   HMPLTemplateFunction,
+  HMPLTemplateFunctionOptions,
   HMPLAutoBodyOptions,
   HMPLDisallowedTag,
   HMPLDisallowedTags,

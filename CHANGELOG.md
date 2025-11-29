@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.2.1 (2025-11-29)
+
+- Create the `HMPLTemplateFunctionOptions` type
+- Speeding up code execution
+
 ## 3.2.0 (2025-11-12)
 
 - Adding the `bind` property

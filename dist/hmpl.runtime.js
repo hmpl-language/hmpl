@@ -1548,16 +1548,12 @@ var compile = (template, options = {}) => {
                 }
                 const buildValue = () => {
                   const resultParts = [...constructorVal];
-                  for (const [key, indexes] of Object.entries(dynamicValues)) {
-                    let replaceVal;
+                  for (const key in dynamicValues) {
+                    const indexes = dynamicValues[key];
                     const { value: value2, prefix } = statusValues[key];
-                    if (value2 !== void 0) {
-                      replaceVal = `${prefix}${key}-${value2}`;
-                    } else {
-                      replaceVal = "";
-                    }
-                    for (const idx of indexes) {
-                      resultParts[idx] = replaceVal;
+                    const replaceVal = value2 !== void 0 ? `${prefix}${key}-${value2}` : "";
+                    for (let i = 0; i < indexes.length; i++) {
+                      resultParts[indexes[i]] = replaceVal;
                     }
                   }
                   return resultParts.join("");
