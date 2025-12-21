@@ -1,0 +1,469 @@
+.comparison-table-wrapper {
+  background: var(--sl-color-bg);
+  box-shadow: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.comparison-header {
+  margin-bottom: 38px;
+}
+
+.comparison-title {
+  font-size: 45px;
+  font-weight: 600;
+  color: var(--homepage-text-color);
+}
+
+.comparison-table {
+  margin-bottom: 100px;
+}
+
+.comparison-subtitle {
+  font-size: 24px;
+  color: var(--homepage-desc-color);
+  font-weight: 400;
+  margin: 0;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.columns-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.table-column {
+  background: white;
+  overflow: hidden;
+  box-shadow: 0px 0px 10px 1px #0000000d;
+  display: flex;
+  flex-direction: column;
+}
+
+.column-header {
+  background: #7e71ba;
+  padding: 15px 18px;
+  letter-spacing: 0.5px;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid var(--homepage-border-lightgrey-color);
+}
+
+.column-header-content {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.feature-column .column-header-content {
+  justify-content: flex-start;
+  text-transform: none;
+}
+
+.column-row:last-child {
+  border-bottom: none;
+}
+
+.column-cell {
+  padding: 15px 18px;
+  text-align: left;
+  border: 1px solid var(--homepage-border-lightgrey-color);
+  border-top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: var(--homepage-text-color);
+  background-color: var(--homepage-highlight-bg-color);
+}
+
+.feature-column .column-cell {
+  font-weight: 400;
+  color: var(--homepage-text-color);
+  font-size: 18px;
+}
+
+.feature-column {
+  min-width: 0;
+}
+
+.framework-column {
+  min-width: 0;
+}
+
+.framework-header {
+  display: flex;
+  gap: 8px;
+  font-weight: 600;
+  color: #fff;
+  font-size: 20px;
+}
+
+.columns-grid:last-child .column-cell {
+  border-radius: 0 0 12px 12px;
+}
+
+.framework-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  padding: 4px;
+}
+
+.framework-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Логотипы теперь имеют белый фон с изображениями */
+
+.column-row:hover {
+  background-color: #f9fafb;
+}
+
+.feature-name {
+  font-weight: 500;
+  color: var(--homepage-text-color);
+}
+
+.feature-value {
+  font-weight: 500;
+}
+
+.feature-value.highlighted {
+  color: var(--homepage-highlight-color);
+  font-weight: 600;
+}
+
+.comparison-footer {
+  margin-top: 30px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.comparison-note {
+  color: var(--homepage-desc-color);
+  font-size: 14px;
+  margin: 0;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+.note-image {
+  min-height: 18px;
+  min-width: 16px;
+}
+
+.metrics-link {
+  color: var(--homepage-text-color);
+  text-decoration: underline !important;
+}
+
+.metrics-link:hover {
+  text-decoration: none !important;
+}
+
+.note-image {
+  margin-right: 4px;
+}
+
+.column-header-hmpl {
+  background-color: #9747ff;
+}
+
+.column-header-feature {
+  background-color: #0183ff;
+}
+
+@media (max-width: 1024px) {
+  /* Заголовки */
+  .comparison-header {
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  .comparison-title {
+    font-size: 36px;
+  }
+
+  .comparison-subtitle {
+    font-size: 20px;
+  }
+
+  /* Таблица */
+  .comparison-table {
+    margin-bottom: 80px;
+  }
+
+  .table-container {
+    padding: 0 12px;
+  }
+
+  .columns-grid {
+    gap: 14px;
+  }
+
+  .table-column {
+    border-radius: 12px;
+  }
+
+  /* Headers */
+  .column-header {
+    padding: 12px 14px;
+  }
+
+  .column-header-content,
+  .framework-header {
+    font-size: 18px;
+  }
+
+  .framework-logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Cells */
+  .column-cell {
+    padding: 12px 14px;
+  }
+
+  .feature-column .column-cell {
+    font-size: 16px;
+  }
+
+  .feature-name,
+  .feature-value {
+    font-size: 16px;
+  }
+
+  /* Footer */
+  .comparison-footer {
+    margin-top: 24px;
+  }
+
+  .comparison-note {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .comparison-table {
+    margin-bottom: 75px;
+  }
+
+  .comparison-header {
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .comparison-title {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .comparison-subtitle {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .comparison-table {
+    margin-bottom: 60px;
+  }
+
+  .table-container {
+    padding: 0 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .columns-grid {
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    gap: 10px;
+    min-width: 520px;
+  }
+
+  .column-header {
+    padding: 10px 12px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .column-header-content {
+    font-size: 14px;
+    justify-content: center;
+  }
+
+  .framework-header {
+    font-size: 14px;
+    gap: 6px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .framework-logo {
+    width: 24px;
+    height: 24px;
+    padding: 3px;
+  }
+
+  .column-cell {
+    padding: 10px 12px;
+    font-size: 14px;
+    justify-content: center;
+  }
+
+  .feature-column .column-cell {
+    font-size: 14px;
+    justify-content: flex-start;
+  }
+
+  .feature-name {
+    font-size: 14px;
+  }
+
+  .feature-value {
+    font-size: 14px;
+  }
+
+  .columns-grid:last-child .column-cell {
+    border-radius: 0 0 8px 8px;
+  }
+
+  .comparison-footer {
+    margin-top: 20px;
+    gap: 12px;
+  }
+
+  .comparison-note {
+    font-size: 12px;
+    line-height: 1.5;
+    flex-wrap: wrap;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  .note-image {
+    min-height: 16px;
+    min-width: 14px;
+  }
+
+  .metrics-link {
+    display: inline;
+  }
+
+  .column-header-feature {
+    height: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .comparison-header {
+    margin-bottom: 20px;
+  }
+
+  .comparison-title {
+    font-size: 24px;
+    line-height: 1.3;
+  }
+
+  .comparison-subtitle {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .comparison-table {
+    margin-bottom: 50px;
+  }
+
+  .table-container {
+    padding: 0 4px;
+  }
+
+  .columns-grid {
+    grid-template-columns: repeat(4, minmax(100px, 1fr));
+    gap: 8px;
+    min-width: 440px;
+  }
+
+  .column-header {
+    padding: 8px 10px;
+    border-radius: 6px 6px 0 0;
+  }
+
+  .column-header-content {
+    font-size: 12px;
+  }
+
+  .framework-header {
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .framework-logo {
+    width: 20px;
+    height: 20px;
+    padding: 2px;
+  }
+
+  .column-cell {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .feature-column .column-cell {
+    font-size: 12px;
+  }
+
+  .feature-name {
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .feature-value {
+    font-size: 12px;
+  }
+
+  .feature-value svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .columns-grid:last-child .column-cell {
+    border-radius: 0 0 6px 6px;
+  }
+
+  .comparison-footer {
+    margin-top: 16px;
+    gap: 10px;
+  }
+
+  .comparison-note {
+    font-size: 11px;
+    line-height: 1.6;
+    padding: 0 4px;
+  }
+
+  .note-image {
+    min-height: 14px;
+    min-width: 12px;
+  }
+
+  .comparison-table {
+    margin-bottom: 50px;
+  }
+}
