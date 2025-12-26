@@ -1,0 +1,63 @@
+---
+title: Block helper
+description: About block helper used in HMPL
+head:
+  - tag: meta
+    attrs:
+      name: keywords
+      content: hmpl block helper, request block syntax, helper structure, nested helpers, template blocks, hmpl syntax
+---
+
+import { Icon } from "@astrojs/starlight/components";
+
+In template language terminology, there is such a thing as a block helper. You may have heard it in Handlebars <Icon class="docs-inline" name="seti:mustache"  />, but in HMPL specifically it is different from what is meant there.
+
+## What is this?
+
+In HMPL, these are some components that are not actually components, but are interpreted as components in the layout. That is, by writing such a block, you have written a `template` tag.
+
+```hmpl
+{{#request src="/api/clicks" after="click:#btn"}}{{/request}}
+```
+
+It also has attributes and nested elements. You can also add it anywhere in HTML.
+
+:::note
+It is worth considering that in the DOM tree, compiled helper blocks are replaced with comments of the form `<!--hmpl1-->`, `<!--hmpl2-->`, etc., when there is no explicit response from the server.
+:::
+
+## Structure
+
+import { Steps } from "@astrojs/starlight/components";
+
+<Steps>
+
+1. All block helpers start with opening double curly braces `{{`. Today, this is the gold standard for template languages, used in many of them. Next comes the special symbol `#`, which lets the compiler know that this is a block helper, and then comes its name (`request` as an example), a list of [attributes](/syntax/attribute), and closing two curly braces `}}`.
+
+   ```hmpl
+   {{#request ...}}
+   ```
+
+2. Next comes the body of the block helper. This can **only** be another block helper, or HTML.
+
+   ```hmpl
+   {{#indicator}}{{/indicator}}
+   ```
+
+   or
+
+   ```html
+   <div>Loading...</div>
+   ```
+
+3. And last, as in HTML, comes the closing "tag". It consists of the same thing as the opening "tag", except that it does not have a list of attributes and instead of `{{#...}}` it begins with the slash symbol `{{/...}}`.
+
+   ```hmpl
+   {{/request}}
+   ```
+
+</Steps>
+
+## About nesting
+
+Nesting in HMPL strictly depends on which block helper you use. The documentation specifies these nesting rules for each of them.
