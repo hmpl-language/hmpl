@@ -7,7 +7,7 @@
       </p>
     </div>
 
-    <div class="table-container">
+    <div class="table-container" ref="tableContainer">
       <!-- Header row -->
       <div class="columns-grid comparison-grid-header">
         <div class="column-header column-header-feature">
@@ -211,6 +211,71 @@
           <span v-else>{{ feature.htmx }}</span>
         </div>
       </div>
+    </div>
+    <div class="slider-controls">
+      <button
+        class="slider-nav-button slider-nav-button-prev"
+        @click="prevSlide"
+        :disabled="isFirstSlide()"
+        aria-label="Previous column"
+      >
+        <svg
+          width="31"
+          height="31"
+          viewBox="0 0 31 31"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="15.5" cy="15.5" r="15" stroke="currentColor" />
+          <path
+            d="M7.39644 15.1464C7.20118 15.3417 7.20118 15.6583 7.39644 15.8536L10.5784 19.0355C10.7737 19.2308 11.0903 19.2308 11.2855 19.0355C11.4808 18.8403 11.4808 18.5237 11.2855 18.3284L8.4571 15.5L11.2855 12.6716C11.4808 12.4763 11.4808 12.1597 11.2855 11.9645C11.0903 11.7692 10.7737 11.7692 10.5784 11.9645L7.39644 15.1464ZM22.3889 15.5L22.3889 15L7.75 15L7.75 15.5L7.75 16L22.3889 16L22.3889 15.5Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+
+      <div class="slider-indicators">
+        <button
+          class="slider-indicator"
+          :class="{ active: currentSlide === 0 }"
+          @click="goToSlide(0)"
+          aria-label="Go to Feature and HMPL columns"
+        ></button>
+        <button
+          class="slider-indicator"
+          :class="{ active: currentSlide === 1 }"
+          @click="goToSlide(1)"
+          aria-label="Go to HMPL and Alpine columns"
+        ></button>
+        <button
+          class="slider-indicator"
+          :class="{ active: currentSlide === 2 }"
+          @click="goToSlide(2)"
+          aria-label="Go to Alpine and HTMX columns"
+        ></button>
+      </div>
+
+      <button
+        class="slider-nav-button slider-nav-button-next"
+        @click="nextSlide"
+        :disabled="isLastSlide()"
+        aria-label="Next column"
+      >
+        <svg
+          width="31"
+          height="31"
+          viewBox="0 0 31 31"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          class="slider-button-flipped"
+        >
+          <circle cx="15.5" cy="15.5" r="15" stroke="currentColor" />
+          <path
+            d="M7.39644 15.1464C7.20118 15.3417 7.20118 15.6583 7.39644 15.8536L10.5784 19.0355C10.7737 19.2308 11.0903 19.2308 11.2855 19.0355C11.4808 18.8403 11.4808 18.5237 11.2855 18.3284L8.4571 15.5L11.2855 12.6716C11.4808 12.4763 11.4808 12.1597 11.2855 11.9645C11.0903 11.7692 10.7737 11.7692 10.5784 11.9645L7.39644 15.1464ZM22.3889 15.5L22.3889 15L7.75 15L7.75 15.5L7.75 16L22.3889 16L22.3889 15.5Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
     </div>
     <div class="comparison-footer">
       <p class="comparison-note">

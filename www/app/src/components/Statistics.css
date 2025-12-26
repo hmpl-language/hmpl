@@ -118,15 +118,21 @@
 }
 
 @media (max-width: 600px) {
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
   .stats {
     margin-bottom: 50px;
   }
   .value {
-    font-size: 20px;
+    font-size: 24px;
+  }
+  .info {
+    margin-top: 0;
   }
 
   .label {
-    font-size: 10px;
+    font-size: 14px;
   }
   .stat-bar {
     height: 40px;

@@ -2,6 +2,8 @@ export default {
   name: "ComparisonTable",
   data() {
     return {
+      currentSlide: 0,
+      totalSlides: 3, // Slides: 0-1, 1-2, 2-3 (showing 2 columns at a time)
       features: [
         {
           name: "Bundle Size (gzipped)",
@@ -72,6 +74,53 @@ export default {
         }
       }
       return "neutral";
+    },
+
+    scrollToSlide() {
+      const container = this.$refs.tableContainer;
+      if (!container) return;
+
+      const grid = container.querySelector(".columns-grid");
+      if (!grid) return;
+
+      const columnWidth = grid.children[0].offsetWidth;
+      const gap = parseInt(getComputedStyle(grid).gap) || 0;
+
+      const step = columnWidth + gap;
+
+      container.scrollTo({
+        left: step * this.currentSlide,
+        behavior: "smooth"
+      });
+    },
+
+    nextSlide() {
+      if (this.currentSlide < this.totalSlides - 1) {
+        this.currentSlide++;
+        this.scrollToSlide();
+      }
+    },
+
+    prevSlide() {
+      if (this.currentSlide > 0) {
+        this.currentSlide--;
+        this.scrollToSlide();
+      }
+    },
+
+    goToSlide(index) {
+      if (index >= 0 && index < this.totalSlides) {
+        this.currentSlide = index;
+        this.scrollToSlide();
+      }
+    },
+
+    isFirstSlide() {
+      return this.currentSlide === 0;
+    },
+
+    isLastSlide() {
+      return this.currentSlide === this.totalSlides - 1;
     }
   }
 };
