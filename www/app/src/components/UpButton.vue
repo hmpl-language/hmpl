@@ -89,12 +89,6 @@ onUnmounted(() => {
   transform: scale(0.95);
 }
 
-@media (min-width: 768px) {
-  .scroll-to-top {
-    display: none;
-  }
-}
-
 @media (max-width: 600px) {
   .scroll-to-top {
     right: 14px;
