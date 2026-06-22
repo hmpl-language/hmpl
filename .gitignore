@@ -5,3 +5,4 @@ package
 coverage
 package
 .DS_Store
+*.log
