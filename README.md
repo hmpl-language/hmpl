@@ -248,7 +248,7 @@ Thank you to all the people who have already contributed to HMPL, or related pro
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=hmpl-language/hmpl&type=date&legend=top-left)](https://www.star-history.com/#hmpl-language/hmpl&type=date&legend=top-left)
+[![Star History Chart](https://star-history.dera.page/svg?repos=hmpl-language/hmpl&type=date&legend=top-left)](https://star-history.dera.page/#hmpl-language/hmpl&type=date&legend=top-left)
 
 ## Roadmap
 
