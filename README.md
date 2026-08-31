@@ -248,7 +248,13 @@ Thank you to all the people who have already contributed to HMPL, or related pro
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=hmpl-language/hmpl&type=date&legend=top-left)](https://www.star-history.com/#hmpl-language/hmpl&type=date&legend=top-left)
+<a href="https://www.star-history.com/?repos=hmpl-language%2Fhmpl&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=hmpl-language/hmpl&type=date&theme=dark&legend=top-left&sealed_token=nGVkD_NtBYpR_IveVu_iBoUfwp0hk4oNQySuuVjDg03KqqG98-fC51ksYM8pBZGOmI0nK2MJSNInEv7i7IL5G84clrXCmeNPJAi98AIzh1mHKeqkmJlQDg" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=hmpl-language/hmpl&type=date&legend=top-left&sealed_token=nGVkD_NtBYpR_IveVu_iBoUfwp0hk4oNQySuuVjDg03KqqG98-fC51ksYM8pBZGOmI0nK2MJSNInEv7i7IL5G84clrXCmeNPJAi98AIzh1mHKeqkmJlQDg" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=hmpl-language/hmpl&type=date&legend=top-left&sealed_token=nGVkD_NtBYpR_IveVu_iBoUfwp0hk4oNQySuuVjDg03KqqG98-fC51ksYM8pBZGOmI0nK2MJSNInEv7i7IL5G84clrXCmeNPJAi98AIzh1mHKeqkmJlQDg" />
+ </picture>
+</a>
 
 ## Roadmap
 
