@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://blog.hmpl-lang.dev/sitemap.xml
+
+# Block access to admin and private areas
+Disallow: /admin/
+Disallow: /_site/
+Disallow: /.jekyll-cache/
+
+# Allow access to important files
+Allow: /css/
+Allow: /images/
+Allow: /assets/
+Allow: /feed.xml

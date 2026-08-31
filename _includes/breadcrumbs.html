@@ -1,0 +1,39 @@
+<nav id="breadcrumbs" aria-label="Breadcrumb">
+{% unless page.url == "/" %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "{{ site.url }}/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "{{ page.title }}",
+          "item": "{{ page.url | absolute_url }}"
+        }
+      ]
+    }
+    </script>
+    
+    <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a itemprop="item" href="{{ site.url }}/">
+                <span itemprop="name">Home</span>
+            </a>
+            <meta itemprop="position" content="1" />
+        </li>
+        <li class="breadcrumb-separator">/</li>
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span itemprop="name">{{ page.title }}</span>
+            <meta itemprop="item" content="{{ page.url | absolute_url }}" />
+            <meta itemprop="position" content="2" />
+        </li>
+    </ol>
+{% endunless %}
+</nav>

@@ -1,0 +1,187 @@
+<!-- Advanced SEO Meta Tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Standard SEO Tags -->
+{%- assign page_title = page.title | default: site.title -%}
+{%- assign page_description = page.description | default: page.excerpt | default: site.description | strip_html | truncatewords: 50 -%}
+{%- assign page_image = page.image | default: site.logo | absolute_url -%}
+{%- assign page_url = page.url | absolute_url -%}
+
+<!-- Keywords generation -->
+{%- assign page_keywords = "" -%}
+{%- if page.tags and page.tags.size > 0 -%}
+  {%- assign page_keywords = page.tags | join: ", " -%}
+{%- elsif page.categories and page.categories.size > 0 -%}
+  {%- assign page_keywords = page.categories | join: ", " -%}
+{%- endif -%}
+
+{%- if page_keywords == "" -%}
+  {%- assign page_keywords = "HMPL, JavaScript, templating, web development" -%}
+  {%- if page.title -%}
+    {%- assign title_words = page.title | split: " " | join: ", " -%}
+    {%- assign page_keywords = page_keywords | append: ", " | append: title_words -%}
+  {%- endif -%}
+{%- else -%}
+  {%- assign page_keywords = page_keywords | append: ", HMPL, JavaScript, templating, web development" -%}
+{%- endif -%}
+
+<meta name="description" content="{{ page_description }}">
+<meta name="keywords" content="{{ page_keywords }}">
+<meta name="author" content="{{ page.author | default: site.author.name }}">
+
+<meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+<meta property="og:title" content="{{ page_title }}">
+<meta property="og:description" content="{{ page_description }}">
+<meta property="og:image" content="{{ page_image }}">
+<meta property="og:url" content="{{ page_url }}">
+<meta property="og:site_name" content="{{ site.title }}">
+{%- if page.layout == 'post' -%}
+<meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
+{%- if page.modified_date -%}
+<meta property="article:modified_time" content="{{ page.modified_date | date_to_xmlschema }}">
+{%- endif -%}
+<meta property="article:author" content="{{ page.author | default: site.author.name }}">
+{%- if page.tags -%}
+{%- for tag in page.tags -%}
+<meta property="article:tag" content="{{ tag }}">
+{%- endfor -%}
+{%- endif -%}
+{%- endif -%}
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page_title }}">
+<meta name="twitter:description" content="{{ page_description }}">
+<meta name="twitter:image" content="{{ page_image }}">
+<meta name="twitter:site" content="@hmpljs">
+<meta name="twitter:creator" content="@hmpljs">
+
+<!-- Additional SEO -->
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="googlebot" content="index, follow">
+<link rel="canonical" href="{{ page_url }}">
+
+<!-- Schema.org JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "{{ site.url }}/#website",
+      "url": "{{ site.url }}/",
+      "name": "{{ site.title }}",
+      "description": "{{ site.description | strip_html }}",
+      "publisher": {
+        "@type": "Organization",
+        "@id": "{{ site.url }}/#organization"
+      },
+      "potentialAction": [
+        {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "{{ site.url }}/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "{{ site.url }}/#organization",
+      "name": "{{ site.title }}",
+      "url": "{{ site.url }}/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{{ site.logo | absolute_url }}"
+      },
+      "sameAs": [
+        "https://github.com/hmpl-language/hmpl",
+        "https://x.com/hmpljs",
+        "https://discord.gg/KFunMep36n"
+      ]
+    }
+    {%- if page.layout == 'post' -%}
+    ,{
+      "@type": "BlogPosting",
+      "@id": "{{ page_url }}/#article",
+      "isPartOf": {
+        "@id": "{{ site.url }}/#website"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "{{ page.author | default: site.author.name }}"
+      },
+      "headline": "{{ page.title }}",
+      "datePublished": "{{ page.date | date_to_xmlschema }}",
+      {%- if page.modified_date -%}
+      "dateModified": "{{ page.modified_date | date_to_xmlschema }}",
+      {%- else -%}
+      "dateModified": "{{ page.date | date_to_xmlschema }}",
+      {%- endif -%}
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ page_url }}"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": "{{ site.url }}/#organization"
+      },
+      "image": {
+        "@type": "ImageObject",
+        "url": "{{ page_image }}"
+      },
+      "description": "{{ page_description }}",
+      "keywords": "{{ page_keywords }}",
+      "articleSection": "{% if page.categories %}{{ page.categories | first }}{% else %}Technology{% endif %}",
+      "inLanguage": "{{ site.lang | default: 'en-US' }}",
+      "url": "{{ page_url }}"
+    }
+    {%- endif -%}
+    {%- if page.layout == 'home' or page.url == '/' -%}
+    ,{
+      "@type": "Blog",
+      "@id": "{{ site.url }}/#blog",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{ site.url }}/"
+      },
+      "name": "{{ site.title }}",
+      "description": "{{ site.description | strip_html }}",
+      "publisher": {
+        "@type": "Organization",
+        "@id": "{{ site.url }}/#organization"
+      },
+      "blogPost": [
+        {%- for post in site.posts limit: 10 -%}
+        {
+          "@type": "BlogPosting",
+          "headline": "{{ post.title }}",
+          "url": "{{ post.url | absolute_url }}",
+          "datePublished": "{{ post.date | date_to_xmlschema }}",
+          "author": {
+            "@type": "Person",
+            "name": "{{ post.author | default: site.author.name }}"
+          }
+        }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+    {%- endif -%}
+  ]
+}
+</script>
+
+<!-- Preconnect to external domains -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://unpkg.com">
+
+<!-- Favicon and app icons -->
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="/favicon.ico">
+
+<!-- RSS Feed -->
+<link rel="alternate" type="application/rss+xml" title="{{ site.title }} Feed" href="{{ '/feed.xml' | absolute_url }}">
