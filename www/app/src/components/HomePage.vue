@@ -658,7 +658,7 @@ export default HomePageScript;
               </p>
             </div>
             <p class="footer_copyright_text">
-              MIT Licensed | © 2024-2025 HMPL.js
+              MIT Licensed | © 2024-2026 HMPL.js
             </p>
           </div>
         </div>
