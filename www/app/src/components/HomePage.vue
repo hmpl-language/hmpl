@@ -666,7 +666,7 @@ export default HomePageScript;
     </div>
   </footer>
   <div class="note">
-    This project participates in Hacktoberfest 2025. See the
+    This project participates in Hacktoberfest 2026. See the
     <a
       class="note_link"
       href="https://github.com/hmpl-language/hmpl/issues"
