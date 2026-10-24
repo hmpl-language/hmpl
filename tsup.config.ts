@@ -25,5 +25,12 @@ export default defineConfig([
     sourcemap: false,
     outDir: "package", // Change output directory to build
     outExtension: () => ({ js: ".js" }) // Unminified hmpl.js
+  },
+  {
+    entry: ["src/index.ts"],
+    format: ["cjs", "esm"],
+    dts: true,
+    outDir: "dist",
+    clean: false
   }
 ]);

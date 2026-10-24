@@ -14,7 +14,8 @@
     "test": "mocha --require ts-node/esm --experimental-specifier-resolution=node",
     "test:watch": "mocha --watch --require ts-node/esm --experimental-specifier-resolution=node",
     "coverage": "c8 --reporter=lcov npm run test",
-    "coverage:default": "c8 npm run test"
+    "coverage:default": "c8 npm run test",
+    "prepack": "npm run build:prod"
   },
   "files": [
     "LICENSE",
