@@ -1,0 +1,243 @@
+---
+// Props interface for the component
+export interface Props {
+  title?: string;
+  description?: string;
+  url?: string;
+}
+
+// Default props
+const {
+  title = "HMPL.js",
+  description = "HMPL.js is a lightweight server-oriented template language for JavaScript. Fetch HTML, render it safely, and keep apps dynamic, modern, and small.",
+  url = "https://hmpl-lang.dev"
+} = Astro.props;
+
+// Get current date for dateModified
+const currentDate = new Date().toISOString();
+---
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${url}/#website`,
+      "url": url,
+      "name": title,
+      "description": description,
+      "publisher": {
+        "@type": "Organization",
+        "@id": `${url}/#organization`
+      },
+      "potentialAction": [
+        {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": `${url}/search?q={search_term_string}`
+          },
+          "query-input": "required name=search_term_string"
+        }
+      ],
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Organization",
+      "@id": `${url}/#organization`,
+      "name": "HMPL Language",
+      "url": url,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${url}/images/antWhite.png`,
+        "width": 460,
+        "height": 460
+      },
+      "sameAs": [
+        "https://github.com/hmpl-language/hmpl",
+        "https://www.npmjs.com/package/hmpl-js",
+        "https://x.com/hmpljs",
+        "https://discord.com/invite/KFunMep36n"
+      ],
+      "description": "Organization behind HMPL.js - a lightweight server-oriented template language for JavaScript"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${url}/#softwareapplication`,
+      "name": "HMPL.js",
+      "description": description,
+      "url": url,
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "Template Engine",
+      "operatingSystem": "Any",
+      "programmingLanguage": "JavaScript",
+      "downloadUrl": "https://www.npmjs.com/package/hmpl-js",
+      "codeRepository": "https://github.com/hmpl-language/hmpl",
+      "license": "https://opensource.org/licenses/MIT",
+      "version": "3.0.5",
+      "dateCreated": "2024-01-01",
+      "dateModified": currentDate,
+      "author": {
+        "@type": "Person",
+        "name": "Anton Maklakov"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "@id": `${url}/#organization`
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      },
+      "screenshot": {
+        "@type": "ImageObject",
+        "url": "https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/new_banner.png",
+        "caption": "HMPL.js Template Language Banner"
+      },
+      "softwareVersion": "3.0.5",
+      "releaseNotes": "Latest version with enhanced features and bug fixes",
+      "requirements": "Node.js >= 10.12.0",
+      "fileSize": "5KB",
+      "installUrl": "https://www.npmjs.com/package/hmpl-js",
+      "softwareHelp": {
+        "@type": "CreativeWork",
+        "url": `${url}/introduction`
+      },
+      "discussionUrl": "https://github.com/hmpl-language/hmpl/discussions",
+      "issueTracker": "https://github.com/hmpl-language/hmpl/issues",
+      "keywords": [
+        "fetch",
+        "html",
+        "template-engine",
+        "rest",
+        "ajax",
+        "hateoas",
+        "hypermedia",
+        "server",
+        "templates",
+        "templating",
+        "template-language",
+        "template-engines",
+        "fetch-api",
+        "server-side",
+        "language",
+        "template",
+        "hmpl",
+        "server",
+        "javascript",
+        "frontend",
+        "web-development",
+        "library"
+      ],
+      "featureList": [
+        "Customizable fetch requests",
+        "Memory preserving - reduced file sizes",
+        "Based on modern Fetch API",
+        "Server-oriented templating",
+        "XSS protection with DOMPurify",
+        "JSON5 integration",
+        "Small bundle size",
+        "Dynamic UI generation"
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "ratingCount": "1",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "JavaScript Developer"
+          },
+          "reviewBody": "HMPL.js is a fantastic lightweight template language that significantly reduces bundle sizes while providing powerful server-oriented templating capabilities."
+        }
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${url}/#webpage`,
+      "url": url,
+      "name": title,
+      "description": description,
+      "isPartOf": {
+        "@id": `${url}/#website`
+      },
+      "about": {
+        "@id": `${url}/#softwareapplication`
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://raw.githubusercontent.com/hmpl-language/media/refs/heads/main/new_banner.png"
+      },
+      "datePublished": "2024-01-01",
+      "dateModified": currentDate,
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": url
+          }
+        ]
+      },
+      "mainEntity": {
+        "@id": `${url}/#softwareapplication`
+      },
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": ["h1", ".sample_highlight"]
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${url}/#faqpage`,
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is HMPL.js?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HMPL.js is a lightweight server-oriented template language for JavaScript that allows you to fetch HTML, render it safely, and keep apps dynamic, modern, and small."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does HMPL.js reduce bundle size?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HMPL.js reduces bundle size by moving UI components to the server and fetching them dynamically, significantly reducing the client-side JavaScript needed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is HMPL.js secure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, HMPL.js includes built-in XSS protection through DOMPurify integration, ensuring safe HTML rendering from server responses."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the main alternatives to HMPL.js?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HMPL.js serves as a lightweight alternative to HTMX and Alpine.js, offering server-oriented templating with a smaller footprint."
+          }
+        }
+      ]
+    }
+  ]
+})} />
