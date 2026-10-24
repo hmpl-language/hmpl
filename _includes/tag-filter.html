@@ -1,0 +1,52 @@
+{% assign all_tags = site.posts | map: 'tags' | join: ',' | split: ',' | uniq |
+sort %} {% assign tag_counts = "" | split: "" %} {% for tag in all_tags %} {% if
+tag != "" %} {% assign count = 0 %} {% for post in site.posts %} {% if post.tags
+contains tag %} {% assign count = count | plus: 1 %} {% endif %} {% endfor %} {%
+assign tag_data = tag | strip | append: ":" | append: count %} {% assign
+tag_counts = tag_counts | push: tag_data %} {% endif %} {% endfor %}
+
+<div class="tag-filter-container">
+  <div class="tag-search-wrapper">
+    <input
+      type="text"
+      class="tag-search-input"
+      id="tag-search-input"
+      placeholder="Search tags..."
+      readonly
+    />
+    <svg
+      class="search-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.35-4.35"></path>
+    </svg>
+    <div class="tag-dropdown" id="tag-dropdown">
+      <input
+        type="text"
+        class="tag-search-box"
+        id="tag-search-filter"
+        placeholder="Filter tags..."
+      />
+      <div class="tag-options" id="tag-options">
+        {% for tag_data in tag_counts %} {% assign tag_parts = tag_data | split:
+        ":" %} {% assign tag = tag_parts[0] %} {% assign count = tag_parts[1] %}
+        <label class="tag-option">
+          <input type="checkbox" value="{{ tag }}" class="tag-checkbox" />
+          <span class="tag-name">{{ tag }}</span>
+          <span class="tag-count">({{ count }})</span>
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="selected-tags-display" id="selected-tags-display"></div>
+</div>
