@@ -19,7 +19,6 @@
     "axios": "^1.21.1",
     "hmpl-js": "^3.2.1",
     "json5": "^2.2.3",
-    "npm-api": "^1.0.1",
     "sharp": "^0.35.5",
     "starlight-theme-nova": "^0.12.3",
     "toastr": "^2.1.4",
