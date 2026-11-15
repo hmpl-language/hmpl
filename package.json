@@ -82,7 +82,7 @@
     "sinon": "^22.1.0",
     "ts-node": "^10.9.2",
     "tsup": "^9.0.0",
-    "typescript": "^7.0.2"
+    "typescript": "~6.0.3"
   },
   "dependencies": {
     "dompurify": "^3.2.7",

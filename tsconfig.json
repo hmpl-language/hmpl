@@ -2,7 +2,8 @@
   "ts-node": {
     "compilerOptions": {
       "module": "commonjs",
-      "noImplicitAny": false
+      "noImplicitAny": false,
+      "types": ["node", "mocha"]
     }
   },
   "compilerOptions": {
