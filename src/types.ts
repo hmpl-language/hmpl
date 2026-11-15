@@ -252,7 +252,7 @@ interface HMPLNodeObj {
     nodes?: ChildNode[]; // Cached child nodes or null if not cached.
   };
   interval?: {
-    value: NodeJS.Timeout; // Interval timer instance.
+    value: ReturnType<typeof setInterval>; // Interval timer instance.
     clearInterval: HMPLClearInterval; // Function to clear this interval.
   };
 }
@@ -357,7 +357,7 @@ type HMPLRequestFunction = (
   isRequests?: boolean,
   currentHMPLElement?: HMPLElement,
   event?: Event,
-  currentInterval?: NodeJS.Timeout | null
+  currentInterval?: ReturnType<typeof setInterval> | null
 ) => void;
 
 /**

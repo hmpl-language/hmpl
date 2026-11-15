@@ -1232,7 +1232,7 @@ const renderTemplate = (
             currentHMPLElement,
             event
           ) => {
-            let interval: NodeJS.Timeout | null = null;
+            let interval: ReturnType<typeof setInterval> | null = null;
             interval = setInterval(() => {
               reqFunction(
                 reqEl,

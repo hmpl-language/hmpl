@@ -21,6 +21,7 @@
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
+    "rootDir": "./src",
     "outDir": "./build",
     "paths": {
       "json5": ["./node_modules/json5/lib/index"],
