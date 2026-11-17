@@ -1215,7 +1215,7 @@ describe("template function", () => {
       referrer: "about:client",
       credentials: "same-origin",
       redirect: "follow",
-      window: "",
+      window: null,
       referrerPolicy: "no-referrer",
       headers: {
         "Cache-Control": "no-cache"

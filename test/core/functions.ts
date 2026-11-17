@@ -45,7 +45,7 @@ const eaeq = (
     });
     sinon.assert.calledWith(createErrorStub, message);
     createErrorStub.restore();
-    clearScope(scope);
+    await clearScope(scope);
     sinon.restore();
   });
 };
@@ -78,7 +78,7 @@ const waeq = (
     });
     sinon.assert.calledWith(createWarningStub, warningMessage);
     createWarningStub.restore();
-    clearScope(scope);
+    await clearScope(scope);
     sinon.restore();
   });
 };
@@ -115,7 +115,7 @@ const aeq = (
       }
     });
     assert.deepEqual(isDeepEqual ? true : req, true);
-    clearScope(scope);
+    await clearScope(scope);
   });
 };
 
@@ -140,7 +140,7 @@ const aeqError = (
       console.error("Error occurred during test:", e);
       throw e;
     } finally {
-      clearScope(scope);
+      await clearScope(scope);
     }
   });
 };
@@ -199,7 +199,7 @@ const aeqe = (
       }
     });
     assert.deepEqual(req, true);
-    clearScope(scope);
+    await clearScope(scope);
   });
 };
 
