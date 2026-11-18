@@ -4,9 +4,7 @@ import DOMPurify, { Config } from "dompurify";
 
 import {
   HMPLNodeObj,
-  HMPLRenderFunction,
   HMPLRequest,
-  HMPLRequestFunction,
   HMPLRequestInit,
   HMPLInstance,
   HMPLIdentificationRequestInit,
@@ -36,7 +34,11 @@ import {
   HMPLStatusValue,
   HMPLBindOptions,
   HMPLStatusValuesGenerator,
-  HMPLTemplateFunctionOptions
+  HMPLTemplateFunctionOptions,
+  RequestFunctionParams,
+  RequestFunction,
+  RenderFunction,
+  RenderTemplateParams
 } from "./types";
 
 /**
@@ -168,6 +170,7 @@ const checkIsStringArray = (arr: any, currentError: string) => {
       break;
     }
   }
+
   return isArrString;
 };
 
@@ -221,6 +224,7 @@ const getTemplateWrapper = (
       ? (window as any).DOMPurify.sanitize(str, sanitizeConfig)
       : (window as any).DOMPurify.sanitize(str);
   }
+
   const elementDocument = new DOMParser().parseFromString(
     `<template>${sanitizedStr}</template>`,
     "text/html"
@@ -275,6 +279,7 @@ const getIsNotAllowedContentType = (
       break;
     }
   }
+
   return !isContain;
 };
 
@@ -300,45 +305,51 @@ const createGetParams = (
   };
 };
 
+interface MakeRequestParams {
+  el: Element | undefined;
+  mainEl: Element | undefined;
+  dataObj: HMPLNodeObj | undefined;
+  method: string;
+  source: string;
+  isRequest: boolean;
+  isRequests: boolean;
+  isMemo: boolean;
+  options?: HMPLRequestInit;
+  templateObject: HMPLInstance;
+  allowedContentTypes: HMPLContentTypes;
+  disallowedTags: HMPLDisallowedTags;
+  sanitize: HMPLSanitize;
+  statusValue?: HMPLStatusValue;
+  sanitizeConfig?: Config;
+  reqObject?: HMPLRequest;
+  indicators?: HMPLParsedIndicators;
+  currentClearInterval?: HMPLClearInterval;
+}
+
 /**
  * Makes an HTTP request and handles the response.
- * @param el - The element related to the request.
- * @param mainEl - The main element in the DOM.
- * @param dataObj - The node object containing data.
- * @param method - The HTTP method to use.
- * @param source - The source URL for the request.
- * @param isRequest - Indicates if it's a single request.
- * @param isRequests - Indicates if it's multiple requests.
- * @param isMemo - Indicates if memoization is enabled.
- * @param options - The request initialization options.
- * @param templateObject - The template instance.
- * @param allowedContentTypes - Allowed Content-Types for response processing.
- * @param disallowedTags - A list of HTML tags that should be removed from the response.
- * @param sanitize - A function or method used to sanitize the response content, ensuring it is safe to render.
- * @param sanitizeConfig - Configuration object for the sanitize function from DOMPurify.
- * @param reqObject - The block helper.
- * @param indicators - Parsed indicators for the request.
+ * @param params - Request settings and rendering state.
  */
-const makeRequest = (
-  el: undefined | Element,
-  mainEl: undefined | Element,
-  dataObj: HMPLNodeObj | undefined,
-  method: string,
-  source: string,
-  isRequest: boolean,
-  isRequests: boolean,
-  isMemo: boolean,
-  options: HMPLRequestInit = {},
-  templateObject: HMPLInstance,
-  allowedContentTypes: HMPLContentTypes,
-  disallowedTags: HMPLDisallowedTags,
-  sanitize: HMPLSanitize,
-  statusValue?: HMPLStatusValue,
-  sanitizeConfig?: Config,
-  reqObject?: HMPLRequest,
-  indicators?: HMPLParsedIndicators,
-  currentClearInterval?: HMPLClearInterval
-) => {
+const makeRequest = ({
+  el,
+  mainEl,
+  dataObj,
+  method,
+  source,
+  isRequest,
+  isRequests,
+  isMemo,
+  options = {},
+  templateObject,
+  allowedContentTypes,
+  disallowedTags,
+  sanitize,
+  statusValue,
+  sanitizeConfig,
+  reqObject,
+  indicators,
+  currentClearInterval
+}: MakeRequestParams) => {
   const {
     mode,
     cache,
@@ -389,6 +400,7 @@ const makeRequest = (
   if (isHaveSignal) {
     initRequest.signal = signal;
   }
+
   if (windowOption !== undefined) {
     initRequest.window = windowOption;
   }
@@ -444,6 +456,7 @@ const makeRequest = (
 
   const updateDependentAttrs = (status: HMPLRequestStatus) => {
     if (!statusValue) return;
+
     const { dependentAttrs } = statusValue;
     statusValue.value = status;
     for (let i = 0; i < dependentAttrs.length; i++) {
@@ -486,6 +499,7 @@ const makeRequest = (
       let reqResponse: ChildNode[] = [];
       const newContent = isClone ? content!.cloneNode(true) : content;
       const nodes = [...(newContent as HTMLTemplateElement).content.childNodes];
+
       if (dataObj!.nodes) {
         const parentNode = dataObj!.parentNode! as ParentNode;
         const newNodes: ChildNode[] = [];
@@ -517,10 +531,12 @@ const makeRequest = (
         dataObj!.nodes = newNodes;
         dataObj!.parentNode = parentNode;
       }
+
       if (isRequestMemo && isNodes) {
         dataObj!.memo!.nodes = dataObj!.nodes;
         if (dataObj!.memo!.isPending) dataObj!.memo!.isPending = false;
       }
+
       callGetResponse(reqResponse);
     }
   };
@@ -556,6 +572,7 @@ const makeRequest = (
         get?.(createGetParams("response", mainEl, requestContext));
       }
     }
+
     if (isRequestMemo) {
       if (dataObj!.memo!.response !== null) {
         dataObj!.memo!.response = null;
@@ -643,10 +660,12 @@ const makeRequest = (
         get?.(createGetParams("status", status, requestContext));
       }
     }
+
     if (isRequestMemo && getIsNotFulfilledStatus(status)) {
       dataObj!.memo!.response = null;
       delete dataObj!.memo!.nodes;
     }
+
     updateIndicator(status);
   };
 
@@ -675,6 +694,7 @@ const makeRequest = (
       dataObj!.memo!.isPending = false;
       dataObj!.memo!.nodes = newNodes.slice();
     }
+
     const reqResponse = dataObj!.nodes!.slice();
     callGetResponse(reqResponse);
   };
@@ -696,6 +716,7 @@ const makeRequest = (
           `${RESPONSE_ERROR}: Response with status code ${requestStatus}`
         );
       }
+
       if (
         Array.isArray(allowedContentTypes) &&
         allowedContentTypes.length !== 0
@@ -709,6 +730,7 @@ const makeRequest = (
           );
         }
       }
+
       return response.text();
     })
     .then((data) => {
@@ -727,6 +749,7 @@ const makeRequest = (
             }
           }
         }
+
         const templateWrapper = getResponseElements(
           data,
           disallowedTags,
@@ -802,6 +825,7 @@ const getInstanceContext = (
   if (currentClearInterval) {
     request.clearInterval = currentClearInterval;
   }
+
   return {
     request
   };
@@ -829,31 +853,20 @@ const getRequestInitFromFn = (
 
 /**
  * Renders the template by processing requests and applying options.
- * @param currentEl - The current element or comment node.
- * @param fn - The render function.
- * @param requests - Array of block helpers.
- * @param compileOptions - Options provided during compilation.
- * @param isMemoUndefined - Indicates if memoization is undefined.
- * @param isAutoBodyUndefined - Indicates if autoBody is undefined.
- * @param isRequest - Indicates if it's a single request.
- * @param isAllowedContentTypesUndefined - Indicates if allowedContentTypes is undefined.
- * @param isDisallowedTagsUndefined - A flag indicating whether the disallowedTags property is undefined.
- * @param isSanitizeUndefined - A flag indicating whether the sanitize property is undefined.
- * @returns The rendered template function.
  */
-const renderTemplate = (
-  currentEl: Element | Comment,
-  fn: HMPLRenderFunction,
-  requests: HMPLRequestsObject[],
-  statusValuesGenerator: HMPLStatusValuesGenerator,
-  compileOptions: HMPLCompileOptions,
-  isMemoUndefined: boolean,
-  isAutoBodyUndefined: boolean,
-  isAllowedContentTypesUndefined: boolean,
-  isDisallowedTagsUndefined: boolean,
-  isSanitizeUndefined: boolean,
-  isRequest: boolean = false
-) => {
+const renderTemplate = ({
+  currentEl,
+  fn,
+  requests,
+  statusValuesGenerator,
+  compileOptions,
+  isMemoUndefined,
+  isAutoBodyUndefined,
+  isAllowedContentTypesUndefined,
+  isDisallowedTagsUndefined,
+  isSanitizeUndefined,
+  isRequest = false
+}: RenderTemplateParams) => {
   const renderRequest = (req: HMPLRequestsObject, mainEl?: Element) => {
     const source = req[SOURCE];
     if (source) {
@@ -869,6 +882,7 @@ const renderTemplate = (
           createError(`${RENDER_ERROR}: EventTarget is undefined`);
         if (bindStatus && isRequest)
           createError(`${RENDER_ERROR}: Binding target is undefined`);
+
         if (bindStatus) {
           let bindPrefix: string | undefined;
           const isBindStatusObject = checkObject(bindStatus);
@@ -888,6 +902,7 @@ const renderTemplate = (
               bindPrefix !== undefined ? bindPrefix : null;
           }
         }
+
         const isModeUndefined = !req.hasOwnProperty(REPEAT);
         const oldMode = isModeUndefined ? true : req[REPEAT];
         const modeAttr = oldMode ? "all" : "one";
@@ -897,6 +912,7 @@ const renderTemplate = (
         const isReqIntervalUndefined = !req.hasOwnProperty(INTERVAL);
         const sanitizeConfig = compileOptions[SANITIZE_CONFIG];
         let isMemo = isMemoUndefined ? false : compileOptions[MEMO];
+
         if (!isReqMemoUndefined) {
           if (after) {
             if (req[MEMO]) {
@@ -926,6 +942,7 @@ const renderTemplate = (
             }
           }
         }
+
         if (!isReqIntervalUndefined) {
           if (isAll && after) {
             createError(
@@ -933,6 +950,7 @@ const renderTemplate = (
             );
           }
         }
+
         const isReqAutoBodyUndefined = !req.hasOwnProperty(AUTO_BODY);
         let autoBody = isAutoBodyUndefined ? false : compileOptions[AUTO_BODY];
         if (!isReqAutoBodyUndefined) {
@@ -968,6 +986,7 @@ const renderTemplate = (
             autoBody = false;
           }
         }
+
         const isReqAllowedContentTypesUndefined = !req.hasOwnProperty(
           ALLOWED_CONTENT_TYPES
         );
@@ -979,6 +998,7 @@ const renderTemplate = (
           validateAllowedContentTypes(currentAllowedContentTypes);
           allowedContentTypes = currentAllowedContentTypes;
         }
+
         const isReqDisallowedTagsUndefined =
           !req.hasOwnProperty(DISALLOWED_TAGS);
         let disallowedTags = isDisallowedTagsUndefined
@@ -989,6 +1009,7 @@ const renderTemplate = (
           validateDisallowedTags(currentDisallowedTags);
           disallowedTags = currentDisallowedTags;
         }
+
         const isReqSanitizeUndefined = !req.hasOwnProperty(SANITIZE);
         let sanitize = isSanitizeUndefined
           ? DEFAULT_SANITIZE
@@ -998,6 +1019,7 @@ const renderTemplate = (
           validateSanitize(currentSanitize);
           sanitize = currentSanitize;
         }
+
         const initId = req[ID];
         const nodeId = req.nodeId;
         let indicators: any = req.indicators;
@@ -1044,8 +1066,10 @@ const renderTemplate = (
             }
             newOn[`${trigger}`] = currentIndicator.content;
           }
+
           indicators = newOn;
         }
+
         const getOptions = (
           options:
             | HMPLRequestInitFunction
@@ -1074,6 +1098,7 @@ const renderTemplate = (
                   `${REQUEST_COMPONENT_ERROR}: ID referenced by request not found`
                 );
               }
+
               return result as HMPLRequestInit;
             } else {
               return {};
@@ -1086,9 +1111,10 @@ const renderTemplate = (
             return options as HMPLRequestInit;
           }
         };
+
         const isInterval = interval !== undefined;
         const isDataObj = (isAll && after) || isInterval;
-        const reqFunction: HMPLRequestFunction = (
+        const reqFunction: RequestFunction = ({
           reqEl,
           options,
           templateObject,
@@ -1101,7 +1127,7 @@ const renderTemplate = (
           currentHMPLElement,
           event,
           currentInterval
-        ) => {
+        }) => {
           const id = data.currentId;
           if (isRequest) {
             if (!reqEl) reqEl = mainEl!;
@@ -1120,6 +1146,7 @@ const renderTemplate = (
               reqEl = currentEl!;
             }
           }
+
           let dataObj: HMPLNodeObj | undefined = undefined;
           if (!isRequest) {
             if (isDataObj || indicators) {
@@ -1139,6 +1166,7 @@ const renderTemplate = (
                     dataObj.memo.isPending = false;
                   }
                 }
+
                 if (isInterval) {
                   if (currentInterval) {
                     dataObj.interval = {
@@ -1147,16 +1175,19 @@ const renderTemplate = (
                     };
                   }
                 }
+
                 currentHMPLElement!.objNode = dataObj;
                 data.dataObjects.push(dataObj);
                 data.currentId++;
               }
             }
           }
+
           let currentOptions = getOptions(options, isArray);
           const isOptionsFunction = checkFunction(currentOptions);
           if (!isOptionsFunction && currentOptions)
             currentOptions = { ...currentOptions };
+
           if (autoBody && autoBody.formData && event && !isOptionsFunction) {
             const { type, target } = event as SubmitEvent;
             if (
@@ -1183,6 +1214,7 @@ const renderTemplate = (
           currentClearInterval = isRequest
             ? currentClearInterval
             : dataObj?.interval?.clearInterval;
+
           const requestInit: HMPLRequestInit | undefined = isOptionsFunction
             ? getRequestInitFromFn(
                 currentOptions as HMPLRequestInitFunction,
@@ -1190,20 +1222,22 @@ const renderTemplate = (
                 currentClearInterval
               )
             : (currentOptions as HMPLRequestInit);
+
           if (!checkObject(requestInit) && requestInit !== undefined)
             createError(
               `${REQUEST_INIT_ERROR}: Expected an object with initialization options`
             );
-          makeRequest(
-            reqEl,
-            reqMainEl,
-            dataObj!,
+
+          makeRequest({
+            el: reqEl,
+            mainEl: reqMainEl,
+            dataObj: dataObj!,
             method,
             source,
             isRequest,
             isRequests,
-            isMemo!,
-            requestInit,
+            isMemo: isMemo!,
+            options: requestInit,
             templateObject,
             allowedContentTypes,
             disallowedTags,
@@ -1213,13 +1247,14 @@ const renderTemplate = (
             reqObject,
             indicators,
             currentClearInterval
-          );
+          });
         };
+
         let currentReqFunction = reqFunction;
         if (interval) {
           validateInterval(interval);
           const time = Number(interval);
-          currentReqFunction = (
+          currentReqFunction = ({
             reqEl,
             options,
             templateObject,
@@ -1231,10 +1266,10 @@ const renderTemplate = (
             isRequests = false,
             currentHMPLElement,
             event
-          ) => {
+          }) => {
             let interval: ReturnType<typeof setInterval> | null = null;
             interval = setInterval(() => {
-              reqFunction(
+              reqFunction({
                 reqEl,
                 options,
                 templateObject,
@@ -1246,104 +1281,79 @@ const renderTemplate = (
                 isRequests,
                 currentHMPLElement,
                 event,
-                interval
-              );
+                currentInterval: interval
+              });
             }, time);
           };
         }
+
         let requestFunction = currentReqFunction;
         if (after) {
-          const setEvents = (
-            reqEl: Element,
-            event: string,
-            selector: string,
-            options:
-              | HMPLRequestInitFunction
-              | HMPLRequestInit
-              | HMPLIdentificationRequestInit[],
-            templateObject: HMPLInstance,
-            data: HMPLData,
-            statusValues: HMPLStatusValues,
-            isArray: boolean,
-            isRequests: boolean,
-            reqMainEl?: Element,
-            reqObject?: HMPLRequest,
-            currentHMPLElement?: HMPLElement
-          ) => {
+          const setEvents = ({
+            event,
+            selector,
+            request
+          }: {
+            event: string;
+            selector: string;
+            request: RequestFunctionParams;
+          }) => {
+            const { reqMainEl } = request;
             const els = reqMainEl!.querySelectorAll(selector);
             if (els.length === 0) {
               createError(`${RENDER_ERROR}: Selectors nodes not found`);
             }
+
             const afterFn = isAll
               ? (evt: Event) => {
-                  currentReqFunction(
-                    reqEl,
-                    options,
-                    templateObject,
-                    data,
-                    statusValues,
-                    reqMainEl,
-                    isArray,
-                    reqObject,
-                    isRequests,
-                    currentHMPLElement,
-                    evt
-                  );
+                  currentReqFunction({ ...request, event: evt });
                 }
               : (evt: Event) => {
-                  currentReqFunction(
-                    reqEl,
-                    options,
-                    templateObject,
-                    data,
-                    statusValues,
-                    reqMainEl,
-                    isArray,
-                    reqObject,
-                    isRequests,
-                    currentHMPLElement,
-                    evt
-                  );
+                  currentReqFunction({ ...request, event: evt });
                   for (let j = 0; j < els.length; j++) {
                     const currentAfterEl = els[j];
                     currentAfterEl.removeEventListener(event, afterFn);
                   }
                 };
+
             for (let i = 0; i < els.length; i++) {
               const afterEl = els[i];
               afterEl.addEventListener(event, afterFn);
             }
           };
+
           if (after.indexOf(":") > 0) {
             const afterArr = after.split(":");
             const event = afterArr[0];
             const selector = afterArr.slice(1).join(":");
-            requestFunction = (
+            requestFunction = ({
               reqEl,
               options,
               templateObject,
               data,
               statusValues,
               reqMainEl,
-              isArray: boolean = false,
+              isArray = false,
               reqObject,
               isRequests = false,
               currentHMPLElement
-            ) => {
-              setEvents(
-                reqEl,
+            }) => {
+              setEvents({
                 event,
                 selector,
-                options,
-                templateObject,
-                data,
-                statusValues,
-                isArray,
-                isRequests,
-                reqMainEl,
-                reqObject,
-                currentHMPLElement
-              );
+                request: {
+                  reqEl,
+                  options,
+                  templateObject,
+                  data,
+                  statusValues,
+                  isArray,
+                  isRequests,
+                  reqMainEl,
+                  reqObject,
+                  currentHMPLElement
+                }
+              });
             };
           } else {
             createError(
@@ -1357,6 +1367,7 @@ const renderTemplate = (
             );
           }
         }
+
         return requestFunction;
       }
     } else {
@@ -1365,7 +1376,7 @@ const renderTemplate = (
       );
     }
   };
-  let reqFn: any;
+  let reqFn: RequestFunction | undefined;
   if (isRequest) {
     requests[0].el = currentEl as Comment;
     reqFn = renderRequest(requests[0]);
@@ -1395,25 +1406,29 @@ const renderTemplate = (
         }
       }
     };
+
     getRequests(currentEl);
+
     if (requests.length > 1) {
-      const algorithm: HMPLRequestFunction[] = [];
+      const algorithm: RequestFunction[] = [];
       for (let i = 0; i < requests.length; i++) {
         const currentRequest = requests[i];
         algorithm.push(renderRequest(currentRequest, currentEl as Element)!);
       }
-      reqFn = (
-        reqEl: Element,
-        options: HMPLRequestInit | HMPLIdentificationRequestInit[],
-        templateObject: HMPLInstance,
-        data: HMPLData,
-        statusValues: HMPLStatusValues,
-        mainEl: Element,
-        isArray: boolean = false
-      ) => {
+
+      reqFn = ({
+        reqEl,
+        options,
+        templateObject,
+        data,
+        statusValues,
+        reqMainEl,
+        isArray = false
+      }: RequestFunctionParams) => {
         if (!reqEl) {
-          reqEl = mainEl;
+          reqEl = reqMainEl;
         }
+
         const requests: HMPLRequest[] = [];
         const els = data.els;
         for (let i = 0; i < els.length; i++) {
@@ -1423,20 +1438,21 @@ const renderTemplate = (
           const currentReq: HMPLRequest = {
             response: undefined
           };
-          currentReqFn!(
-            currentReqEl,
+          currentReqFn!({
+            reqEl: currentReqEl,
             options,
             templateObject,
             data,
             statusValues,
-            reqEl,
+            reqMainEl: reqEl,
             isArray,
-            currentReq,
-            true,
-            hmplElement
-          );
+            reqObject: currentReq,
+            isRequests: true,
+            currentHMPLElement: hmplElement
+          });
           requests.push(currentReq);
         }
+
         templateObject.requests = requests;
       };
     } else {
@@ -1444,6 +1460,7 @@ const renderTemplate = (
       reqFn = renderRequest(currentRequest, currentEl as Element);
     }
   }
+
   return fn(reqFn!);
 };
 
@@ -1724,23 +1741,29 @@ export const compile: HMPLCompile = (
     createError(`${COMPILE_ERROR}: Template must not be a falsy value`);
   if (!checkObject(options))
     createError(`${COMPILE_OPTIONS_ERROR}: Options must be an object`);
+
   const isMemoUndefined = !options.hasOwnProperty(MEMO);
   if (!isMemoUndefined && typeof options[MEMO] !== "boolean")
     createError(
       `${COMPILE_OPTIONS_ERROR}: The value of the property ${MEMO} must be a boolean`
     );
+
   const isAutoBodyUndefined = !options.hasOwnProperty(AUTO_BODY);
   if (!isAutoBodyUndefined) validateAutoBody(options[AUTO_BODY]!, true);
+
   const isAllowedContentTypesUndefined = !options.hasOwnProperty(
     ALLOWED_CONTENT_TYPES
   );
   if (!isAllowedContentTypesUndefined)
     validateAllowedContentTypes(options[ALLOWED_CONTENT_TYPES]!, true);
+
   const isDisallowedTagsUndefined = !options.hasOwnProperty(DISALLOWED_TAGS);
   if (!isDisallowedTagsUndefined)
     validateDisallowedTags(options[DISALLOWED_TAGS]!, true);
+
   const isSanitizeUndefined = !options.hasOwnProperty(SANITIZE);
   if (!isSanitizeUndefined) validateSanitize(options[SANITIZE]!, true);
+
   const requests: HMPLRequestsObject[] = [];
   const requestsIndexes: number[] = [];
 
@@ -1859,6 +1882,7 @@ export const compile: HMPLCompile = (
   const templateArr = parseTemplate(template);
   if (requestsIndexes.length === 0)
     createError(`${PARSE_ERROR}: Block helper not found`);
+
   const setRequest = (text: string) => {
     const parsedData = JSON5.parse(text);
     for (const key in parsedData) {
@@ -1917,6 +1941,7 @@ export const compile: HMPLCompile = (
           break;
       }
     }
+
     const requestObject = {
       ...parsedData
     };
@@ -1930,8 +1955,10 @@ export const compile: HMPLCompile = (
     const comment = `<!--hmpl${i}-->`;
     templateArr[reqId] = comment;
   }
+
   template = templateArr.join("");
   let isRequest = false;
+
   const getElement = (template: string): Element | Comment | null => {
     const elWrapper = getTemplateWrapper(
       template.trim()
@@ -1945,6 +1972,7 @@ export const compile: HMPLCompile = (
         `${RENDER_ERROR}: Template includes only one node of the Element type or one response object`
       );
     }
+
     const prepareNode = (node: ChildNode) => {
       switch (node.nodeType) {
         case Node.ELEMENT_NODE:
@@ -1957,10 +1985,12 @@ export const compile: HMPLCompile = (
           }
           break;
       }
+
       for (let i = 0; i < node.childNodes.length; i++) {
         prepareNode(node.childNodes.item(i));
       }
     };
+
     prepareNode(elWrapper.content.childNodes[0]);
     let currentEl: Element | Comment | null =
       elWrapper.content.firstElementChild;
@@ -1972,8 +2002,10 @@ export const compile: HMPLCompile = (
         currentEl = comment as Comment;
       }
     }
+
     return currentEl;
   };
+
   const templateEl = getElement(template);
   const statusValuesGenerator: HMPLStatusValuesGenerator = {};
   const createStatusValue = (bindPrefix: string | null) => {
@@ -1981,11 +2013,11 @@ export const compile: HMPLCompile = (
       dependentAttrs: [],
       prefix: bindPrefix !== null ? bindPrefix : DEFAULT_BIND_PREFIX
     };
+
     return newStatusValue;
   };
-  const renderFn: HMPLRenderFunction = (
-    requestFunction: HMPLRequestFunction
-  ) => {
+
+  const renderFn: RenderFunction = (requestFunction) => {
     const templateFunction: HMPLTemplateFunction = (
       options: HMPLTemplateFunctionOptions = {}
     ): HMPLInstance => {
@@ -1994,6 +2026,7 @@ export const compile: HMPLCompile = (
         const bindPrefix = statusValuesGenerator[key];
         statusValues[key] = createStatusValue(bindPrefix);
       }
+
       const el = templateEl!.cloneNode(true) as Element;
       const templateObject: HMPLInstance = {
         response: isRequest ? undefined : el
@@ -2003,6 +2036,7 @@ export const compile: HMPLCompile = (
         els: [],
         currentId: 0
       };
+
       if (!isRequest) {
         let id = -2;
         const parseSyntax = (currentElement: ChildNode) => {
@@ -2038,6 +2072,7 @@ export const compile: HMPLCompile = (
                     dynamicValues[key].push(i);
                   }
                 }
+
                 const buildValue = () => {
                   const resultParts = [...constructorVal];
                   for (const key in dynamicValues) {
@@ -2053,14 +2088,17 @@ export const compile: HMPLCompile = (
                   }
                   return resultParts.join("");
                 };
+
                 const setValue = () => {
                   const newValue = buildValue();
                   element.setAttribute(name, newValue);
                 };
+
                 statusAttr.setValue = setValue;
               }
             }
           }
+
           if (currentElement.nodeType == 8) {
             const value = currentElement.nodeValue;
             if (value && value.startsWith(COMMENT)) {
@@ -2071,6 +2109,7 @@ export const compile: HMPLCompile = (
               data.els.push(elObj);
             }
           }
+
           if (currentElement.hasChildNodes()) {
             const chNodes = currentElement.childNodes;
             for (let i = 0; i < chNodes.length; i++) {
@@ -2080,6 +2119,7 @@ export const compile: HMPLCompile = (
         };
         parseSyntax(el);
       }
+
       for (const key in statusValues) {
         const { dependentAttrs } = statusValues[key];
         if (!dependentAttrs.length) {
@@ -2087,49 +2127,53 @@ export const compile: HMPLCompile = (
           break;
         }
       }
+
       if (checkObject(options) || checkFunction(options)) {
         validateOptions(options as HMPLRequestInit | HMPLRequestInitFunction);
-        requestFunction(
-          undefined!,
-          options as HMPLRequestInit,
+        requestFunction({
+          reqEl: undefined,
+          options: options as HMPLRequestInit,
           templateObject,
           data,
           statusValues,
-          el
-        );
+          reqMainEl: el
+        });
       } else if (Array.isArray(options)) {
         validateIdentificationOptionsArray(
           options as HMPLIdentificationRequestInit[]
         );
-        requestFunction(
-          undefined!,
-          options as HMPLIdentificationRequestInit[],
+        requestFunction({
+          reqEl: undefined,
+          options: options as HMPLIdentificationRequestInit[],
           templateObject,
           data,
           statusValues,
-          el,
-          true
-        );
+          reqMainEl: el,
+          isArray: true
+        });
       } else {
         createError(
           `${REQUEST_INIT_ERROR}: The type of the value being passed does not match the supported types for RequestInit`
         );
       }
+
       return templateObject;
     };
+
     return templateFunction;
   };
-  return renderTemplate(
-    templateEl as Element,
-    renderFn,
+
+  return renderTemplate({
+    currentEl: templateEl as Element,
+    fn: renderFn,
     requests,
     statusValuesGenerator,
-    options,
+    compileOptions: options,
     isMemoUndefined,
     isAutoBodyUndefined,
     isAllowedContentTypesUndefined,
     isDisallowedTagsUndefined,
     isSanitizeUndefined,
     isRequest
-  );
+  });
 };

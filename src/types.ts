@@ -339,6 +339,38 @@ interface HMPLData {
  */
 type HMPLClearInterval = () => void;
 
+interface RequestFunctionParams {
+  reqEl: Element | undefined;
+  options: HMPLTemplateFunctionOptions;
+  templateObject: HMPLInstance;
+  data: HMPLData;
+  statusValues: HMPLStatusValues;
+  reqMainEl?: Element;
+  isArray?: boolean;
+  reqObject?: HMPLRequest;
+  isRequests?: boolean;
+  currentHMPLElement?: HMPLElement;
+  event?: Event;
+  currentInterval?: ReturnType<typeof setInterval> | null;
+}
+
+type RequestFunction = (params: RequestFunctionParams) => void;
+type RenderFunction = (requestFunction: RequestFunction) => HMPLTemplateFunction;
+
+interface RenderTemplateParams {
+  currentEl: Element | Comment;
+  fn: RenderFunction;
+  requests: HMPLRequestsObject[];
+  statusValuesGenerator: HMPLStatusValuesGenerator;
+  compileOptions: HMPLCompileOptions;
+  isMemoUndefined: boolean;
+  isAutoBodyUndefined: boolean;
+  isAllowedContentTypesUndefined: boolean;
+  isDisallowedTagsUndefined: boolean;
+  isSanitizeUndefined: boolean;
+  isRequest?: boolean;
+}
+
 /**
  * Type for the function that processes a request.
  */
@@ -437,5 +469,9 @@ export {
   HMPLStatusValues,
   HMPLDynamicValues,
   HMPLBindOptions,
-  HMPLStatusValuesGenerator
+  HMPLStatusValuesGenerator,
+  RequestFunctionParams,
+  RequestFunction,
+  RenderFunction,
+  RenderTemplateParams
 };
