@@ -94,32 +94,525 @@ documentation, examples, and marketing copy.
 
 ### Other repository areas
 
-- [`www/spec/`](./www/spec/) contains the language specification and has its own
-  README when present.
-- [`hmpl-site/`](./hmpl-site/) is a separate site/server area; do not assume it
-  is the same application as `www/app`.
+- The language specification is published at
+  [spec.hmpl-lang.dev](https://spec.hmpl-lang.dev/).
 - Root [`README.md`](./README.md), [`CONTRIBUTING.md`](./CONTRIBUTING.md), and
   [`SECURITY.md`](./SECURITY.md) are the project-level reference documents.
 
-## Public API and Data Flow
+## Installation and Integration Choices
 
-The main public API is:
+For a JavaScript or TypeScript application, install the core package:
 
-```ts
-import hmpl, { compile, stringify } from "hmpl-js";
-
-const templateFn = compile(template, options?);
-const result = templateFn(requestInitOrFunction?);
+```sh
+npm install hmpl-js
 ```
 
-`compile` parses an HMPL template and returns a template function. Calling that
-function creates or initializes the rendered DOM/request graph. The returned
-object includes the rendered `response` node and request-related state. Use the
-typed APIs in [`src/types.ts`](./src/types.ts) rather than inventing new
-untyped shapes.
+```js
+import { compile } from "hmpl-js";
+```
 
-`stringify` is the complementary serialization utility. Preserve its existing
-behavior and tests when changing parser or renderer internals.
+For a React application, install HMPL alongside React if React is not already
+installed:
+
+```sh
+npm install hmpl-js react react-dom
+```
+
+In TypeScript projects, use the React type packages required by the app's React
+version and toolchain.
+
+The package manifest includes `json5` and `dompurify` as dependencies. If
+sanitization is enabled in a browser integration, the runtime also needs a
+DOMPurify instance on `window.DOMPurify`; see the React notes below and the
+security documentation.
+
+Choose an integration based on how templates are authored and mounted:
+
+- **Core JavaScript/TypeScript or React:** use `hmpl-js`, `compile(template)`,
+  then append `instance.response` to a host element.
+- **Declarative templates in HTML:** install the separate `hmpl-dom` package
+  with `npm install hmpl-dom`. It scans `<template data-hmpl>` / `<template
+hmpl>` elements and mounts their output; see the `hmpl-dom` section below.
+- **`.hmpl` source files:** use the project’s documented Vite plugin or Webpack
+  loader integration. Do not assume the core package alone configures either
+  bundler.
+- **CDN:** include JSON5, DOMPurify, and `hmpl-js` in that order. Add
+  `hmpl-dom` only when using its declarative DOM integration.
+
+For CDN usage:
+
+```html
+<script src="https://unpkg.com/json5/dist/index.min.js"></script>
+<script src="https://unpkg.com/dompurify/dist/purify.min.js"></script>
+<script src="https://unpkg.com/hmpl-js/dist/hmpl.min.js"></script>
+```
+
+The optional `hmpl-dom` script must load after `hmpl-js`:
+
+```html
+<script src="https://unpkg.com/hmpl-dom/dist/hmpl-dom.min.js"></script>
+```
+
+### Vite plugin
+
+Install the Vite integration as a development dependency:
+
+```sh
+npm install --save-dev vite-plugin-hmpl
+```
+
+Register it in `vite.config.js` or `vite.config.ts`:
+
+```js
+import { defineConfig } from "vite";
+import hmplPlugin from "vite-plugin-hmpl";
+
+export default defineConfig({
+  plugins: [
+    hmplPlugin({
+      memo: true,
+      sanitize: true
+    })
+  ]
+});
+```
+
+Then import `.hmpl` files as template functions:
+
+```js
+import templateFn from "./templates/component.hmpl";
+
+const instance = templateFn();
+```
+
+Plugin options can set compile defaults such as `memo`, `sanitize`,
+`autoBody`, `allowedContentTypes`, `disallowedTags`, and configure `include`
+and `exclude` globs. Verify exact options and defaults against the plugin's
+documentation before changing plugin configuration.
+
+### Webpack loader
+
+Install the loader as a development dependency:
+
+```sh
+npm install --save-dev hmpl-loader
+```
+
+Configure the loader for `.hmpl` files using the project's existing Webpack
+rules, then import the file as a template function:
+
+```js
+const templateFn = require("./templates/component.hmpl");
+const instance = templateFn();
+```
+
+The official loader documentation recommends `hmpl-loader` version `0.0.2` or
+higher. Check the loader's documentation for the exact rule syntax used by the
+project's Webpack version.
+
+### Starter project
+
+The official installation guide provides a Vite starter project:
+
+```sh
+npx degit hmpl-language/hello-hmpl-starter hello-hmpl
+cd hello-hmpl
+npm install
+```
+
+Use the scripts defined by the generated starter project's `package.json` to
+start development or build the application.
+
+The official [installation page](https://hmpl-lang.vercel.app/installation)
+covers prerequisites, CDN/npm/bun installation, the starter project, and links
+to bundler integrations. For repository-specific details, see
+[`www/app/src/content/docs/installation.mdx`](./www/app/src/content/docs/installation.mdx),
+[`www/app/src/content/docs/vite-plugin.md`](./www/app/src/content/docs/vite-plugin.md),
+and [`www/app/src/content/docs/webpack.md`](./www/app/src/content/docs/webpack.md).
+
+## Public API and Data Flow
+
+The `hmpl-js` package exposes `compile`, `stringify`, and its public TypeScript
+types. The default export is an object containing `compile` and `stringify`;
+named imports are also supported:
+
+```ts
+import hmpl from "hmpl-js";
+
+const template = `<div>{{#request src="/api/items"}}{{/request}}</div>`;
+const templateFn = hmpl.compile(template);
+const instance = templateFn();
+```
+
+Use `hmpl.compile(...)` or the named `compile(...)`; both compile a template
+string and return an HMPL template function. `hmpl.stringify(info)` and the
+named `stringify(info)` export serialize a request helper. The second argument
+to `compile` is compile-time configuration (`HMPLCompileOptions`), not fetch
+options.
+
+The usual way to instantiate a template is simply `templateFn()`. The optional
+argument to the returned function is named `options` and has this
+`HMPLTemplateFunctionOptions` union:
+
+1. A single `HMPLRequestInit` object shared by requests in the template.
+2. An `HMPLRequestInitFunction`, which receives HMPL request context and returns
+   an `HMPLRequestInit` object.
+3. An array of `{ id, value }` identification entries, used to associate
+   request initialization options with helpers that declare a matching
+   `initId`.
+
+These are request-initialization options, not a required argument, and not a
+generic “request init or function” API. Use `templateFn()` when no custom fetch
+configuration is needed. The returned `HMPLInstance` contains `response` and
+may contain `status` and `requests`, depending on the template.
+
+```js
+import { compile } from "hmpl-js";
+
+const templateFn = compile(`
+  <div>
+    <button class="load">Load</button>
+    {{#request src="/api/items" after="click:.load" repeat=false}}
+      {{#indicator trigger="pending"}}<p>Loading...</p>{{/indicator}}
+      {{#indicator trigger="error"}}<p>Request failed</p>{{/indicator}}
+    {{/request}}
+  </div>
+`);
+
+const instance = templateFn();
+document.querySelector("#app").appendChild(instance.response);
+```
+
+Pass one `HMPLRequestInit` object when requests share options:
+
+```js
+const instance = templateFn({ credentials: "same-origin" });
+```
+
+The `get` option is a callback called with one object argument,
+`{ prop, value, context, request }`. It reports instance property changes such
+as `"status"` and `"response"`; it is not the callback that returns fetch
+options:
+
+```js
+const instance = templateFn({
+  get: ({ prop, value, context, request }) => {
+    if (prop === "status") {
+      console.log("Request status:", value, request);
+    }
+  }
+});
+```
+
+Use an `HMPLRequestInitFunction` only when fetch options need to be generated
+dynamically from the request context, for example to build a form body from the
+triggering event:
+
+```js
+const instance = templateFn(({ request: { event } }) => ({
+  body: new FormData(event.target, event.submitter),
+  credentials: "same-origin"
+}));
+```
+
+For templates with multiple requests that need different options, give each
+request an `initId`, then pass an array of matching `{ id, value }` entries to
+the template function. `value` can be an `HMPLRequestInit` object or a function
+that returns one:
+
+```hmpl
+{{#request src="/api/register" after="submit:#form" initId="register"}}
+{{/request}}
+```
+
+```js
+const instance = templateFn([
+  {
+    id: "register",
+    value: ({ request: { event } }) => ({
+      body: new FormData(event.target, event.submitter)
+    })
+  }
+]);
+```
+
+`stringify(info)` serializes an `HMPLRequestInfo` into a request block string,
+which can then be included in a template passed to `compile`:
+
+```js
+const requestBlock = stringify({ src: "/api/items" });
+const templateFn = compile(`<div>${requestBlock}</div>`);
+```
+
+Use the typed API definitions in [`src/types.ts`](./src/types.ts) rather than
+inventing untyped option shapes. Preserve `stringify` behavior and tests when
+changing parser or renderer internals.
+
+### `hmpl-dom` is a separate integration
+
+[`hmpl-dom`](https://www.npmjs.com/package/hmpl-dom) is a separate package, not
+part of the `hmpl-js` package bundle. It scans HTML templates marked with
+`data-hmpl` (or `hmpl`), compiles their HMPL markup, and mounts their rendered
+output into the DOM. This declarative integration is different from calling
+`compile` directly:
+
+```html
+<template data-hmpl data-config-id="custom-config">
+  <div>
+    <button id="load">Load</button>
+    {{#request src="/api/items" after="click:#load" repeat=false}} {{#indicator
+    trigger="pending"}}
+    <p>Loading...</p>
+    {{/indicator}} {{#indicator trigger="error"}}
+    <p>Request failed</p>
+    {{/indicator}} {{/request}}
+  </div>
+</template>
+```
+
+Configure a matching `data-config-id` through `hmpl-dom`'s `init` API. Its
+`value.compile` config is passed to HMPL `compile`; `value.templateFunction`
+config is passed to the returned template function. For example, monitor status
+updates using the `get` callback:
+
+```js
+import { init } from "hmpl-dom";
+
+init([
+  {
+    id: "custom-config",
+    value: {
+      templateFunction: {
+        get: ({ prop, value }) => {
+          if (prop === "status" && value === 200) {
+            console.log("Request succeeded");
+          }
+        }
+      }
+    }
+  }
+]);
+```
+
+When using the global CDN builds, load JSON5, DOMPurify, `hmpl-js`, and then
+`hmpl-dom` before initializing it; the global API is `hmplDOM.init([...])`.
+The module form uses `import { init } from "hmpl-dom"`. Keep behavior specific
+to the external `hmpl-dom` package separate from the core `hmpl-js` API.
+
+## Using HMPL with React
+
+HMPL can coexist with React: let React own an empty host element and let HMPL
+own the DOM subtree it inserts into that host. Do not let React render children
+inside a subtree that HMPL will replace or mutate.
+
+In Next.js App Router, code using `useEffect`, refs, or browser APIs belongs in
+a Client Component (`"use client"`). `compile` and DOM insertion require a
+browser DOM, so instantiate templates in an effect, not during server render.
+
+### Mounting a template and reflecting status in React
+
+Keep the template string stable (for example, at module scope) so ordinary
+React renders do not recompile and remount it. The `get` callback is the
+supported way to reflect HMPL instance updates in React state:
+
+```tsx
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { compile, type HMPLRequestStatus } from "hmpl-js";
+
+const template = `<div>
+  <button id="load">Load items</button>
+  {{#request src="/api/items" after="click:#load" repeat=false}}
+    {{#indicator trigger="pending"}}<p>Loading...</p>{{/indicator}}
+    {{#indicator trigger="rejected"}}<p>Network error</p>{{/indicator}}
+    {{#indicator trigger="error"}}<p>Request failed</p>{{/indicator}}
+  {{/request}}
+</div>`;
+
+export function ItemsPanel() {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [status, setStatus] = useState<HMPLRequestStatus | "idle">("idle");
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+
+    let active = true;
+    const controller = new AbortController();
+    const instance = compile(template)({
+      signal: controller.signal,
+      get: ({ prop, value }) => {
+        if (active && prop === "status") {
+          setStatus(value);
+        }
+      }
+    });
+
+    if (instance.response) host.append(instance.response);
+
+    return () => {
+      active = false;
+      controller.abort();
+      host.textContent = "";
+    };
+  }, []);
+
+  return (
+    <section>
+      <div ref={hostRef} />
+      <output aria-live="polite">
+        {status === "idle" ? "Waiting" : String(status)}
+      </output>
+    </section>
+  );
+}
+```
+
+The `active` guard prevents late request callbacks from updating an unmounted
+component. Abort the request in cleanup when appropriate; React Strict Mode
+deliberately re-runs effects in development, so an automatically-started
+request can otherwise be sent more than once. Clearing the host also prevents
+stale HMPL nodes from accumulating. If `template` or options are component
+props, include stable values in the effect dependencies and expect cleanup and
+re-instantiation when they change.
+
+### Forms and event-derived request options
+
+HMPL can listen to events on DOM nodes in the compiled template. For a form,
+use `after="submit:#form"` and derive the request body from the context event.
+Prevent the browser’s native form navigation; the example uses a native capture
+listener on the HMPL host and removes it during cleanup:
+
+```tsx
+const formTemplate = `<div>
+  <form id="gallery-form">
+    <label>
+      Page
+      <input name="page" type="number" value="1" min="1" />
+    </label>
+    <button type="submit">Load images</button>
+  </form>
+  {{#request
+    src="/api/images"
+    method="POST"
+    after="submit:#gallery-form"
+    autoBody=false
+  }}
+    {{#indicator trigger="pending"}}<p>Loading images...</p>{{/indicator}}
+    {{#indicator trigger=400}}<p>Invalid page.</p>{{/indicator}}
+    {{#indicator trigger=404}}<p>No images on this page.</p>{{/indicator}}
+  {{/request}}
+</div>`;
+
+useEffect(() => {
+  const host = hostRef.current;
+  if (!host) return;
+
+  const preventNavigation = (event: Event) => event.preventDefault();
+  host.addEventListener("submit", preventNavigation, true);
+
+  const instance = compile(formTemplate)(({ request }) => {
+    const form = request.event?.target;
+    if (!(form instanceof HTMLFormElement)) return {};
+
+    const page = new FormData(form).get("page");
+    return {
+      body: new URLSearchParams({ page: String(page ?? "") }),
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    };
+  });
+
+  if (instance.response) host.append(instance.response);
+
+  return () => {
+    host.removeEventListener("submit", preventNavigation, true);
+    host.textContent = "";
+  };
+}, []);
+```
+
+This uses `HMPLRequestInitFunction`, not the `get` callback. If using
+`autoBody=true` instead, HMPL builds `FormData` from the form submit event; do
+not also construct a competing body unless that is intentional.
+
+### Polling and interval cleanup
+
+For polling, combine `after`, `repeat=false`, and `interval` to start the
+interval from an event. Save `context.request.clearInterval` in a ref and call
+it from both the stop control and effect cleanup:
+
+```tsx
+const clearPollingRef = useRef<(() => void) | undefined>(undefined);
+
+useEffect(() => {
+  const host = hostRef.current;
+  if (!host) return;
+
+  const instance = compile(`<div>
+    <button id="start-polling" type="button">Start polling</button>
+    {{#request
+      src="/api/metrics"
+      after="click:#start-polling"
+      repeat=false
+      interval=1500
+    }}
+      {{#indicator trigger="pending"}}<span>Refreshing...</span>{{/indicator}}
+    {{/request}}
+  </div>`)((context) => {
+    clearPollingRef.current = context.request.clearInterval;
+    return {};
+  });
+
+  if (instance.response) host.append(instance.response);
+
+  return () => {
+    clearPollingRef.current?.();
+    clearPollingRef.current = undefined;
+    host.textContent = "";
+  };
+}, []);
+```
+
+An interval without `after` starts immediately. The currently supported
+event-triggered interval mode uses `repeat=false`. When a template has multiple
+interval requests, retain and clear every interval handle rather than
+overwriting one ref with the last callback.
+
+The React-owned stop control can call `clearPollingRef.current?.()` directly;
+clear the ref after stopping if the component can be restarted without being
+unmounted.
+
+### Status binding, memoization, and sanitization in React
+
+- Use `bind` when the response status should update an attribute inside the
+  HMPL-owned subtree. Use `get` when React state or another React-owned UI needs
+  the status. These are complementary, not interchangeable.
+- `memo=true` is for identical repeated requests and is only supported with
+  repeat mode enabled; it is not a substitute for React state or a general
+  application cache.
+- If enabling `sanitize=true` in a bundled browser app, provide the
+  DOMPurify-compatible global required by the core implementation:
+
+  ```tsx
+  import DOMPurify from "dompurify";
+
+  useEffect(() => {
+    window.DOMPurify = DOMPurify;
+  }, []);
+  ```
+
+  Initialize the global before mounting a template that can sanitize a
+  response.
+
+- Avoid using `dangerouslySetInnerHTML` as a workaround for HMPL integration;
+  HMPL already parses and mounts response HTML, and untrusted HTML must be
+  sanitized.
+
+The React examples above cover event-triggered requests, POST forms,
+status-driven React state, polling and interval cleanup, response sanitization,
+and serializing request configuration. Keep React-owned UI outside the HMPL
+mount point and let HMPL own the subtree it renders.
 
 ### Core implementation invariants
 
@@ -149,7 +642,7 @@ invariants that are easy to break during parser or renderer changes:
   payload shape created by `createGetParams`.
 - Status bindings are represented by dynamic HTML attribute values such as
   `{{requestStatus}}`. The default generated value uses the
-  `hmpl-status-<source>-<status>` convention; custom bind prefixes must remain
+  `hmpl-status-<target>-<status>` convention; custom bind prefixes must remain
   supported.
 - Response memoization stores/reuses the rendered request data only when the
   corresponding memo options are enabled. Do not turn memoization into a global
@@ -166,40 +659,73 @@ request context includes:
 - `context.request.clearInterval`: a callback for stopping an active request
   interval, when applicable.
 
-The `get` callback receives `{ prop, value, context, request }`. `prop` is the
-updated property name, `value` is the new value, `context` is the current
-request context, and `request` identifies the relevant helper in templates with
-multiple requests. In v3, `context` is the third parameter and `request` is the
-fourth; do not restore the v2 callback signature.
+The `get` callback receives one object argument:
+`{ prop, value, context, request }`. `prop` is the updated property name,
+`value` is the new value, `context` is the current request context, and
+`request` identifies the relevant helper in templates with multiple requests.
+Do not document or implement this as a positional callback. This is separate
+from an `HMPLRequestInitFunction`, which receives the request context as its
+single argument and returns fetch options.
+
+### Compile-time defaults
+
+The second argument to `compile(template, compileOptions)` configures defaults
+for request helpers in that compiled template. A helper's explicit attribute
+takes precedence over the same compile-level option.
+
+| Compile option        | Default         | Effect                                           |
+| --------------------- | --------------- | ------------------------------------------------ |
+| `memo`                | `false`         | Enables response memoization by default          |
+| `autoBody`            | `false`         | Sets automatic request-body behavior by default  |
+| `allowedContentTypes` | `["text/html"]` | Restricts response types processed as HTML       |
+| `disallowedTags`      | `[]`            | Removes configured tags from response HTML       |
+| `sanitize`            | `false`         | Enables DOMPurify for response HTML              |
+| `sanitizeConfig`      | undefined       | Supplies DOMPurify configuration when sanitizing |
+
+`sanitizeConfig` is compile-level configuration; it is not a request-block
+attribute.
 
 ## HMPL Syntax
 
 HMPL v3 uses block helpers with key/value attributes:
 
 ```hmpl
-{{#request src="/api/component" method="GET"}}
-  {{#indicator trigger="pending"}}
-    <p>Loading...</p>
-  {{/indicator}}
-{{/request}}
+<div>
+  <button id="load">Load component</button>
+  {{#request src="/api/component" after="click:#load" repeat=false}}
+    {{#indicator trigger="pending"}}<p>Loading...</p>{{/indicator}}
+    {{#indicator trigger="error"}}<p>Request failed</p>{{/indicator}}
+  {{/request}}
+</div>
 ```
 
-The short alias `{{#r ...}}{{/r}}` may be used for request blocks. Indicators
-are nested `{{#indicator ...}}{{/indicator}}` blocks. HMPL v3 intentionally
-replaced the older v2
-JSON-like form:
+Block helpers start with `{{#name ...}}` and close with `{{/name}}`. A helper
+can appear in HTML; its body can contain HTML and, for a request helper,
+indicator helpers. The `request` helper also has the short alias
+`{{#r ...}}{{/r}}`. Indicators use
+`{{#indicator trigger="pending"}}...{{/indicator}}`. Do not assume arbitrary
+helper nesting is supported: the documented request-helper nesting is for
+indicator blocks.
+
+The older v2 JSON-like form:
 
 ```hmpl
 {{src:"/api/test" method:"GET"}}
 ```
 
-with the v3 form:
+was replaced in v3 by:
 
 ```hmpl
 {{#request src="/api/test" method="GET"}}{{/request}}
 ```
 
 Do not introduce v2 syntax into new examples or tests.
+
+The compiled markup must have one root element or be a request-only template;
+multiple root elements are not supported. Request helper blocks are compiled
+into comment placeholders in the intermediate DOM and later replaced at their
+position by response/indicator nodes. They are not runtime HTML custom
+elements.
 
 ### Attribute values
 
@@ -238,26 +764,31 @@ that are related to request status:
 
 Do not confuse HMPL block attributes with ordinary HTML attributes. Preserve
 the parser's support for nested arrays/objects and JSON5-compatible values.
+Values such as `src="/api/items"`, `repeat=false`,
+`indicators=[{ trigger: "pending", content: "<p>Loading</p>" }]`, and
+`autoBody={ formData: true }` are helper attributes; normal attributes remain
+ordinary HTML. Attribute values are parsed as JSON5-compatible values, not
+evaluated as arbitrary JavaScript expressions.
 
 ## Request Helper
 
 `request` is the main block helper. Its supported properties are:
 
-| Property | Type | Default | Purpose |
-| --- | --- | --- | --- |
-| `src` | `string` | required | Request URL |
-| `method` | `string` | `"GET"` | HTTP method |
-| `after` | `string` | none | Event trigger in `event:selector` form |
-| `repeat` | `boolean` | `true` | Whether subsequent triggers issue requests |
-| `interval` | `number` | none | Polling interval in milliseconds |
-| `indicators` | `HMPLIndicator[]` | `[]` | Status-specific HTML |
-| `autoBody` | `boolean \| HMPLAutoBodyOptions` | `false` | Build request body from event/form |
-| `memo` | `boolean` | `false` | Cache/reuse response behavior |
-| `initId` | `string \| number` | none | Identify shared request initialization |
-| `allowedContentTypes` | `string[] \| "*"` | `["text/html"]` | Accepted response content types |
-| `disallowedTags` | `("script" \| "style" \| "iframe")[]` | `[]` | Remove selected response tags |
-| `sanitize` | `boolean` | `false` | Run DOMPurify on response HTML |
-| `bind` | `string \| HMPLBindOptions` | none | Bind request status to an attribute |
+| Property              | Type                                  | Default         | Purpose                                    |
+| --------------------- | ------------------------------------- | --------------- | ------------------------------------------ |
+| `src`                 | `string`                              | required        | Request URL                                |
+| `method`              | `string`                              | `"GET"`         | HTTP method                                |
+| `after`               | `string`                              | none            | Event trigger in `event:selector` form     |
+| `repeat`              | `boolean`                             | `true`          | Whether subsequent triggers issue requests |
+| `interval`            | `number`                              | none            | Polling interval in milliseconds           |
+| `indicators`          | `HMPLIndicator[]`                     | `[]`            | Status-specific HTML                       |
+| `autoBody`            | `boolean \| HMPLAutoBodyOptions`      | `false`         | Build request body from event/form         |
+| `memo`                | `boolean`                             | `false`         | Cache/reuse response behavior              |
+| `initId`              | `string \| number`                    | none            | Identify shared request initialization     |
+| `allowedContentTypes` | `string[] \| "*"`                     | `["text/html"]` | Accepted response content types            |
+| `disallowedTags`      | `("script" \| "style" \| "iframe")[]` | `[]`            | Remove selected response tags              |
+| `sanitize`            | `boolean`                             | `false`         | Run DOMPurify on response HTML             |
+| `bind`                | `string \| HMPLBindOptions`           | none            | Bind request status to an attribute        |
 
 Supported HTTP methods are `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`,
 and `TRACE`; method validation is case-insensitive.
@@ -418,6 +949,46 @@ Bundler is available.
 
 Tests use mocked network behavior and DOM environments. Do not add tests that
 depend on live production URLs or external APIs.
+
+### Existing test coverage map
+
+Before adding a test, inspect the closest existing cases and reuse their
+helpers. The suite already exercises these behavior families:
+
+- [`test/core/compile.test.ts`](./test/core/compile.test.ts): template and
+  compile-option validation; block syntax and malformed/unclosed blocks;
+  unsupported nested request/indicator blocks; root-node constraints; request
+  attribute validation; `autoBody`; `allowedContentTypes`; `disallowedTags`;
+  `sanitize` and `sanitizeConfig`; and `bind` targets/prefixes.
+- [`test/core/template-function.test.ts`](./test/core/template-function.test.ts):
+  method and selector errors; request initialization object/function/arrays;
+  duplicate and missing `initId`s; initial and event-triggered requests;
+  `repeat`; request status and response callbacks; pending/rejected/HTTP status
+  indicators; HTTP failures and network rejections; content-type acceptance and
+  rejection; headers, timeout and abort signal; interval cleanup; form body
+  behavior; memoized and non-memoized DOM nodes; response sanitization and
+  disallowed tags; `bind` on classes/custom attributes and multiple request
+  targets.
+- [`test/core/stringify.test.ts`](./test/core/stringify.test.ts): serialization
+  of request fields including strings, numbers, booleans, arrays, nested
+  indicator/configuration values, `initId`, `after`, `repeat`, `memo`,
+  `interval`, and allowed content types.
+- [`test/core/createWarning.test.ts`](./test/core/createWarning.test.ts):
+  warning behavior.
+- [`test/core/functions.ts`](./test/core/functions.ts) and
+  [`test/server/server.ts`](./test/server/server.ts): shared test helpers,
+  mocked HTTP routes, response bodies/statuses/headers, rejected requests, and
+  event dispatch.
+- [`test/setup/setup.ts`](./test/setup/setup.ts) and
+  [`test/setup/server.setup.ts`](./test/setup/server.setup.ts): DOM and network
+  test setup. The test suite uses jsdom, nock, and Sinon; keep tests isolated
+  and restore stubs/scopes.
+
+The tests are useful executable examples of supported syntax and edge cases,
+but documentation remains the source for intended public behavior. If a test
+contradicts the current docs or public types, determine whether the
+implementation, test, or documentation is stale rather than copying the
+contradiction into new examples.
 
 ## Code and Change Conventions
 
