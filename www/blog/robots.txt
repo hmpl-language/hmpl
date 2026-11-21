@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://blog.hmpl-lang.dev/sitemap.xml
+Sitemap: https://blog-hmpl-lang.vercel.app/sitemap.xml
 
 # Block access to admin and private areas
 Disallow: /admin/

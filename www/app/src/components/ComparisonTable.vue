@@ -298,11 +298,11 @@
           />
         </svg>
         These comparisons are based on two articles. For more details, see<a
-          href="https://blog.hmpl-lang.dev/2025/05/03/best-alpinejs-alternative/"
+          href="https://blog-hmpl-lang.vercel.app/2025/05/03/best-alpinejs-alternative/"
           class="metrics-link"
           >about alpine</a
         >,<a
-          href="https://blog.hmpl-lang.dev/2024/08/10/differences-between-hmpl-and-htmx/"
+          href="https://blog-hmpl-lang.vercel.app/2024/08/10/differences-between-hmpl-and-htmx/"
           class="metrics-link"
           >about htmx</a
         >.

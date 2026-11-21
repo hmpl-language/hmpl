@@ -27,9 +27,6 @@ export default defineConfig({
           }
         }
       ],
-      logo: {
-        src: "./src/assets/logo.svg"
-      },
       expressiveCode: {
         themes: ["min-light", "min-light"],
         shiki: {
@@ -274,7 +271,7 @@ export default defineConfig({
           items: [
             {
               label: "Blog",
-              link: "https://blog.hmpl-lang.dev"
+              link: "https://blog-hmpl-lang.vercel.app"
             },
             {
               label: "Community projects",
@@ -308,7 +305,7 @@ export default defineConfig({
             },
             {
               label: "Blog",
-              href: "https://blog.hmpl-lang.dev"
+              href: "https://blog-hmpl-lang.vercel.app"
             }
           ]
         })

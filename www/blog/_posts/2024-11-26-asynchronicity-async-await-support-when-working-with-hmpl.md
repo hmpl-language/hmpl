@@ -65,4 +65,4 @@ Here, whatever resolves faster will work. Moreover, the macro task `setTimeout` 
 
 Links to documentation:
 
-[https://hmpl-lang.dev/hmpl.html#compile](https://hmpl-lang.dev/hmpl.html#compile)
+[https://hmpl-lang.vercel.app/hmpl.html#compile](https://hmpl-lang.vercel.app/hmpl.html#compile)

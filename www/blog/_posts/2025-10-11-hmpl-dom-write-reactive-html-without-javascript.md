@@ -117,7 +117,7 @@ We can still pass everything that was done before. It's just another level of ne
 More about this project you can find here:
 
 -   [Repo](https://github.com/hmpl-language/hmpl-dom)
--   [Documentation Page](https://hmpl-lang.dev/dom.html)
+-   [Documentation Page](https://hmpl-lang.vercel.app/dom.html)
 
 Also, if you want to support us, you can put a star on our main project. Thanks!
 

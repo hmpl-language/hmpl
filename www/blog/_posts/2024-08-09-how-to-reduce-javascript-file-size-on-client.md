@@ -68,5 +68,5 @@ Thank you all very much for reading this post!
 
 List of materials:
 
-- [HMPL docs](https://hmpl-lang.dev/introduction.html)
+- [HMPL docs](https://hmpl-lang.vercel.app/introduction.html)
 - [Vue docs](https://vuejs.org/guide/introduction.html)

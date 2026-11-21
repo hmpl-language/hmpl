@@ -6,7 +6,7 @@ description: >
   HMPL Blog - HMPL.js is a lightweight server-oriented template language for JavaScript. 
        Fetch HTML, render it safely, and keep apps dynamic, modern, and small.
 tagline: "Server-oriented customizable templating for JavaScript"
-url: "https://blog.hmpl-lang.dev"
+url: "https://blog-hmpl-lang.vercel.app"
 lang: en_US
 
 # SEO Configuration

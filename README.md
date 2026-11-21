@@ -20,7 +20,7 @@
 </div>
 
 <div align="center">
-<a href="https://hmpl-lang.dev">🌐 Website</a> • <a href="https://hmpl-lang.dev/introduction">📄 Docs</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">🖥️ Demo Sandbox</a> • <a href="https://hmpl-lang.dev/examples">⚙️ Examples</a>
+<a href="https://hmpl-lang.vercel.app">🌐 Website</a> • <a href="https://hmpl-lang.vercel.app/introduction">📄 Docs</a> • <a href="https://codesandbox.io/p/sandbox/basic-hmpl-example-dxlgfg">🖥️ Demo Sandbox</a> • <a href="https://hmpl-lang.vercel.app/examples">⚙️ Examples</a>
 </div>
 
 <br/>
@@ -150,7 +150,7 @@ Also, HMPL can be a great alternative to popular tools such as HTMX and Alpine.j
 - **Simple**: Get ready-made UI from the server by writing a couple of lines of familiar object syntax
 - **Protected from XSS attacks**: Enable incoming server HTML sanitization with [DOMPurify](https://www.npmjs.com/package/dompurify) and work with it safely
 - **Flexible**: Can be used in almost any project due to not only working through a script, but also working in files with the `.hmpl` extension
-- **Integrated with JSON5**: Flexible writing of objects by [docs](https://hmpl-lang.dev/introduction) as in vanilla js, as well as the reliability of the parser used by millions of people
+- **Integrated with JSON5**: Flexible writing of objects by [docs](https://hmpl-lang.vercel.app/introduction) as in vanilla js, as well as the reliability of the parser used by millions of people
 - **Small bundle size**: Lots of functionality in a couple of kilobytes
 
 ## Installation
@@ -230,7 +230,7 @@ But we will be glad if you make your own :)
 
 ## Community support
 
-The [documentation](https://hmpl-lang.dev/introduction) contains main information on how the HMPL template language works. If you have any questions about how HMPL works, you can use the following resources:
+The [documentation](https://hmpl-lang.vercel.app/introduction) contains main information on how the HMPL template language works. If you have any questions about how HMPL works, you can use the following resources:
 
 - [GitHub](https://github.com/hmpl-language/hmpl) - In the discussion and issues sections you can ask any question you are interested in
 - [Discord](https://discord.gg/KFunMep36n) - You can ask your question in the thematic channel "support"
@@ -266,7 +266,7 @@ Released under the [MIT](https://github.com/hmpl-language/hmpl/blob/main/LICENSE
 
 <div align="center">
 
-💎 **[Star this repo](https://github.com/hmpl-language/hmpl)** • 💻 **[Try HMPL.js](https://hmpl-lang.dev/getting-started)** • 💬 **[Join Discord](https://discord.gg/KFunMep36n)**
+💎 **[Star this repo](https://github.com/hmpl-language/hmpl)** • 💻 **[Try HMPL.js](https://hmpl-lang.vercel.app/getting-started)** • 💬 **[Join Discord](https://discord.gg/KFunMep36n)**
 
 <i>This project has been developed with contributions from many amazing community developers!</i>
 

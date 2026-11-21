@@ -333,7 +333,7 @@ export default HomePageScript;
         <div class="article_content">
           <a
             class="article_link"
-            href="https://blog.hmpl-lang.dev/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
+            href="https://blog-hmpl-lang.vercel.app/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
             rel="noreferrer noopener"
             target="_blank"
             ><h2 class="article_title">
@@ -347,7 +347,7 @@ export default HomePageScript;
             so I will try to describe the differences as fully as possible...
           </p>
           <a
-            href="https://blog.hmpl-lang.dev/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
+            href="https://blog-hmpl-lang.vercel.app/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
             class="main-button article-button"
             rel="noreferrer noopener"
             target="_blank"
@@ -355,7 +355,7 @@ export default HomePageScript;
           >
         </div>
         <a
-          href="https://blog.hmpl-lang.dev/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
+          href="https://blog-hmpl-lang.vercel.app/blog/2024/08/10/differences-between-hmpl-and-htmx.html"
           rel="noreferrer noopener"
           class="article_preview_link"
           target="_blank"
@@ -369,7 +369,7 @@ export default HomePageScript;
         <div class="article_gradient"></div>
         <div class="article_content">
           <a
-            href="https://blog.hmpl-lang.dev/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
+            href="https://blog-hmpl-lang.vercel.app/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
             rel="noreferrer noopener"
             target="_blank"
             ><h2 class="article_title">
@@ -384,7 +384,7 @@ export default HomePageScript;
             my opinion...
           </p>
           <a
-            href="https://blog.hmpl-lang.dev/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
+            href="https://blog-hmpl-lang.vercel.app/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
             class="main-button article-button"
             rel="noreferrer noopener"
             target="_blank"
@@ -392,7 +392,7 @@ export default HomePageScript;
           >
         </div>
         <a
-          href="https://blog.hmpl-lang.dev/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
+          href="https://blog-hmpl-lang.vercel.app/blog/2024/12/18/creating-a-gallery-app-in-javascript-with-hmpl.html"
           rel="noreferrer noopener"
           class="article_preview_link"
           target="_blank"

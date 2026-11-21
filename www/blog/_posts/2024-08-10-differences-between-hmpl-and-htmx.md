@@ -95,5 +95,5 @@ Thank you all for reading the post!
 
 Sources:
 
-- [HMPL Docs](https://hmpl-lang.dev/introduction.html)
+- [HMPL Docs](https://hmpl-lang.vercel.app/introduction.html)
 - [HTMX Docs](https://htmx.org/docs)
