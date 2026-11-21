@@ -1,0 +1,20 @@
+<li>{% assign entry = include.item %}
+  <a {% unless entry.platform=='rss' %}rel="me" {% endunless %}href="{{ entry.user_url }}" target="_blank" title="{{ entry.title | default: entry.platform | capitalize }}" class="social-link">
+    <svg class="svg-icon social-icon {{ entry.platform }}-icon" viewBox="0 0 16 16" width="16" height="16" aria-labelledby="{{ entry.platform }}-title">
+      <title id="{{ entry.platform }}-title">{{ entry.platform | capitalize }}</title>
+      {% case entry.platform %}
+        {% when 'github' %}
+          {% include social-icons/github.svg %}
+        {% when 'x' %}
+          {% include social-icons/x.svg %}
+        {% when 'discord' %}
+          {% include social-icons/discord.svg %}
+        {% when 'rss' %}
+          {% include social-icons/rss.svg %}
+      {% else %}
+        <circle cx="8" cy="8" r="6" fill="currentColor"/>
+      {% endcase %}
+    </svg>
+    <span class="username">{{ entry.platform | capitalize }}</span>
+  </a>
+</li>
