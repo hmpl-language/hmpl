@@ -1,0 +1,83 @@
+---
+import Default from '@astrojs/starlight/components/Search.astro';
+---
+
+<Default {...Astro.props} />
+<div class="github-stars">
+  <a
+    href="https://github.com/hmpl-language/hmpl/stargazers"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="star-link"
+    aria-label="GitHub Stars"
+  >
+    <span class="icon-wrap">
+      <svg class="star" width="20" height="20" viewBox="0 0 36 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.0772 1.21105C17.4193 0.391279 18.5807 0.391279 18.9228 1.21105L23.0672 11.1406C23.2113 11.4858 23.536 11.7217 23.9089 11.7521L34.6331 12.6252C35.5185 12.6973 35.8774 13.8019 35.2035 14.3806L27.0406 21.3905C26.7568 21.6342 26.6328 22.016 26.7191 22.38L29.2027 32.8491C29.4077 33.7135 28.4681 34.3961 27.7095 33.934L18.5202 28.3368C18.2007 28.1422 17.7993 28.1422 17.4798 28.3368L8.29051 33.934C7.53186 34.3961 6.59228 33.7135 6.79732 32.8491L9.28088 22.38C9.36723 22.016 9.24319 21.6342 8.95938 21.3905L0.796525 14.3806C0.122612 13.8019 0.481499 12.6973 1.36687 12.6252L12.0911 11.7521C12.464 11.7217 12.7887 11.4858 12.9328 11.1406L17.0772 1.21105Z" fill="currentColor"/>
+      </svg>
+    </span>
+    <span class="star-count" id="github-stars-count">...</span>
+  </a>
+</div>
+<script is:inline>
+(function() {
+  const el = document.getElementById('github-stars-count');
+  if (!el) return;
+  fetch('https://api.github.com/repos/hmpl-language/hmpl')
+    .then(res => res.json())
+    .then(data => {
+      let count = data.stargazers_count;
+      if (count >= 1000) count = (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+      el.textContent = count;
+    })
+    .catch(() => { el.textContent = '...'; });
+})();
+</script>
+<style>
+.github-stars {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: -96px;
+  height: 40px;
+  min-width: 86px;
+  max-width: 86px;
+}
+.star-link {
+  display: flex;
+  align-items: center;
+  gap: 0.29rem;
+  height: 100%;
+  min-width: 86px;
+  max-width: 86px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: background 0.15s, border 0.15s, color 0.15s;
+  text-decoration: none;
+  background-color: var(--sl-color-black);
+  color: var(--sl-color-gray-2);
+  font-size: var(--sl-text-sm);
+}
+.star-link:hover,
+.star-link:focus {
+  border-color: var(--sl-color-gray-2);
+  color: var(--sl-color-white);
+}
+.icon-wrap {
+  display: flex;
+  align-items: center;
+}
+.star {
+  display: block;
+  margin-right: 0.25rem;
+}
+.star-count {
+  min-width: 2.5ch;
+  text-align: right;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+</style>
