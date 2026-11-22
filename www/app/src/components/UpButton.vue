@@ -1,9 +1,12 @@
 <template>
   <button
     class="scroll-to-top"
-    v-show="showScroll"
+    :class="{ 'is-visible': showScroll }"
+    :tabindex="showScroll ? 0 : -1"
+    :aria-hidden="!showScroll"
     @click="scrollToTop"
     aria-label="Scroll to top"
+    type="button"
   >
     <i class="fas fa-arrow-up" aria-hidden="true"></i>
   </button>
@@ -16,13 +19,10 @@ const showScroll = ref(false);
 let faLink = null;
 
 const scrollToTop = () => {
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
-  window.scrollTo(
-    prefersReducedMotion ? { top: 0 } : { top: 0, behavior: "smooth" }
-  );
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 };
 
 const handleScroll = () => {
@@ -78,14 +78,36 @@ onUnmounted(() => {
   cursor: pointer;
   z-index: 1200;
 
-  transition: transform 0.15s ease;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0s linear 0.25s !important;
+}
+
+.scroll-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0s linear 0s !important;
 }
 
 .scroll-to-top i {
   font-size: 18px;
 }
 
-.scroll-to-top:active {
+.scroll-to-top.is-visible:hover {
+  transform: translateY(-4px);
+}
+
+.scroll-to-top.is-visible:active {
   transform: scale(0.95);
 }
 

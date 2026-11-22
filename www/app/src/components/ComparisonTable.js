@@ -7,9 +7,9 @@ export default {
       features: [
         {
           name: "Bundle Size (gzipped)",
-          hmpl: "~24KB",
-          alpine: "~19KB",
-          htmx: "~14KB"
+          hmpl: "~26.6 KB",
+          alpine: "~19.1 KB",
+          htmx: "~18.2 KB"
         },
         {
           name: "Fetch API support",

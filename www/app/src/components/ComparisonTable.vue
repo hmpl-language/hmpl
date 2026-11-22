@@ -5,6 +5,11 @@
       <p class="comparison-subtitle">
         See how HMPL.js compares to similar projects
       </p>
+      <p class="comparison-source">
+        Bundle sizes are minified and gzipped, including dependencies, according
+        to <a href="https://bundlephobia.com/">Bundlephobia</a> (November 2026):
+        HMPL.js 3.2.1, Alpine.js 3.17.5, and HTMX 2.0.11.
+      </p>
     </div>
 
     <div class="table-container" ref="tableContainer">

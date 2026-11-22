@@ -26,6 +26,12 @@
   margin: 0;
 }
 
+.comparison-source {
+  color: var(--homepage-desc-color);
+  font-size: 14px;
+  margin: 8px 0 0;
+}
+
 .table-container {
   overflow-x: auto;
   margin: 0 auto;

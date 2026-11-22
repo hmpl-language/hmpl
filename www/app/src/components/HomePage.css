@@ -1446,36 +1446,6 @@ footer {
 }
 
 /* ============================================ */
-/* Scroll to Top Button */
-/* ============================================ */
-.scroll-to-top {
-  position: fixed;
-  right: 20px;
-  bottom: 35px;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #0183ff; /* project blue */
-  color: #ffffff;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 18px rgba(1, 131, 255, 0.22);
-  cursor: pointer;
-  z-index: 1200;
-  transition:
-    transform 0.18s ease,
-    opacity 0.18s ease;
-}
-.scroll-to-top:hover {
-  transform: translateY(-4px);
-}
-.scroll-to-top i {
-  font-size: 18px;
-}
-
-/* ============================================ */
 /* Note */
 /* ============================================ */
 .note {
